@@ -485,7 +485,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); min-hei
   </div>
 
   <!-- Save Bar -->
-  <div class="save-bar visible" id="save-bar">
+  <div class="save-bar" id="save-bar" style="display:none;">
     <p>Changes are stored in memory. Download content.json and push to GitHub to publish.</p>
     <button class="btn btn-primary" onclick="downloadContent()">⬇ Download content.json</button>
   </div>
@@ -901,7 +901,7 @@ function addPost() {
   DATA.blog_posts.push(post);
   document.getElementById('post-count').textContent = DATA.blog_posts.length;
   populatePosts();
-  toast('Post added! Download content.json to publish.', 'success');
+  toast('Post added successfully.', 'success');
   showPanel('blog-posts');
 }
 

@@ -1,0 +1,506 @@
+{
+  "site": {
+    "name": "Janak Pokharel",
+    "shortName": "Janak",
+    "role": "Global SEO & Ads Manager",
+    "tagline": "Helping businesses grow through smart search and performance marketing.",
+    "description": "Janak Pokharel is a Global SEO and Ads Manager helping businesses scale through data-driven search strategies, content systems, and high-performance advertising.",
+    "url": "https://janakpokharel.com.np",
+    "email": "janakpokharel000@gmail.com",
+    "phone": "+977-9840033771",
+    "whatsapp": "9779840033771",
+    "location": "Kathmandu, Nepal",
+    "facebook": "https://www.facebook.com/janak.pokharel7788",
+    "linkedin": "https://www.linkedin.com/in/janak-pokharel",
+    "gtmId": "GTM-564SNKQ7",
+    "gaId": "G-TFN0WN40XW"
+  },
+  "navigation": [
+    {
+      "label": "Home",
+      "href": "/"
+    },
+    {
+      "label": "About",
+      "href": "/#about"
+    },
+    {
+      "label": "Services",
+      "href": "/#services"
+    },
+    {
+      "label": "Work",
+      "href": "/#projects"
+    },
+    {
+      "label": "Blogs",
+      "href": "/blog"
+    }
+  ],
+  "hero": {
+    "availability": "Available for new projects",
+    "eyebrow": "SPECIALIZED IN SEO, META ADS, AND GROWTH SYSTEMS",
+    "headline": "Search engine optimization and ads management that actually moves revenue.",
+    "description": "I help brands grow with technical SEO, performance content, Meta Ads, and conversion-focused strategy backed by a dedicated team.",
+    "primaryCta": {
+      "label": "Start a Project",
+      "href": "/#contact"
+    },
+    "secondaryCta": {
+      "label": "View Portfolio",
+      "href": "/#projects"
+    },
+    "image": {
+      "src": "/image/janak.webp",
+      "alt": "Portrait of Janak Pokharel"
+    },
+    "stat": {
+      "value": "12+",
+      "label": "Happy Clients"
+    }
+  },
+  "about": {
+    "title": "Who is Janak?",
+    "intro": "I help small and growing businesses build sustainable visibility through technical SEO, content strategy, and paid acquisition systems.",
+    "body": "My work blends search intent, site performance, persuasive messaging, and campaign optimization. That means cleaner rankings, stronger lead flow, and better return on every marketing dollar you invest.",
+    "stats": [
+      {
+        "value": "3+",
+        "label": "Years Experience"
+      },
+      {
+        "value": "16+",
+        "label": "Projects Delivered"
+      }
+    ],
+    "highlightCards": [
+      {
+        "icon": "users",
+        "title": "Leading SEO & Ads Team",
+        "description": "Driving results with a focused team that supports strategy, creative, and execution."
+      },
+      {
+        "icon": "heart",
+        "title": "Community Leader",
+        "description": "Founder and admin of BIT Guide-TU with a growing student and professional network."
+      }
+    ],
+    "organizationsTitle": "Associated Organizations",
+    "organizations": [
+      {
+        "name": "Limi Creatives",
+        "logo": "/image/limi creatives.webp",
+        "alt": "Limi Creatives logo"
+      },
+      {
+        "name": "Bhatti Chulo",
+        "logo": "/image/bhattichulo.webp",
+        "alt": "Bhatti Chulo logo"
+      },
+      {
+        "name": "Supreme College",
+        "logo": "/image/supreme college.webp",
+        "alt": "Supreme College logo"
+      },
+      {
+        "name": "Gurzu Nepal",
+        "logo": "/image/gurzu.webp",
+        "alt": "Gurzu Nepal logo"
+      },
+      {
+        "name": "Bhundipuran Prakashan",
+        "logo": "/image/bhundipuran.webp",
+        "alt": "Bhundipuran Prakashan logo"
+      },
+      {
+        "name": "Splashnode",
+        "logo": "/image/splashnode.webp",
+        "alt": "Splashnode logo"
+      },
+      {
+        "name": "IT Mart",
+        "logo": "/image/IT mart logo.webp",
+        "alt": "IT Mart logo"
+      },
+      {
+        "name": "Shopit",
+        "logo": "/image/shopit.webp",
+        "alt": "Shopit logo"
+      },
+      {
+        "name": "Click Dribble",
+        "logo": "/image/click dribble.webp",
+        "alt": "Click Dribble logo"
+      },
+      {
+        "name": "Nomor Tech",
+        "logo": "/image/nomor tech.webp",
+        "alt": "Nomor Tech logo"
+      }
+    ]
+  },
+  "services": [
+    {
+      "icon": "search",
+      "title": "Advanced SEO",
+      "description": "On-page, off-page, and technical optimization built to rank stronger and convert better."
+    },
+    {
+      "icon": "target",
+      "title": "Meta Ads Mastery",
+      "description": "Performance campaigns on Facebook and Instagram with sharper targeting and lower wasted spend."
+    },
+    {
+      "icon": "mouse-pointer-2",
+      "title": "Google Ads & PPC",
+      "description": "Paid search campaigns tuned for conversion intent, efficient bidding, and profitable scale."
+    },
+    {
+      "icon": "settings",
+      "title": "Technical SEO",
+      "description": "Site audits, Core Web Vitals improvements, indexation fixes, and schema implementation."
+    },
+    {
+      "icon": "bar-chart-2",
+      "title": "CRO & Analytics",
+      "description": "Clear tracking, performance reporting, and conversion-focused optimization across funnels."
+    },
+    {
+      "icon": "cpu",
+      "title": "Programmatic Ads",
+      "description": "Data-led ad buying systems that reach the right audience at the right time across channels."
+    }
+  ],
+  "projects": {
+    "title": "Featured Brands and Campaigns",
+    "intro": "These cards highlight brands and projects I have supported across SEO, paid media, content, and growth execution. Every item below is editable from the CMS, including logos, summaries, tags, and links.",
+    "lockedTitle": "Confidential Portfolio",
+    "lockedDescription": "Many campaigns are protected by client agreements, so detailed case studies and reporting snapshots are shared privately.",
+    "lockedCtaLabel": "Request Access",
+    "lockedCtaHref": "/#contact",
+    "items": [
+      {
+        "title": "Limi Creatives",
+        "category": "SEO and Growth Strategy",
+        "description": "Supported search visibility, campaign planning, and performance-focused digital growth work for a creative-led client portfolio.",
+        "tags": [
+          "SEO",
+          "Strategy",
+          "Content",
+          "Growth"
+        ],
+        "image": {
+          "src": "/image/limi creatives.webp",
+          "alt": "Limi Creatives logo"
+        },
+        "result": "Ongoing support",
+        "href": "/#contact",
+        "ctaLabel": "Request case study"
+      },
+      {
+        "title": "Bhatti Chulo Lounge & Bar",
+        "category": "Local Brand Growth",
+        "description": "Worked on digital visibility and audience growth for a hospitality brand focused on stronger local reach and customer engagement.",
+        "tags": [
+          "Local SEO",
+          "Branding",
+          "Social Campaigns"
+        ],
+        "image": {
+          "src": "/image/bhattichulo.webp",
+          "alt": "Bhatti Chulo Lounge and Bar logo"
+        },
+        "result": "Local visibility",
+        "href": "/#contact",
+        "ctaLabel": "Ask about this work"
+      },
+      {
+        "title": "Gurzu Nepal",
+        "category": "Digital Marketing Execution",
+        "description": "Contributed to SEO research, product-focused growth support, and digital campaign execution for Gurzu and related products.",
+        "tags": [
+          "SEO",
+          "Research",
+          "Product Marketing"
+        ],
+        "image": {
+          "src": "/image/gurzu.webp",
+          "alt": "Gurzu Nepal logo"
+        },
+        "result": "Cross-product support",
+        "href": "/#contact",
+        "ctaLabel": "Request details"
+      },
+      {
+        "title": "Clickdribble",
+        "category": "Creative and Click-Focused Marketing",
+        "description": "Supported brand growth work centered on stronger messaging, campaign direction, and audience-ready digital presentation.",
+        "tags": [
+          "Creative Strategy",
+          "Ads",
+          "Positioning"
+        ],
+        "image": {
+          "src": "/image/click dribble.webp",
+          "alt": "Clickdribble logo"
+        },
+        "result": "Sharper messaging",
+        "href": "/#contact",
+        "ctaLabel": "View availability"
+      },
+      {
+        "title": "ShopIt",
+        "category": "E-commerce Growth",
+        "description": "Worked on performance-oriented digital promotion for an e-commerce brand with a focus on traffic quality and conversion intent.",
+        "tags": [
+          "E-commerce",
+          "Paid Media",
+          "Performance"
+        ],
+        "image": {
+          "src": "/image/shopit.webp",
+          "alt": "ShopIt logo"
+        },
+        "result": "Revenue-focused traffic",
+        "href": "/#contact",
+        "ctaLabel": "Talk about e-commerce"
+      },
+      {
+        "title": "Supreme College",
+        "category": "Education and Community Reach",
+        "description": "Contributed to educational visibility and digital communication support while strengthening community-facing brand presence.",
+        "tags": [
+          "Education",
+          "Brand Reach",
+          "Content"
+        ],
+        "image": {
+          "src": "/image/supreme college.webp",
+          "alt": "Supreme College logo"
+        },
+        "result": "Community engagement",
+        "href": "/#contact",
+        "ctaLabel": "Ask for portfolio access"
+      }
+    ]
+  },
+  "resume": {
+    "experience": [
+      {
+        "title": "SEO & Ads Manager",
+        "subtitle": "Limi Creatives | Dec 2025 - Present",
+        "points": [
+          "Leading SEO strategies and Meta Ads campaigns for a diverse client portfolio.",
+          "Managing campaign planning, budget optimization, and measurable growth reporting."
+        ]
+      },
+      {
+        "title": "Computer Science Teacher",
+        "subtitle": "Supreme College | Sep 2025 - Present",
+        "points": [
+          "Teaching Computer Science to grade 11 students during morning shifts.",
+          "Guiding students through programming basics and practical assignments."
+        ]
+      },
+      {
+        "title": "Digital Marketing Executive",
+        "subtitle": "Gurzu Nepal | May 2025 - Sep 2025",
+        "href": "https://gurzu.com/",
+        "points": [
+          "Executed SEO, keyword research, competitor analysis, and campaign support for product growth.",
+          "Supported digital promotion for Gurzu products including Splashnode and Meesa."
+        ]
+      },
+      {
+        "title": "Digital Assistant",
+        "subtitle": "Bhundipuran Prakashan | Nov 2023 - Mar 2025",
+        "points": [
+          "Created and published social content with a strong focus on Facebook.",
+          "Managed online sales workflows and supported small-scale ad campaigns."
+        ]
+      }
+    ],
+    "education": [
+      {
+        "title": "Tribhuvan University",
+        "subtitle": "BIT | 2022 - 2026",
+        "points": [
+          "Bachelor of Information Technology with focus areas across AI, digital systems, and modern web technologies.",
+          "Coursework includes web development, databases, software engineering, and data systems."
+        ]
+      },
+      {
+        "title": "Nilkantha Secondary School",
+        "subtitle": "+2 Science | 2019 - 2021",
+        "points": [
+          "Completed higher secondary education in the science stream with strong analytical foundations.",
+          "Built early depth in mathematics, computer science, physics, and problem solving."
+        ]
+      },
+      {
+        "title": "Sunaulo Bhairabi Secondary School",
+        "subtitle": "SEE | 2019",
+        "points": [
+          "Graduated with distinction and developed an early interest in technology and digital work.",
+          "Built the academic foundation that later shaped a technical and marketing career path."
+        ]
+      }
+    ],
+    "certifications": [
+      {
+        "title": "5-Day SEO Challenge",
+        "subtitle": "ORKA SOCIALS",
+        "points": [
+          "Completed an intensive hands-on SEO bootcamp that accelerated foundational search strategy skills.",
+          "Learned practical keyword research, content planning, and early optimization workflows."
+        ]
+      },
+      {
+        "title": "SEO Certification",
+        "subtitle": "HubSpot Academy",
+        "points": [
+          "Earned certification covering on-page SEO, off-page SEO, technical SEO, and optimization strategy.",
+          "Strengthened skills in content performance, link building, and search measurement."
+        ]
+      },
+      {
+        "title": "Mastering SEO Strategy",
+        "subtitle": "Advanced Certification",
+        "points": [
+          "Completed advanced study in technical SEO, site architecture, and performance-driven optimization.",
+          "Built stronger execution frameworks for enterprise-style audits and strategy planning."
+        ]
+      }
+    ]
+  },
+  "blog": {
+    "title": "Digital Marketing Insights",
+    "description": "Strategies, tips, and practical guides on SEO, Meta Ads, Google Ads, and digital growth in 2026.",
+    "posts": [
+      {
+        "slug": "hire-seo-ads-freelancer",
+        "title": "Hire an SEO and Ads Freelancer for a Small Business",
+        "date": "February 6, 2026",
+        "category": "SEO Strategy",
+        "excerpt": "Small businesses often get better speed, communication, and ROI from a specialized freelancer than from a large agency package.",
+        "metaDescription": "Learn why hiring an SEO and Ads freelancer can be a stronger fit for small businesses than choosing a large agency.",
+        "readTime": "5 min read",
+        "heroIntro": "Small businesses usually need focused execution, not bloated retainers. A freelancer who owns both SEO and ads can move faster, communicate more clearly, and shape strategy around your actual business goals.",
+        "sections": [
+          {
+            "heading": "Why freelancers can be more cost-efficient",
+            "body": "Freelancers usually operate with less overhead than agencies, so more of your budget goes into work instead of account layers. That often means better value for technical fixes, content planning, and campaign optimization."
+          },
+          {
+            "heading": "Direct communication means fewer delays",
+            "body": "When the strategist and the executor are the same person, decisions happen faster. You avoid long handoffs, reduce misunderstandings, and get cleaner visibility into what is being tested and why."
+          },
+          {
+            "heading": "Tailored strategy beats generic retainers",
+            "body": "Smaller businesses rarely benefit from recycled agency playbooks. A dedicated freelancer can build around your actual sales cycle, geography, niche, and margin constraints."
+          }
+        ],
+        "faqs": [
+          {
+            "question": "How much does an SEO freelancer usually cost?",
+            "answer": "Pricing depends on scope, market, and reporting depth, but freelancers are often more flexible than agency retainers and easier to phase in around realistic goals."
+          },
+          {
+            "question": "When should a small business choose an agency instead?",
+            "answer": "An agency makes more sense when you need a larger multidisciplinary team immediately or already have the budget and internal systems to manage a broader operation."
+          }
+        ],
+        "cta": {
+          "title": "Need a growth partner who can handle both SEO and ads?",
+          "buttonLabel": "Get In Touch",
+          "buttonHref": "/#contact"
+        }
+      },
+      {
+        "slug": "are-meta-ads-worth-it-2026",
+        "title": "Are Meta Ads Worth It in 2026?",
+        "date": "January 24, 2026",
+        "category": "Paid Media",
+        "excerpt": "Meta Ads still work well in 2026 when account structure, creative testing, and landing page alignment are treated as one system.",
+        "metaDescription": "A practical look at whether Meta Ads are still worth it in 2026 and what separates profitable campaigns from wasted spend.",
+        "readTime": "4 min read",
+        "heroIntro": "Meta Ads are still one of the fastest ways to get attention, leads, and purchases, but they reward strong systems more than ever. Targeting alone is not enough anymore.",
+        "sections": [
+          {
+            "heading": "Creative quality matters more than narrow targeting",
+            "body": "As platform automation keeps improving, ad creative and message-market fit carry more of the performance burden. Strong hooks, clear offers, and fast feedback loops matter more than trying to over-control the audience."
+          },
+          {
+            "heading": "Your landing page still decides profitability",
+            "body": "Even well-optimized campaigns fail if the page experience is slow, confusing, or mismatched to the ad promise. Conversion rate and ad efficiency are tightly connected."
+          },
+          {
+            "heading": "Meta Ads are strongest when paired with retention and SEO",
+            "body": "Paid traffic works best when it feeds a broader system that includes remarketing, organic visibility, and offer refinement. That is how you keep customer acquisition from becoming too expensive over time."
+          }
+        ],
+        "faqs": [
+          {
+            "question": "What businesses benefit most from Meta Ads?",
+            "answer": "Lead generation, e-commerce, local service brands, and awareness-focused campaigns can all perform well when the offer is clear and the funnel is set up properly."
+          },
+          {
+            "question": "How quickly can Meta Ads show results?",
+            "answer": "You can get early signal within days, but stable performance normally needs testing time, enough budget to gather data, and a page that converts."
+          }
+        ],
+        "cta": {
+          "title": "Want smarter Meta Ads that support long-term growth?",
+          "buttonLabel": "Book a Strategy Call",
+          "buttonHref": "/#contact"
+        }
+      },
+      {
+        "slug": "seo-vs-meta-ads",
+        "title": "SEO vs Meta Ads: Which One Should You Choose?",
+        "date": "December 20, 2025",
+        "category": "Comparison",
+        "excerpt": "SEO builds durable traffic while Meta Ads deliver speed. The strongest strategy often uses both, but in different phases.",
+        "metaDescription": "Compare SEO and Meta Ads for cost, speed, ROI, and long-term value to decide which growth channel fits your business.",
+        "readTime": "6 min read",
+        "heroIntro": "Choosing between SEO and Meta Ads is really about choosing between speed and durability. Each channel solves a different business problem, and your best option depends on timing, budget, and internal capacity.",
+        "sections": [
+          {
+            "heading": "SEO is slower but compounds over time",
+            "body": "Search optimization usually takes longer to show clear movement, but the upside is durable traffic, stronger authority, and less dependency on ongoing spend once rankings improve."
+          },
+          {
+            "heading": "Meta Ads create speed and fast feedback",
+            "body": "Ads can generate traffic and lead volume almost immediately, which is useful for launches, offers, demand testing, and shorter sales cycles. The tradeoff is that traffic slows when spend stops."
+          },
+          {
+            "heading": "The best answer is often sequencing, not choosing",
+            "body": "Many businesses should start with the channel that solves the immediate bottleneck, then layer the second channel for resilience. Use ads for speed and SEO for long-term efficiency."
+          }
+        ],
+        "faqs": [
+          {
+            "question": "Which channel has the better long-term ROI?",
+            "answer": "SEO often produces stronger long-term efficiency because organic clicks do not have a direct ongoing cost, but it requires patience and consistent execution."
+          },
+          {
+            "question": "Can a small budget still work for paid ads?",
+            "answer": "Yes, but small budgets need tighter offers, stronger pages, and realistic expectations. Efficiency matters even more when testing room is limited."
+          }
+        ],
+        "cta": {
+          "title": "Need help choosing the right channel mix?",
+          "buttonLabel": "Let's Talk",
+          "buttonHref": "/#contact"
+        }
+      }
+    ]
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "intro": "Ready to improve your search presence, ads performance, or overall growth system? Let's talk about the next step for your business.",
+    "whatsappTitle": "Let's Chat on WhatsApp",
+    "whatsappDescription": "Get quick responses for digital marketing questions, project discussions, or new campaign planning.",
+    "footerNote": "Designed and developed for a Vercel-ready Next.js deployment."
+  }
+}
