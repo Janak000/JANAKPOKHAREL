@@ -1,0 +1,385 @@
+{
+  "site": {
+    "name": "Janak Pokharel",
+    "tagline": "SEO And Ads Experts",
+    "description": "Janak Pokharel is a Global SEO and Ads Manager helping businesses scale through data-driven search strategies and high-performance advertising.",
+    "email": "janakpokharel000@gmail.com",
+    "phone": "+977-9840033771",
+    "whatsapp": "9779840033771",
+    "location": "Kathmandu, Nepal",
+    "facebook": "https://www.facebook.com/janak.pokharel7788",
+    "linkedin": "https://www.linkedin.com/in/janak-pokharel",
+    "canonical": "https://janakpokharel.com.np/",
+    "gtmId": "GTM-564SNKQ7",
+    "gaId": "G-TFN0WN40XW",
+    "copyright": "2024 Janak Pokharel. All rights reserved."
+  },
+  "hero": {
+    "badge": "Available for new projects",
+    "eyebrow": "SPECIALIZED IN SEO & META ADS",
+    "headline": "Search Engine Optimization <span class=\"neon-text\">And</span> Ads manager.",
+    "description": "<a href=\"https://janakpokharel.com.np/hire-seo-ads-manager/hire-ads-SEO-manager.html\">Hire me for SEO and Ads.</a> Supported by a dedicated team.",
+    "cta_primary": "Start a Project",
+    "cta_secondary": "View Portfolio",
+    "stat_value": "12+",
+    "stat_label": "Happy Clients",
+    "image": "image/janak.webp",
+    "image_alt": "Janak Pokharel"
+  },
+  "about": {
+    "headline": "About <span class=\"neon-text\">Me</span>",
+    "lead": "I'm Janak Pokharel, a Global SEO & Ads Manager based in Kathmandu, Nepal. I help businesses achieve top search rankings and maximize ROI through data-driven strategies.",
+    "body": "With expertise in technical SEO, content strategy, and performance advertising, I deliver measurable results that matter. My approach combines analytical thinking with creative execution to drive sustainable growth for my clients.",
+    "stats": [
+      {
+        "value": "12+",
+        "label": "Happy Clients"
+      },
+      {
+        "value": "3+",
+        "label": "Years Experience"
+      },
+      {
+        "value": "50+",
+        "label": "Projects Done"
+      }
+    ],
+    "image": "image/janak.webp"
+  },
+  "services": [
+    {
+      "icon": "search",
+      "title": "SEO Optimization",
+      "description": "Comprehensive on-page and off-page SEO strategies to boost your organic search rankings and drive qualified traffic.",
+      "tags": [
+        "Keyword Research",
+        "On-Page SEO",
+        "Technical SEO"
+      ]
+    },
+    {
+      "icon": "megaphone",
+      "title": "Meta Ads Management",
+      "description": "Data-driven Facebook and Instagram ad campaigns optimized for maximum ROI and targeted audience reach.",
+      "tags": [
+        "Facebook Ads",
+        "Instagram Ads",
+        "Retargeting"
+      ]
+    },
+    {
+      "icon": "file-text",
+      "title": "Content Strategy",
+      "description": "Strategic content planning and creation that aligns with your business goals and resonates with your target audience.",
+      "tags": [
+        "Content Planning",
+        "SEO Writing",
+        "Blog Management"
+      ]
+    },
+    {
+      "icon": "settings",
+      "title": "Technical SEO",
+      "description": "Deep technical audits and fixes to ensure your website meets all search engine requirements for optimal crawling and indexing.",
+      "tags": [
+        "Site Audit",
+        "Core Web Vitals",
+        "Schema Markup"
+      ]
+    },
+    {
+      "icon": "bar-chart-2",
+      "title": "Analytics & Reporting",
+      "description": "Detailed performance tracking and reporting to measure campaign effectiveness and guide strategic decisions.",
+      "tags": [
+        "Google Analytics",
+        "Search Console",
+        "Custom Reports"
+      ]
+    },
+    {
+      "icon": "link",
+      "title": "Link Building",
+      "description": "White-hat link acquisition strategies to build domain authority and improve your site's credibility with search engines.",
+      "tags": [
+        "Backlinks",
+        "Guest Posting",
+        "Outreach"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "SEO & Ads Manager",
+      "company": "Freelance / Self-Employed",
+      "period": "2022 – Present",
+      "points": [
+        "Managing SEO and paid advertising campaigns for clients across USA, UK, and Nepal.",
+        "Delivering measurable results including 200%+ organic traffic increases for e-commerce clients.",
+        "Specializing in technical SEO audits, keyword strategy, and Meta Ads optimization."
+      ]
+    },
+    {
+      "title": "Digital Marketing Specialist",
+      "company": "Various Clients",
+      "period": "2021 – 2022",
+      "points": [
+        "Developed and executed digital marketing strategies for local businesses.",
+        "Managed Google Ads and Meta Ads campaigns with consistent positive ROI.",
+        "Conducted comprehensive SEO audits and implemented optimization strategies."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Computer Application",
+      "school": "Tribhuvan University",
+      "period": "2021-2025",
+      "points": [
+        "Completed coursework in Web Development, Data Warehousing, Database Management, and Software Engineering principles.",
+        "Applied technical knowledge to real-world digital marketing and SEO projects."
+      ]
+    },
+    {
+      "degree": "+2 Science",
+      "school": "Nilkantha Secondary School",
+      "period": "2019-2021",
+      "points": [
+        "Achieved Higher Secondary Education in Science Faculty with strong performance in analytical subjects.",
+        "Built foundation in Physics, Chemistry, Mathematics, and Computer Science."
+      ]
+    },
+    {
+      "degree": "SEE",
+      "school": "Sunaulo Bhairabi Secondary School",
+      "period": "2019",
+      "points": [
+        "Graduated with distinction, completing comprehensive basic education through Class 10.",
+        "Cultivated early passion for technology and innovation through computer science exposure."
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "title": "5-Day SEO Challenge",
+      "issuer": "ORKA SOCIALS",
+      "points": [
+        "Completed intensive hands-on SEO bootcamp, kickstarting professional journey in search optimization.",
+        "Acquired practical knowledge in keyword research, content strategy, and foundational digital marketing tactics."
+      ]
+    },
+    {
+      "title": "SEO Certification",
+      "issuer": "HubSpot Academy",
+      "points": [
+        "Earned industry-recognized certification demonstrating proficiency in on-page and off-page SEO techniques.",
+        "Mastered advanced skills in keyword research, content optimization, link building, and technical SEO audits."
+      ]
+    },
+    {
+      "title": "Mastering SEO Strategy",
+      "issuer": "Advanced Certification",
+      "points": [
+        "Completed advanced training in technical SEO, site architecture optimization, and performance enhancement strategies.",
+        "Developed expertise in data-driven SEO methodologies, competitive analysis frameworks, and enterprise-level implementation."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "E-Commerce SEO Campaign",
+      "description": "Achieved 250% increase in organic traffic for a US-based e-commerce store through comprehensive SEO strategy.",
+      "tags": [
+        "SEO",
+        "E-commerce",
+        "USA"
+      ],
+      "result": "+250% Traffic",
+      "locked": false,
+      "link": "#"
+    },
+    {
+      "title": "Meta Ads Lead Generation",
+      "description": "Reduced cost per lead by 60% for a Nepal-based real estate company through targeted Meta Ads campaigns.",
+      "tags": [
+        "Meta Ads",
+        "Lead Gen",
+        "Nepal"
+      ],
+      "result": "-60% CPL",
+      "locked": false,
+      "link": "#"
+    },
+    {
+      "title": "Technical SEO Overhaul",
+      "description": "Complete technical SEO audit and implementation for a UK SaaS company, resulting in first-page rankings.",
+      "tags": [
+        "Technical SEO",
+        "SaaS",
+        "UK"
+      ],
+      "result": "Page 1 Rankings",
+      "locked": true,
+      "link": "#"
+    }
+  ],
+  "blog_page": {
+    "headline": "Digital Marketing <span class=\"neon-text\">Insights</span>",
+    "subheadline": "Strategies, tips, and guides to help you master SEO and Advertising in 2026."
+  },
+  "blog_posts": [
+    {
+      "slug": "hire-seo-ads-manager",
+      "title": "Hire SEO and Ads Freelancer for Small Business",
+      "date": "Feb 6, 2026",
+      "tag": "SEO Strategy",
+      "excerpt": "Small businesses often struggle with limited budgets. Learn why hiring a specialized freelancer can offer better ROI than a big agency.",
+      "bullets": [
+        "Cost Efficiency",
+        "Direct Communication",
+        "Tailored Strategies"
+      ],
+      "link": "hire-seo-ads-manager/hire-ads-SEO-manager.html",
+      "category": "SEO Strategy",
+      "meta_description": "Learn why hiring an SEO and Ads freelancer for your small business can offer better ROI than a big agency.",
+      "content": {
+        "intro": "Small businesses often struggle with limited budgets when it comes to digital marketing. Hiring a specialized freelancer can offer significantly better ROI than working with a large agency. Here's why.",
+        "sections": [
+          {
+            "heading": "Cost Efficiency",
+            "body": "Freelancers operate with lower overhead costs compared to agencies. You pay only for the work done, not for account managers, office rent, or agency markups. For small businesses, this can mean getting the same quality of work at 40-60% of the agency cost."
+          },
+          {
+            "heading": "Direct Communication",
+            "body": "When you hire a freelancer, you communicate directly with the person doing the work. No account managers, no miscommunication, no delays. This direct line ensures your vision is executed precisely and changes are implemented quickly."
+          },
+          {
+            "heading": "Tailored Strategies",
+            "body": "A freelancer invests in understanding your specific business, market, and goals. Unlike agencies that apply templated strategies across clients, a dedicated freelancer crafts a custom approach for your unique situation and competitive landscape."
+          }
+        ],
+        "faqs": [
+          {
+            "q": "How much does an SEO freelancer cost?",
+            "a": "SEO freelancer rates vary widely, typically ranging from $500 to $3000 per month depending on scope. This is generally 40-60% less than comparable agency retainers."
+          },
+          {
+            "q": "How do I know if a freelancer is qualified?",
+            "a": "Look for verifiable results, client testimonials, certifications (HubSpot, Google), and transparency about their methods. Ask to see case studies with real traffic data."
+          }
+        ],
+        "cta_text": "Ready to hire an SEO and Ads expert for your small business?",
+        "cta_button": "Get In Touch"
+      }
+    },
+    {
+      "slug": "seo-service-usa",
+      "title": "SEO Services for USA",
+      "date": "Feb 14, 2026",
+      "tag": "SEO & Ads",
+      "excerpt": "Expert SEO services for USA businesses. Boost your Google ranking with comprehensive SEO audits, high-quality backlinks, and targeted ad campaigns.",
+      "bullets": [
+        "SEO Audit",
+        "Backlinks",
+        "Ads Expert"
+      ],
+      "link": "hire-seo-ads-manager/seo-service.html",
+      "category": "SEO & Ads",
+      "meta_description": "Expert SEO services for USA businesses. Boost your Google ranking with comprehensive SEO audits, high-quality backlinks, and targeted ad campaigns.",
+      "content": {
+        "intro": "Are you struggling to get your business noticed online? In today's competitive digital landscape, having a beautiful website isn't enough. You need a strategic partner who understands the nuances of search engines and paid advertising.",
+        "sections": [
+          {
+            "heading": "Why You Need a Dedicated SEO Expert",
+            "body": "The digital world is noisy. To stand out, you need more than just generic marketing advice; you need a tailored strategy. Combining SEO with paid ads creates a synergy that maximizes your ROI. While SEO optimization builds long-term organic authority, paid ads provide immediate visibility."
+          },
+          {
+            "heading": "Comprehensive SEO Audit",
+            "body": "Before implementing any strategy, it's crucial to understand where you stand. A thorough SEO audit includes technical analysis, content evaluation, and competitor research. This reveals the hidden roadblocks preventing your site from ranking high and provides a clear roadmap for optimization."
+          },
+          {
+            "heading": "High-Quality Backlinks",
+            "body": "In the eyes of Google, authority is everything. Backlinks from reputable sites act as votes of confidence for your content. I focus on quality over quantity, ensuring your site gains trust and credibility in your specific niche through strategic outreach, guest posting, and broken link building."
+          }
+        ],
+        "faqs": [
+          {
+            "q": "How long does it take to see SEO results?",
+            "a": "SEO is a long-term strategy. Significant improvements in Google ranking typically take 3 to 6 months. However, the results are sustainable and compound over time."
+          },
+          {
+            "q": "Do I need both SEO and Google Ads?",
+            "a": "While you can use them separately, combining them is often the most effective strategy. Ads provide immediate traffic, while SEO optimization builds long-term, free traffic. Together, they dominate the search results page."
+          }
+        ],
+        "cta_text": "Ready to dominate US search results?",
+        "cta_button": "Start Your SEO Campaign"
+      }
+    },
+    {
+      "slug": "seo-vs-meta-ads",
+      "title": "SEO vs Meta Ads: Which One To Choose?",
+      "date": "Dec 20, 2025",
+      "tag": "Comparison",
+      "excerpt": "Should you invest in long-term organic search growth or immediate paid traffic? A breakdown of when to use each for your business.",
+      "bullets": [
+        "Long-term vs Short-term",
+        "Budget Considerations",
+        "When to Use Both"
+      ],
+      "link": "blog/seo-vs-meta-ads.html",
+      "category": "Comparison",
+      "meta_description": "SEO vs Meta Ads: Which digital marketing channel should you invest in? A comprehensive comparison to help you make the right choice for your business.",
+      "content": {
+        "intro": "One of the most common questions from business owners is whether to invest in SEO or Meta Ads. The honest answer: it depends on your goals, budget, and timeline. Here's a comprehensive breakdown.",
+        "sections": [
+          {
+            "heading": "SEO: The Long Game",
+            "body": "SEO builds organic search visibility over time. The results are sustainable and compound — once you rank, you receive free traffic indefinitely. The trade-off is time; meaningful results typically take 3-6 months. SEO is ideal for businesses with a longer time horizon and limited monthly ad budget."
+          },
+          {
+            "heading": "Meta Ads: Instant Visibility",
+            "body": "Meta Ads (Facebook and Instagram) provide immediate visibility and highly precise audience targeting. You can reach exactly the right person at the right time. The limitation is that traffic stops the moment your budget does. Meta Ads are ideal for product launches, promotions, and businesses that need results fast."
+          },
+          {
+            "heading": "The Winning Strategy: Use Both",
+            "body": "The most successful businesses use SEO and Meta Ads together. Use Meta Ads for immediate traffic and conversions while your SEO strategy builds. Over time, as organic traffic grows, you can reduce ad spend. This integrated approach maximizes visibility across all touchpoints in your customer's journey."
+          }
+        ],
+        "faqs": [
+          {
+            "q": "Which has a better ROI: SEO or Meta Ads?",
+            "a": "SEO typically delivers better long-term ROI as organic traffic has no ongoing cost per click. However, Meta Ads can deliver faster short-term ROI, especially for e-commerce with high-value products."
+          },
+          {
+            "q": "Can I start with a small budget for Meta Ads?",
+            "a": "Yes, you can start Meta Ads with as little as $5-10 per day. However, a minimum budget of $300-500 per month is recommended to gather meaningful data and see results."
+          }
+        ],
+        "cta_text": "Not sure which strategy is right for your business?",
+        "cta_button": "Let's Discuss Your Goals"
+      }
+    },
+    {
+      "slug": "janak-pokharel",
+      "title": "why janak why",
+      "date": "",
+      "tag": "",
+      "excerpt": "",
+      "bullets": [],
+      "link": "",
+      "category": "",
+      "meta_description": "",
+      "content": {
+        "intro": "",
+        "sections": [],
+        "faqs": [],
+        "cta_text": "",
+        "cta_button": ""
+      }
+    }
+  ],
+  "footer": {
+    "tagline": "Helping businesses grow through data-driven digital marketing strategies."
+  }
+}

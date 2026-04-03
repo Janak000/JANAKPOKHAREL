@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Manager | Janak Pokharel</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #050505;
+  --surface: #111;
+  --surface2: #1a1a1a;
+  --border: #2a2a2a;
+  --primary: #ccff00;
+  --primary-dim: rgba(204,255,0,0.08);
+  --text: #fff;
+  --muted: #888;
+  --danger: #ff4d4d;
+  --success: #4dff91;
+  --radius: 12px;
+  --font: 'Inter', sans-serif;
+  --display: 'Space Grotesk', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:var(--font); background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── Login Screen ── */
+#login-screen {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh;
+  background: radial-gradient(ellipse at 60% 20%, rgba(204,255,0,0.06) 0%, transparent 60%);
+}
+.login-box {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:3rem; width:100%; max-width:420px;
+  box-shadow:0 40px 80px rgba(0,0,0,0.6);
+}
+.login-box h1 {
+  font-family:var(--display); font-size:1.8rem; margin-bottom:0.5rem;
+}
+.login-box h1 span { color:var(--primary); }
+.login-box p { color:var(--muted); margin-bottom:2rem; font-size:0.9rem; }
+.login-box input {
+  width:100%; background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius); padding:0.875rem 1rem; color:var(--text);
+  font-family:var(--font); font-size:1rem; margin-bottom:1rem; outline:none;
+  transition:border-color 0.2s;
+}
+.login-box input:focus { border-color:var(--primary); }
+.login-box button {
+  width:100%; background:var(--primary); color:#000;
+  border:none; border-radius:var(--radius); padding:0.875rem;
+  font-weight:700; font-size:1rem; cursor:pointer; transition:opacity 0.2s;
+}
+.login-box button:hover { opacity:0.9; }
+#login-error {
+  color:var(--danger); font-size:0.875rem; margin-top:0.75rem; text-align:center; display:none;
+}
+
+/* ── App Shell ── */
+#app { display:none; }
+
+.app-header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(5,5,5,0.9); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:1rem 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.app-header h1 { font-family:var(--display); font-size:1.25rem; }
+.app-header h1 span { color:var(--primary); }
+.app-header-actions { display:flex; gap:0.75rem; align-items:center; }
+
+/* ── Layout ── */
+.app-body { display:flex; min-height:calc(100vh - 65px); }
+
+.sidebar {
+  width:220px; flex-shrink:0;
+  background:var(--surface); border-right:1px solid var(--border);
+  padding:1.5rem 1rem;
+  position:sticky; top:65px; height:calc(100vh - 65px); overflow-y:auto;
+}
+.sidebar-section { margin-bottom:1.5rem; }
+.sidebar-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--muted); padding:0 0.5rem;
+  margin-bottom:0.5rem;
+}
+.sidebar-btn {
+  display:flex; align-items:center; gap:0.6rem;
+  width:100%; text-align:left;
+  background:none; border:none; cursor:pointer;
+  color:var(--muted); font-family:var(--font); font-size:0.875rem;
+  padding:0.6rem 0.75rem; border-radius:8px;
+  transition:all 0.15s;
+}
+.sidebar-btn:hover { background:var(--surface2); color:var(--text); }
+.sidebar-btn.active { background:var(--primary-dim); color:var(--primary); font-weight:600; }
+.sidebar-btn .dot { width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
+
+/* ── Content Area ── */
+.content-area { flex:1; padding:2rem; max-width:900px; }
+
+.panel { display:none; }
+.panel.active { display:block; }
+
+.panel-header { margin-bottom:2rem; }
+.panel-header h2 { font-family:var(--display); font-size:1.5rem; margin-bottom:0.25rem; }
+.panel-header p { color:var(--muted); font-size:0.9rem; }
+
+/* ── Form Styles ── */
+.form-section {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:1.5rem; margin-bottom:1.5rem;
+}
+.form-section h3 {
+  font-size:0.9rem; font-weight:600; color:var(--primary);
+  margin-bottom:1.25rem; letter-spacing:0.05em; text-transform:uppercase;
+}
+.field { margin-bottom:1.25rem; }
+.field:last-child { margin-bottom:0; }
+.field label {
+  display:block; font-size:0.8rem; font-weight:600;
+  color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.04em; text-transform:uppercase;
+}
+.field input, .field textarea, .field select {
+  width:100%; background:var(--surface2); border:1px solid var(--border);
+  border-radius:8px; padding:0.75rem 1rem; color:var(--text);
+  font-family:var(--font); font-size:0.9rem; outline:none; transition:border-color 0.2s;
+  resize:vertical;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color:var(--primary); }
+.field textarea { min-height:100px; }
+.field-hint { font-size:0.75rem; color:var(--muted); margin-top:0.35rem; }
+
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+/* ── Buttons ── */
+.btn { display:inline-flex; align-items:center; gap:0.4rem; padding:0.6rem 1.25rem; border-radius:8px; font-family:var(--font); font-size:0.875rem; font-weight:600; cursor:pointer; border:none; transition:all 0.15s; }
+.btn-primary { background:var(--primary); color:#000; }
+.btn-primary:hover { opacity:0.9; box-shadow:0 0 20px rgba(204,255,0,0.3); }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-outline:hover { border-color:var(--text); background:rgba(255,255,255,0.04); }
+.btn-danger { background:transparent; border:1px solid var(--danger); color:var(--danger); }
+.btn-danger:hover { background:rgba(255,77,77,0.1); }
+.btn-success { background:var(--success); color:#000; }
+
+/* ── Repeater ── */
+.repeater-item {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius); padding:1.25rem; margin-bottom:1rem; position:relative;
+}
+.repeater-item-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:1rem; cursor:pointer;
+}
+.repeater-item-header h4 { font-size:0.95rem; font-weight:600; }
+.repeater-item-body { display:none; }
+.repeater-item-body.open { display:block; }
+.repeater-actions { display:flex; gap:0.5rem; margin-top:1rem; }
+
+/* ── Save Bar ── */
+.save-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:200;
+  background:rgba(17,17,17,0.95); backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  padding:1rem 2rem;
+  display:none; align-items:center; justify-content:space-between;
+}
+.save-bar.visible { display:flex; }
+.save-bar p { font-size:0.875rem; color:var(--muted); }
+
+/* ── Toast ── */
+#toast {
+  position:fixed; top:80px; right:20px; z-index:9999;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:1rem 1.5rem;
+  font-size:0.875rem; transform:translateX(200%);
+  transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);
+  display:flex; align-items:center; gap:0.75rem;
+}
+#toast.show { transform:translateX(0); }
+#toast.success { border-color:var(--success); }
+#toast.error { border-color:var(--danger); }
+
+/* ── Badge ── */
+.badge-count {
+  background:var(--primary); color:#000; border-radius:50%;
+  width:18px; height:18px; font-size:0.65rem; font-weight:700;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+
+@media (max-width:768px) {
+  .sidebar { width:180px; }
+  .field-row { grid-template-columns:1fr; }
+}
+@media (max-width:600px) {
+  .app-body { flex-direction:column; }
+  .sidebar { width:100%; height:auto; position:static; }
+  .content-area { padding:1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Janak<span>.</span>CMS</h1>
+    <p>Content Management System — Enter your password to continue.</p>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
+    <button onclick="login()">Sign In</button>
+    <div id="login-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+
+  <header class="app-header">
+    <h1>Janak<span>.</span> CMS</h1>
+    <div class="app-header-actions">
+      <a href="index.html" target="_blank" class="btn btn-outline" style="font-size:0.8rem;">← View Site</a>
+      <button class="btn btn-primary" onclick="triggerSave()">⬇ Download content.json</button>
+      <button class="btn btn-outline" onclick="logout()" style="font-size:0.8rem;">Log Out</button>
+    </div>
+  </header>
+
+  <div class="app-body">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Site</div>
+        <button class="sidebar-btn active" onclick="showPanel('site')"><span class="dot"></span> Site Settings</button>
+        <button class="sidebar-btn" onclick="showPanel('hero')"><span class="dot"></span> Hero</button>
+        <button class="sidebar-btn" onclick="showPanel('about')"><span class="dot"></span> About</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Content</div>
+        <button class="sidebar-btn" onclick="showPanel('services')"><span class="dot"></span> Services</button>
+        <button class="sidebar-btn" onclick="showPanel('experience')"><span class="dot"></span> Experience</button>
+        <button class="sidebar-btn" onclick="showPanel('education')"><span class="dot"></span> Education</button>
+        <button class="sidebar-btn" onclick="showPanel('certifications')"><span class="dot"></span> Certifications</button>
+        <button class="sidebar-btn" onclick="showPanel('projects')"><span class="dot"></span> Projects</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Blog</div>
+        <button class="sidebar-btn" onclick="showPanel('blog-settings')"><span class="dot"></span> Blog Page</button>
+        <button class="sidebar-btn" onclick="showPanel('blog-posts')"><span class="dot"></span> Blog Posts <span class="badge-count" id="post-count">0</span></button>
+        <button class="sidebar-btn" onclick="showPanel('new-post')"><span class="dot"></span> + New Post</button>
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="content-area" style="padding-bottom:5rem;">
+
+      <!-- ── SITE SETTINGS ── -->
+      <div class="panel active" id="panel-site">
+        <div class="panel-header">
+          <h2>Site Settings</h2>
+          <p>Global settings: name, contact info, social links, and analytics.</p>
+        </div>
+        <div class="form-section">
+          <h3>Identity</h3>
+          <div class="field-row">
+            <div class="field"><label>Site Name</label><input id="s-name" type="text"></div>
+            <div class="field"><label>Tagline</label><input id="s-tagline" type="text"></div>
+          </div>
+          <div class="field"><label>Site Description (meta)</label><textarea id="s-description" rows="3"></textarea></div>
+        </div>
+        <div class="form-section">
+          <h3>Contact Info</h3>
+          <div class="field-row">
+            <div class="field"><label>Email</label><input id="s-email" type="email"></div>
+            <div class="field"><label>Phone</label><input id="s-phone" type="text"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>WhatsApp Number (digits only)</label><input id="s-whatsapp" type="text"></div>
+            <div class="field"><label>Location</label><input id="s-location" type="text"></div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h3>Social Links</h3>
+          <div class="field"><label>Facebook URL</label><input id="s-facebook" type="url"></div>
+          <div class="field"><label>LinkedIn URL</label><input id="s-linkedin" type="url"></div>
+          <div class="field"><label>Canonical URL</label><input id="s-canonical" type="url"></div>
+        </div>
+        <div class="form-section">
+          <h3>Analytics</h3>
+          <div class="field-row">
+            <div class="field"><label>GTM Container ID</label><input id="s-gtmId" type="text" placeholder="GTM-XXXXXXX"></div>
+            <div class="field"><label>GA4 Measurement ID</label><input id="s-gaId" type="text" placeholder="G-XXXXXXXXXX"></div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h3>Footer</h3>
+          <div class="field"><label>Footer Tagline</label><input id="f-tagline" type="text"></div>
+          <div class="field"><label>Copyright Text</label><input id="s-copyright" type="text"></div>
+        </div>
+      </div>
+
+      <!-- ── HERO ── -->
+      <div class="panel" id="panel-hero">
+        <div class="panel-header">
+          <h2>Hero Section</h2>
+          <p>The first thing visitors see on your homepage.</p>
+        </div>
+        <div class="form-section">
+          <h3>Text Content</h3>
+          <div class="field"><label>Badge Text</label><input id="h-badge" type="text"></div>
+          <div class="field"><label>Eyebrow (small text above headline)</label><input id="h-eyebrow" type="text"></div>
+          <div class="field"><label>Headline (HTML allowed for &lt;span&gt;)</label><textarea id="h-headline" rows="2"></textarea><div class="field-hint">Use &lt;span class="neon-text"&gt;word&lt;/span&gt; to highlight a word in neon green.</div></div>
+          <div class="field"><label>Description (HTML allowed for links)</label><textarea id="h-description" rows="3"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Primary CTA Button Text</label><input id="h-cta_primary" type="text"></div>
+            <div class="field"><label>Secondary CTA Button Text</label><input id="h-cta_secondary" type="text"></div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h3>Badge / Stat</h3>
+          <div class="field-row">
+            <div class="field"><label>Stat Value</label><input id="h-stat_value" type="text" placeholder="12+"></div>
+            <div class="field"><label>Stat Label</label><input id="h-stat_label" type="text" placeholder="Happy Clients"></div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h3>Image</h3>
+          <div class="field-row">
+            <div class="field"><label>Image Path</label><input id="h-image" type="text" placeholder="image/janak.webp"></div>
+            <div class="field"><label>Image Alt Text</label><input id="h-image_alt" type="text"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ABOUT ── -->
+      <div class="panel" id="panel-about">
+        <div class="panel-header">
+          <h2>About Section</h2>
+          <p>Your bio, stats, and profile image.</p>
+        </div>
+        <div class="form-section">
+          <h3>Content</h3>
+          <div class="field"><label>Headline (HTML allowed)</label><textarea id="a-headline" rows="2"></textarea></div>
+          <div class="field"><label>Lead Paragraph</label><textarea id="a-lead" rows="3"></textarea></div>
+          <div class="field"><label>Body Paragraph</label><textarea id="a-body" rows="4"></textarea></div>
+        </div>
+        <div class="form-section">
+          <h3>Stats (3 items)</h3>
+          <div id="about-stats-fields"></div>
+        </div>
+        <div class="form-section">
+          <h3>Image</h3>
+          <div class="field"><label>Image Path</label><input id="a-image" type="text" placeholder="image/janak.webp"></div>
+        </div>
+      </div>
+
+      <!-- ── SERVICES ── -->
+      <div class="panel" id="panel-services">
+        <div class="panel-header">
+          <h2>Services</h2>
+          <p>Add, edit, or remove service cards.</p>
+        </div>
+        <div id="services-repeater"></div>
+        <button class="btn btn-outline" onclick="addService()" style="margin-top:0.5rem;">+ Add Service</button>
+      </div>
+
+      <!-- ── EXPERIENCE ── -->
+      <div class="panel" id="panel-experience">
+        <div class="panel-header">
+          <h2>Work Experience</h2>
+          <p>Your professional history.</p>
+        </div>
+        <div id="experience-repeater"></div>
+        <button class="btn btn-outline" onclick="addExperience()" style="margin-top:0.5rem;">+ Add Experience</button>
+      </div>
+
+      <!-- ── EDUCATION ── -->
+      <div class="panel" id="panel-education">
+        <div class="panel-header">
+          <h2>Education</h2>
+        </div>
+        <div id="education-repeater"></div>
+        <button class="btn btn-outline" onclick="addEducation()" style="margin-top:0.5rem;">+ Add Education</button>
+      </div>
+
+      <!-- ── CERTIFICATIONS ── -->
+      <div class="panel" id="panel-certifications">
+        <div class="panel-header">
+          <h2>Certifications</h2>
+        </div>
+        <div id="certifications-repeater"></div>
+        <button class="btn btn-outline" onclick="addCert()" style="margin-top:0.5rem;">+ Add Certification</button>
+      </div>
+
+      <!-- ── PROJECTS ── -->
+      <div class="panel" id="panel-projects">
+        <div class="panel-header">
+          <h2>Projects / Portfolio</h2>
+          <p>Featured work displayed on the homepage.</p>
+        </div>
+        <div id="projects-repeater"></div>
+        <button class="btn btn-outline" onclick="addProject()" style="margin-top:0.5rem;">+ Add Project</button>
+      </div>
+
+      <!-- ── BLOG SETTINGS ── -->
+      <div class="panel" id="panel-blog-settings">
+        <div class="panel-header">
+          <h2>Blog Page Settings</h2>
+        </div>
+        <div class="form-section">
+          <h3>Page Header</h3>
+          <div class="field"><label>Headline (HTML allowed)</label><textarea id="bp-headline" rows="2"></textarea></div>
+          <div class="field"><label>Subheadline</label><input id="bp-subheadline" type="text"></div>
+        </div>
+      </div>
+
+      <!-- ── BLOG POSTS ── -->
+      <div class="panel" id="panel-blog-posts">
+        <div class="panel-header">
+          <h2>Blog Posts</h2>
+          <p>All articles. Click a post to expand and edit.</p>
+        </div>
+        <div id="posts-repeater"></div>
+      </div>
+
+      <!-- ── NEW POST ── -->
+      <div class="panel" id="panel-new-post">
+        <div class="panel-header">
+          <h2>New Blog Post</h2>
+          <p>Fill in the details. The post will appear on the blog page immediately after you download and deploy content.json.</p>
+        </div>
+        <div class="form-section">
+          <h3>Post Details</h3>
+          <div class="field-row">
+            <div class="field"><label>Slug (URL identifier, lowercase, no spaces)</label><input id="np-slug" type="text" placeholder="my-new-article"></div>
+            <div class="field"><label>Date</label><input id="np-date" type="text" placeholder="Jan 1, 2026"></div>
+          </div>
+          <div class="field"><label>Title</label><input id="np-title" type="text"></div>
+          <div class="field"><label>Tag / Category</label><input id="np-tag" type="text" placeholder="SEO Strategy"></div>
+          <div class="field"><label>Excerpt (short summary for cards)</label><textarea id="np-excerpt" rows="3"></textarea></div>
+          <div class="field"><label>Bullet Points (comma separated, shown on blog card)</label><input id="np-bullets" type="text" placeholder="Point 1, Point 2, Point 3"></div>
+          <div class="field"><label>Article Link (relative path)</label><input id="np-link" type="text" placeholder="blog/my-new-article.html"></div>
+          <div class="field"><label>Meta Description</label><textarea id="np-meta" rows="2"></textarea></div>
+        </div>
+        <div class="form-section">
+          <h3>Article Content</h3>
+          <div class="field"><label>Intro Paragraph</label><textarea id="np-intro" rows="4"></textarea></div>
+          <div id="np-sections">
+            <div class="repeater-item">
+              <div class="field"><label>Section Heading</label><input type="text" class="np-sec-heading"></div>
+              <div class="field"><label>Section Body</label><textarea class="np-sec-body" rows="4"></textarea></div>
+            </div>
+          </div>
+          <button class="btn btn-outline" onclick="addNpSection()" style="margin-top:0.5rem;">+ Add Section</button>
+        </div>
+        <div class="form-section">
+          <h3>FAQ (optional)</h3>
+          <div id="np-faqs">
+            <div class="repeater-item">
+              <div class="field"><label>Question</label><input type="text" class="np-faq-q"></div>
+              <div class="field"><label>Answer</label><textarea class="np-faq-a" rows="3"></textarea></div>
+            </div>
+          </div>
+          <button class="btn btn-outline" onclick="addNpFaq()" style="margin-top:0.5rem;">+ Add FAQ</button>
+        </div>
+        <div class="form-section">
+          <h3>CTA</h3>
+          <div class="field-row">
+            <div class="field"><label>CTA Text</label><input id="np-cta_text" type="text"></div>
+            <div class="field"><label>CTA Button Label</label><input id="np-cta_button" type="text"></div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="addPost()" style="margin-top:1rem;">Add Post to Content</button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Save Bar -->
+  <div class="save-bar visible" id="save-bar">
+    <p>Changes are stored in memory. Download content.json and push to GitHub to publish.</p>
+    <button class="btn btn-primary" onclick="downloadContent()">⬇ Download content.json</button>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast">
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+// ─── Auth ────────────────────────────────────────────────────────────────────
+const PASS = 'janak2025admin'; // Change this!
+
+function login() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadContent();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+function logout() {
+  window.location.reload();
+}
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+let DATA = {};
+
+function loadContent() {
+  fetch('content.json')
+    .then(r => r.json())
+    .then(d => {
+      DATA = JSON.parse(JSON.stringify(d));
+      populateAll();
+      toast('Content loaded ✓', 'success');
+    })
+    .catch(() => {
+      toast('Could not load content.json', 'error');
+    });
+}
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+
+  document.querySelectorAll('.sidebar-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${name}'`)) {
+      b.classList.add('active');
+    }
+  });
+}
+
+// ─── Populate All ────────────────────────────────────────────────────────────
+function populateAll() {
+  populateSite();
+  populateHero();
+  populateAbout();
+  populateRepeater('services', renderService);
+  populateRepeater('experience', renderExp, 'experience');
+  populateRepeater('education', renderEdu, 'education');
+  populateRepeater('certifications', renderCert, 'certifications');
+  populateRepeater('projects', renderProject, 'projects');
+  populateBlogSettings();
+  populatePosts();
+  document.getElementById('post-count').textContent = DATA.blog_posts ? DATA.blog_posts.length : 0;
+}
+
+function bind(id, path) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const parts = path.split('.');
+  let val = DATA;
+  parts.forEach(p => { if (val) val = val[p]; });
+  el.value = val !== undefined ? val : '';
+  el.addEventListener('input', () => {
+    let obj = DATA;
+    for (let i = 0; i < parts.length - 1; i++) obj = obj[parts[i]];
+    obj[parts[parts.length - 1]] = el.value;
+  });
+}
+
+// ─── Site ─────────────────────────────────────────────────────────────────
+function populateSite() {
+  ['name','tagline','description','email','phone','whatsapp','location','facebook','linkedin','canonical','gtmId','gaId','copyright'].forEach(k => bind('s-'+k, 'site.'+k));
+  bind('f-tagline', 'footer.tagline');
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────
+function populateHero() {
+  ['badge','eyebrow','headline','description','cta_primary','cta_secondary','stat_value','stat_label','image','image_alt'].forEach(k => bind('h-'+k, 'hero.'+k));
+}
+
+// ─── About ────────────────────────────────────────────────────────────────
+function populateAbout() {
+  bind('a-headline', 'about.headline');
+  bind('a-lead', 'about.lead');
+  bind('a-body', 'about.body');
+  bind('a-image', 'about.image');
+
+  const statsEl = document.getElementById('about-stats-fields');
+  if (statsEl && DATA.about.stats) {
+    statsEl.innerHTML = DATA.about.stats.map((s, i) => `
+      <div class="field-row" style="margin-bottom:0.75rem;">
+        <div class="field"><label>Value ${i+1}</label>
+          <input type="text" value="${s.value}" onchange="DATA.about.stats[${i}].value=this.value">
+        </div>
+        <div class="field"><label>Label ${i+1}</label>
+          <input type="text" value="${s.label}" onchange="DATA.about.stats[${i}].label=this.value">
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+// ─── Generic Repeater ─────────────────────────────────────────────────────
+function populateRepeater(key, renderFn, dataKey) {
+  const el = document.getElementById((dataKey || key) + '-repeater');
+  if (!el) return;
+  const arr = DATA[dataKey || key] || [];
+  el.innerHTML = arr.map((item, i) => renderFn(item, i)).join('');
+}
+
+function toggleItem(btn) {
+  const body = btn.closest('.repeater-item').querySelector('.repeater-item-body');
+  body.classList.toggle('open');
+  btn.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+function removeItem(key, i) {
+  DATA[key].splice(i, 1);
+  populateAll();
+  toast('Item removed', 'success');
+}
+
+// ─── Services ─────────────────────────────────────────────────────────────
+function renderService(s, i) {
+  return `
+    <div class="repeater-item">
+      <div class="repeater-item-header" onclick="toggleItem(this.querySelector('button'))">
+        <h4>${s.title || 'Service ' + (i+1)}</h4>
+        <button class="btn btn-outline" style="padding:0.25rem 0.6rem; font-size:0.8rem;">▼</button>
+      </div>
+      <div class="repeater-item-body">
+        <div class="field"><label>Icon (Lucide name)</label>
+          <input type="text" value="${s.icon || ''}" oninput="DATA.services[${i}].icon=this.value" placeholder="search">
+        </div>
+        <div class="field"><label>Title</label>
+          <input type="text" value="${s.title || ''}" oninput="DATA.services[${i}].title=this.value;this.closest('.repeater-item').querySelector('h4').textContent=this.value">
+        </div>
+        <div class="field"><label>Description</label>
+          <textarea oninput="DATA.services[${i}].description=this.value">${s.description || ''}</textarea>
+        </div>
+        <div class="field"><label>Tags (comma separated)</label>
+          <input type="text" value="${(s.tags||[]).join(', ')}" oninput="DATA.services[${i}].tags=this.value.split(',').map(t=>t.trim())">
+        </div>
+        <div class="repeater-actions">
+          <button class="btn btn-danger" onclick="removeItem('services',${i})">Remove</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addService() {
+  DATA.services.push({ icon:'star', title:'New Service', description:'', tags:[] });
+  populateRepeater('services', renderService);
+}
+
+// ─── Experience ───────────────────────────────────────────────────────────
+function renderExp(e, i) {
+  return `
+    <div class="repeater-item">
+      <div class="repeater-item-header" onclick="toggleItem(this.querySelector('button'))">
+        <h4>${e.title || 'Experience ' + (i+1)}</h4>
+        <button class="btn btn-outline" style="padding:0.25rem 0.6rem; font-size:0.8rem;">▼</button>
+      </div>
+      <div class="repeater-item-body">
+        <div class="field-row">
+          <div class="field"><label>Job Title</label><input type="text" value="${e.title||''}" oninput="DATA.experience[${i}].title=this.value;this.closest('.repeater-item').querySelector('h4').textContent=this.value"></div>
+          <div class="field"><label>Company</label><input type="text" value="${e.company||''}" oninput="DATA.experience[${i}].company=this.value"></div>
+        </div>
+        <div class="field"><label>Period</label><input type="text" value="${e.period||''}" oninput="DATA.experience[${i}].period=this.value"></div>
+        <div class="field"><label>Bullet Points (one per line)</label>
+          <textarea rows="4" oninput="DATA.experience[${i}].points=this.value.split('\\n').filter(l=>l.trim())">${(e.points||[]).join('\n')}</textarea>
+        </div>
+        <div class="repeater-actions">
+          <button class="btn btn-danger" onclick="removeItem('experience',${i})">Remove</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addExperience() {
+  DATA.experience.push({ title:'New Role', company:'', period:'', points:[] });
+  populateRepeater('experience', renderExp, 'experience');
+}
+
+// ─── Education ────────────────────────────────────────────────────────────
+function renderEdu(e, i) {
+  return `
+    <div class="repeater-item">
+      <div class="repeater-item-header" onclick="toggleItem(this.querySelector('button'))">
+        <h4>${e.degree || 'Education ' + (i+1)}</h4>
+        <button class="btn btn-outline" style="padding:0.25rem 0.6rem; font-size:0.8rem;">▼</button>
+      </div>
+      <div class="repeater-item-body">
+        <div class="field-row">
+          <div class="field"><label>Degree</label><input type="text" value="${e.degree||''}" oninput="DATA.education[${i}].degree=this.value;this.closest('.repeater-item').querySelector('h4').textContent=this.value"></div>
+          <div class="field"><label>School</label><input type="text" value="${e.school||''}" oninput="DATA.education[${i}].school=this.value"></div>
+        </div>
+        <div class="field"><label>Period</label><input type="text" value="${e.period||''}" oninput="DATA.education[${i}].period=this.value"></div>
+        <div class="field"><label>Points (one per line)</label>
+          <textarea rows="3" oninput="DATA.education[${i}].points=this.value.split('\\n').filter(l=>l.trim())">${(e.points||[]).join('\n')}</textarea>
+        </div>
+        <div class="repeater-actions">
+          <button class="btn btn-danger" onclick="removeItem('education',${i})">Remove</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addEducation() {
+  DATA.education.push({ degree:'New Degree', school:'', period:'', points:[] });
+  populateRepeater('education', renderEdu, 'education');
+}
+
+// ─── Certifications ───────────────────────────────────────────────────────
+function renderCert(c, i) {
+  return `
+    <div class="repeater-item">
+      <div class="repeater-item-header" onclick="toggleItem(this.querySelector('button'))">
+        <h4>${c.title || 'Cert ' + (i+1)}</h4>
+        <button class="btn btn-outline" style="padding:0.25rem 0.6rem; font-size:0.8rem;">▼</button>
+      </div>
+      <div class="repeater-item-body">
+        <div class="field-row">
+          <div class="field"><label>Title</label><input type="text" value="${c.title||''}" oninput="DATA.certifications[${i}].title=this.value;this.closest('.repeater-item').querySelector('h4').textContent=this.value"></div>
+          <div class="field"><label>Issuer</label><input type="text" value="${c.issuer||''}" oninput="DATA.certifications[${i}].issuer=this.value"></div>
+        </div>
+        <div class="field"><label>Points (one per line)</label>
+          <textarea rows="3" oninput="DATA.certifications[${i}].points=this.value.split('\\n').filter(l=>l.trim())">${(c.points||[]).join('\n')}</textarea>
+        </div>
+        <div class="repeater-actions">
+          <button class="btn btn-danger" onclick="removeItem('certifications',${i})">Remove</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addCert() {
+  DATA.certifications.push({ title:'New Cert', issuer:'', points:[] });
+  populateRepeater('certifications', renderCert, 'certifications');
+}
+
+// ─── Projects ─────────────────────────────────────────────────────────────
+function renderProject(p, i) {
+  return `
+    <div class="repeater-item">
+      <div class="repeater-item-header" onclick="toggleItem(this.querySelector('button'))">
+        <h4>${p.title || 'Project ' + (i+1)}</h4>
+        <button class="btn btn-outline" style="padding:0.25rem 0.6rem; font-size:0.8rem;">▼</button>
+      </div>
+      <div class="repeater-item-body">
+        <div class="field-row">
+          <div class="field"><label>Title</label><input type="text" value="${p.title||''}" oninput="DATA.projects[${i}].title=this.value;this.closest('.repeater-item').querySelector('h4').textContent=this.value"></div>
+          <div class="field"><label>Result Badge</label><input type="text" value="${p.result||''}" oninput="DATA.projects[${i}].result=this.value" placeholder="+250% Traffic"></div>
+        </div>
+        <div class="field"><label>Description</label><textarea oninput="DATA.projects[${i}].description=this.value">${p.description||''}</textarea></div>
+        <div class="field-row">
+          <div class="field"><label>Tags (comma separated)</label><input type="text" value="${(p.tags||[]).join(', ')}" oninput="DATA.projects[${i}].tags=this.value.split(',').map(t=>t.trim())"></div>
+          <div class="field"><label>Link</label><input type="text" value="${p.link||'#'}" oninput="DATA.projects[${i}].link=this.value"></div>
+        </div>
+        <div class="field">
+          <label>Locked (show lock icon instead of content)</label>
+          <select onchange="DATA.projects[${i}].locked=this.value==='true'">
+            <option value="false" ${!p.locked ? 'selected' : ''}>No (show content)</option>
+            <option value="true" ${p.locked ? 'selected' : ''}>Yes (show lock)</option>
+          </select>
+        </div>
+        <div class="repeater-actions">
+          <button class="btn btn-danger" onclick="removeItem('projects',${i})">Remove</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addProject() {
+  DATA.projects.push({ title:'New Project', description:'', tags:[], result:'', locked:false, link:'#' });
+  populateRepeater('projects', renderProject, 'projects');
+}
+
+// ─── Blog Settings ────────────────────────────────────────────────────────
+function populateBlogSettings() {
+  bind('bp-headline', 'blog_page.headline');
+  bind('bp-subheadline', 'blog_page.subheadline');
+}
+
+// ─── Blog Posts ───────────────────────────────────────────────────────────
+function populatePosts() {
+  const el = document.getElementById('posts-repeater');
+  if (!el || !DATA.blog_posts) return;
+  el.innerHTML = DATA.blog_posts.map((p, i) => `
+    <div class="repeater-item">
+      <div class="repeater-item-header" onclick="toggleItem(this.querySelector('button'))">
+        <h4>${p.title}</h4>
+        <button class="btn btn-outline" style="padding:0.25rem 0.6rem; font-size:0.8rem;">▼</button>
+      </div>
+      <div class="repeater-item-body">
+        <div class="field-row">
+          <div class="field"><label>Slug</label><input type="text" value="${p.slug||''}" oninput="DATA.blog_posts[${i}].slug=this.value"></div>
+          <div class="field"><label>Date</label><input type="text" value="${p.date||''}" oninput="DATA.blog_posts[${i}].date=this.value"></div>
+        </div>
+        <div class="field"><label>Title</label><input type="text" value="${p.title||''}" oninput="DATA.blog_posts[${i}].title=this.value;this.closest('.repeater-item').querySelector('h4').textContent=this.value"></div>
+        <div class="field-row">
+          <div class="field"><label>Tag</label><input type="text" value="${p.tag||''}" oninput="DATA.blog_posts[${i}].tag=this.value"></div>
+          <div class="field"><label>Link (relative path)</label><input type="text" value="${p.link||''}" oninput="DATA.blog_posts[${i}].link=this.value"></div>
+        </div>
+        <div class="field"><label>Excerpt</label><textarea oninput="DATA.blog_posts[${i}].excerpt=this.value">${p.excerpt||''}</textarea></div>
+        <div class="field"><label>Bullet Points (comma separated)</label>
+          <input type="text" value="${(p.bullets||[]).join(', ')}" oninput="DATA.blog_posts[${i}].bullets=this.value.split(',').map(t=>t.trim())">
+        </div>
+        <div class="field"><label>Meta Description</label><textarea rows="2" oninput="DATA.blog_posts[${i}].meta_description=this.value">${p.meta_description||''}</textarea></div>
+        ${p.content ? `
+        <div class="field"><label>Intro</label><textarea rows="4" oninput="DATA.blog_posts[${i}].content.intro=this.value">${p.content.intro||''}</textarea></div>
+        <div class="field-hint" style="margin-bottom:1rem;">Edit full article content in the downloaded JSON file or re-create the post using "New Post".</div>
+        ` : ''}
+        <div class="repeater-actions">
+          <button class="btn btn-danger" onclick="removePost(${i})">Delete Post</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function removePost(i) {
+  DATA.blog_posts.splice(i, 1);
+  populatePosts();
+  document.getElementById('post-count').textContent = DATA.blog_posts.length;
+  toast('Post deleted', 'success');
+}
+
+// ─── New Post ─────────────────────────────────────────────────────────────
+function addNpSection() {
+  const el = document.getElementById('np-sections');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <div class="field"><label>Section Heading</label><input type="text" class="np-sec-heading"></div>
+    <div class="field"><label>Section Body</label><textarea class="np-sec-body" rows="4"></textarea></div>
+    <button class="btn btn-danger" style="margin-top:0.5rem;" onclick="this.parentElement.remove()">Remove</button>
+  `;
+  el.appendChild(div);
+}
+
+function addNpFaq() {
+  const el = document.getElementById('np-faqs');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <div class="field"><label>Question</label><input type="text" class="np-faq-q"></div>
+    <div class="field"><label>Answer</label><textarea class="np-faq-a" rows="3"></textarea></div>
+    <button class="btn btn-danger" style="margin-top:0.5rem;" onclick="this.parentElement.remove()">Remove</button>
+  `;
+  el.appendChild(div);
+}
+
+function addPost() {
+  const slug = document.getElementById('np-slug').value.trim();
+  if (!slug) { toast('Slug is required', 'error'); return; }
+
+  const sections = Array.from(document.querySelectorAll('.np-sec-heading')).map((h, i) => ({
+    heading: h.value,
+    body: document.querySelectorAll('.np-sec-body')[i].value
+  })).filter(s => s.heading);
+
+  const faqs = Array.from(document.querySelectorAll('.np-faq-q')).map((q, i) => ({
+    q: q.value,
+    a: document.querySelectorAll('.np-faq-a')[i].value
+  })).filter(f => f.q);
+
+  const bullets = document.getElementById('np-bullets').value
+    .split(',').map(b => b.trim()).filter(Boolean);
+
+  const post = {
+    slug,
+    title: document.getElementById('np-title').value,
+    date: document.getElementById('np-date').value,
+    tag: document.getElementById('np-tag').value,
+    excerpt: document.getElementById('np-excerpt').value,
+    bullets,
+    link: document.getElementById('np-link').value,
+    category: document.getElementById('np-tag').value,
+    meta_description: document.getElementById('np-meta').value,
+    content: {
+      intro: document.getElementById('np-intro').value,
+      sections,
+      faqs,
+      cta_text: document.getElementById('np-cta_text').value,
+      cta_button: document.getElementById('np-cta_button').value
+    }
+  };
+
+  DATA.blog_posts.push(post);
+  document.getElementById('post-count').textContent = DATA.blog_posts.length;
+  populatePosts();
+  toast('Post added! Download content.json to publish.', 'success');
+  showPanel('blog-posts');
+}
+
+// ─── Save / Download ──────────────────────────────────────────────────────
+function triggerSave() { downloadContent(); }
+
+function downloadContent() {
+  const json = JSON.stringify(DATA, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'content.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('content.json downloaded! Push to GitHub to publish.', 'success');
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────
+function toast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  m.textContent = msg;
+  t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+</script>
+</body>
+</html>

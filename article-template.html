@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Article | Janak Pokharel</title>
+
+<link rel="icon" type="image/webp" href="../image/favicon.webp">
+<meta name="description" id="meta-description" content="">
+
+<!-- Open Graph -->
+<meta property="og:title" id="og-title" content="">
+<meta property="og:description" id="og-description" content="">
+<meta property="og:image" content="../image/janakOG.webp">
+<meta property="og:type" content="article">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+<!-- Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<!-- data-slug MUST match the "slug" field in content.json blog_posts -->
+<body data-page="article" data-slug="REPLACE_SLUG_HERE">
+
+<!-- Mobile Menu -->
+<div class="mobile-menu">
+  <div class="mobile-close"><i data-lucide="x" width="32" height="32"></i></div>
+  <a href="../index.html">Home</a>
+  <a href="../index.html#about">About</a>
+  <a href="../index.html#services">Services</a>
+  <a href="../index.html#projects">Projects</a>
+  <a href="../blog.html" class="active">Articles</a>
+  <a href="../index.html#contact">Contact</a>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="nav-flex">
+      <a href="../index.html" class="logo">Janak<span>.</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#services">Services</a>
+        <a href="../index.html#projects">Work</a>
+        <a href="../blog.html" class="active">Articles</a>
+      </nav>
+      <div class="header-actions">
+        <a href="../index.html#contact" class="cta-btn">Let's Talk</a>
+        <div class="menu-toggle"><i data-lucide="menu" width="28" height="28"></i></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Article -->
+<article style="padding-top: 120px; padding-bottom: 4rem;">
+  <div class="container" style="max-width: 860px;">
+
+    <!-- Breadcrumb -->
+    <nav style="margin-bottom: 2rem; font-size: 0.875rem; color: var(--text-muted);">
+      <a href="../index.html" style="color: var(--text-muted);">Home</a>
+      <span style="margin: 0 0.5rem; color: var(--border-color);">/</span>
+      <a href="../blog.html" style="color: var(--text-muted);">Articles</a>
+      <span style="margin: 0 0.5rem; color: var(--border-color);">/</span>
+      <span id="article-category" style="color: var(--primary-color);"></span>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="article-header">
+      <div class="article-category" id="article-category-tag"></div>
+      <h1 class="article-title" id="article-title">Loading article...</h1>
+      <div class="article-meta">
+        <span id="article-date"></span>
+        <span>·</span>
+        <span>By <a href="../index.html" style="color: var(--primary-color);">Janak Pokharel</a></span>
+      </div>
+    </header>
+
+    <!-- Article Body -->
+    <div class="article-content" id="article-body">
+      <p style="color: var(--text-muted);">Loading content...</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo">Janak<span>.</span></a>
+        <p id="footer-tagline">Helping businesses grow through data-driven digital marketing strategies.</p>
+        <div class="social-links">
+          <a id="social-facebook" href="https://www.facebook.com/janak.pokharel7788" target="_blank" style="color:#fff;"><i data-lucide="facebook"></i></a>
+          <a id="social-linkedin" href="https://www.linkedin.com/in/janak-pokharel" target="_blank" style="color:#fff;"><i data-lucide="linkedin"></i></a>
+          <a id="social-whatsapp" href="https://wa.me/+9779840033771" target="_blank" style="color:#fff;"><i data-lucide="message-circle"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul class="footer-links">
+          <li><a href="../index.html#services">SEO Optimization</a></li>
+          <li><a href="../index.html#services">Meta Ads</a></li>
+          <li><a href="../index.html#services">Content Strategy</a></li>
+          <li><a href="../index.html#services">Technical SEO</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul class="footer-links">
+          <li><a href="../blog.html">Blog &amp; Articles</a></li>
+          <li><a href="../index.html#projects">Case Studies</a></li>
+          <li><a href="../index.html#about">Community</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><a id="footer-email" href="#">email</a></li>
+          <li><a id="footer-phone" href="#">phone</a></li>
+          <li id="footer-location"></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p id="footer-copyright">&copy; 2024 Janak Pokharel. All rights reserved.</p>
+      <p class="stat-label">Designed &amp; Developed by Janak.</p>
+    </div>
+  </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+<script src="../script.js"></script>
+<script src="../cms.js"></script>
+<script>
+  // Sync breadcrumb and tag
+  document.addEventListener('DOMContentLoaded', function () {
+    // Wait for cms.js to populate
+    setTimeout(function () {
+      const cat = document.getElementById('article-category-tag');
+      const breadCat = document.getElementById('article-category');
+      if (cat && breadCat) breadCat.textContent = cat.textContent;
+    }, 500);
+  });
+</script>
+</body>
+</html>
