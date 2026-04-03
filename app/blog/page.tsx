@@ -21,7 +21,7 @@ export default async function BlogPage() {
     <section className="section-block page-offset">
       <div className="shell">
         <div className="section-heading">
-          <p className="section-kicker">Blogs</p>
+          <p className="section-kicker">{blog.kicker}</p>
           <h1>{blog.title}</h1>
           <p className="section-copy">{blog.description}</p>
         </div>
@@ -35,7 +35,7 @@ export default async function BlogPage() {
               <h2>{post.title}</h2>
               <p>{post.excerpt}</p>
               <Link className="text-link" href={`/blog/${post.slug}`}>
-                Open blog
+                {blog.openPostLabel}
               </Link>
             </article>
           ))}

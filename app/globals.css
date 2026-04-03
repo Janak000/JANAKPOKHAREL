@@ -1,15 +1,16 @@
 :root {
   --font-body: "Segoe UI", "Helvetica Neue", sans-serif;
-  --font-display: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
-  --bg: #050505;
-  --panel: rgba(17, 17, 17, 0.88);
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --line: rgba(255, 255, 255, 0.1);
-  --text: #f4f4f0;
-  --muted: #b6b6ad;
-  --accent: #d2ff3f;
-  --accent-glow: rgba(210, 255, 63, 0.18);
-  --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  --font-display: "Avenir Next", "Segoe UI", sans-serif;
+  --bg: #08111d;
+  --panel: rgba(12, 23, 39, 0.88);
+  --panel-border: rgba(151, 185, 214, 0.16);
+  --line: rgba(151, 185, 214, 0.16);
+  --text: #f3f8fc;
+  --muted: #9ab0c4;
+  --accent: #4dd0a8;
+  --accent-glow: rgba(77, 208, 168, 0.2);
+  --accent-strong: #7de2c2;
+  --shadow: 0 30px 80px rgba(2, 10, 19, 0.45);
   --radius-lg: 32px;
   --radius-md: 22px;
   --radius-sm: 16px;
@@ -26,9 +27,9 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top right, rgba(210, 255, 63, 0.1), transparent 28%),
-    radial-gradient(circle at left 20%, rgba(77, 107, 255, 0.06), transparent 24%),
-    linear-gradient(180deg, #060606 0%, #090909 100%);
+    radial-gradient(circle at top right, rgba(77, 208, 168, 0.14), transparent 28%),
+    radial-gradient(circle at left 20%, rgba(92, 142, 255, 0.12), transparent 24%),
+    linear-gradient(180deg, #08111d 0%, #0c1726 100%);
   color: var(--text);
   font-family: var(--font-body), sans-serif;
   min-width: 320px;
@@ -63,8 +64,8 @@ pre {
   top: 0;
   z-index: 20;
   backdrop-filter: blur(18px);
-  background: rgba(5, 5, 5, 0.78);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(8, 17, 29, 0.78);
+  border-bottom: 1px solid rgba(151, 185, 214, 0.08);
 }
 
 .nav-shell {
@@ -117,13 +118,13 @@ pre {
 .header-cta,
 .button-primary {
   background: var(--accent);
-  color: #111;
+  color: #07201a;
   box-shadow: 0 10px 25px var(--accent-glow);
 }
 
 .button-secondary {
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text);
 }
 
@@ -171,7 +172,7 @@ pre {
 
 .availability-pill {
   display: inline-flex;
-  border: 1px solid rgba(210, 255, 63, 0.3);
+  border: 1px solid rgba(77, 208, 168, 0.3);
   color: var(--accent);
   padding: 0.65rem 1rem;
   border-radius: 999px;
@@ -262,8 +263,8 @@ li {
   gap: 0.9rem;
   padding: 1rem 1.15rem;
   border-radius: 20px;
-  background: rgba(8, 8, 8, 0.92);
-  border: 1px solid rgba(210, 255, 63, 0.15);
+  background: rgba(6, 18, 29, 0.94);
+  border: 1px solid rgba(77, 208, 168, 0.18);
 }
 
 .floating-stat strong,
@@ -343,21 +344,31 @@ li {
 .contact-list div {
   padding: 1rem 1.15rem;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .mini-stat {
   min-width: 160px;
 }
 
-.logo-grid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+.logo-marquee {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent, white 8%, white 92%, transparent);
+}
+
+.logo-track {
+  display: flex;
+  gap: 1.2rem;
+  width: max-content;
+  animation: marquee 28s linear infinite;
 }
 
 .logo-card {
   border-radius: 20px;
   padding: 1.1rem;
-  min-height: 120px;
+  min-height: 108px;
+  min-width: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -389,7 +400,7 @@ li {
 .project-image-wrap {
   border-radius: 24px;
   background:
-    radial-gradient(circle at top, rgba(210, 255, 63, 0.1), transparent 58%),
+    radial-gradient(circle at top, rgba(77, 208, 168, 0.12), transparent 58%),
     rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
   min-height: 220px;
@@ -430,8 +441,8 @@ li {
 .project-result {
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
-  border: 1px solid rgba(210, 255, 63, 0.18);
-  background: rgba(210, 255, 63, 0.08);
+  border: 1px solid rgba(77, 208, 168, 0.22);
+  background: rgba(77, 208, 168, 0.08);
   color: var(--text);
   font-size: 0.85rem;
   white-space: nowrap;
@@ -475,8 +486,8 @@ li {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(210, 255, 63, 0.08);
-  border: 1px solid rgba(210, 255, 63, 0.14);
+  background: rgba(77, 208, 168, 0.08);
+  border: 1px solid rgba(77, 208, 168, 0.14);
   margin-bottom: 1.2rem;
 }
 
@@ -496,7 +507,7 @@ li {
 }
 
 .timeline-item {
-  border-left: 1px solid rgba(210, 255, 63, 0.25);
+  border-left: 1px solid rgba(77, 208, 168, 0.25);
   padding-left: 1rem;
 }
 
@@ -553,8 +564,8 @@ li {
   flex-direction: column;
   justify-content: center;
   background:
-    radial-gradient(circle at top, rgba(64, 255, 142, 0.08), transparent 50%),
-    linear-gradient(180deg, rgba(12, 29, 17, 0.95), rgba(8, 16, 11, 0.95));
+    radial-gradient(circle at top, rgba(77, 208, 168, 0.12), transparent 50%),
+    linear-gradient(180deg, rgba(12, 36, 29, 0.95), rgba(8, 23, 20, 0.95));
 }
 
 .whatsapp-icon {
@@ -607,7 +618,7 @@ li {
 }
 
 .faq-item {
-  border-left: 2px solid rgba(210, 255, 63, 0.35);
+  border-left: 2px solid rgba(77, 208, 168, 0.35);
   padding-left: 1rem;
 }
 
@@ -618,8 +629,8 @@ li {
 
 .article-cta {
   padding: 2rem;
-  border: 1px solid rgba(210, 255, 63, 0.18);
-  background: linear-gradient(160deg, rgba(210, 255, 63, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(77, 208, 168, 0.18);
+  background: linear-gradient(160deg, rgba(77, 208, 168, 0.1), rgba(255, 255, 255, 0.02));
 }
 
 .admin-shell code {
@@ -664,8 +675,8 @@ li {
 .admin-chip {
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
-  border: 1px solid rgba(210, 255, 63, 0.2);
-  background: rgba(210, 255, 63, 0.07);
+  border: 1px solid rgba(77, 208, 168, 0.2);
+  background: rgba(77, 208, 168, 0.07);
   color: var(--text);
   font-size: 0.9rem;
 }
@@ -679,7 +690,8 @@ li {
 }
 
 .admin-input,
-.admin-editor {
+.admin-editor,
+.rich-editor .ProseMirror {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
@@ -705,13 +717,96 @@ li {
 }
 
 .admin-input:focus,
-.admin-editor:focus {
-  outline: 1px solid rgba(210, 255, 63, 0.35);
-  border-color: rgba(210, 255, 63, 0.35);
+.admin-editor:focus,
+.rich-editor .ProseMirror:focus {
+  outline: 1px solid rgba(77, 208, 168, 0.35);
+  border-color: rgba(77, 208, 168, 0.35);
 }
 
 .admin-save-row {
   justify-content: space-between;
+}
+
+.admin-section-card,
+.admin-repeater-card,
+.admin-blog-post,
+.rich-editor-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.admin-tab {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.admin-tab.is-active {
+  background: var(--accent);
+  color: #07201a;
+  border-color: transparent;
+}
+
+.rich-toolbar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.rich-editor .ProseMirror {
+  min-height: 300px;
+  padding: 1rem;
+}
+
+.rich-copy {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.rich-copy h2,
+.rich-copy h3 {
+  margin-bottom: 0.5rem;
+}
+
+.rich-copy p,
+.rich-copy ul,
+.rich-copy ol {
+  margin: 0;
+}
+
+.rich-copy ul,
+.rich-copy ol {
+  padding-left: 1.2rem;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (max-width: 1080px) {
@@ -721,8 +816,7 @@ li {
   .project-showcase,
   .resume-grid,
   .contact-grid,
-  .footer-grid,
-  .logo-grid {
+  .footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -739,7 +833,6 @@ li {
   .resume-grid,
   .contact-grid,
   .footer-grid,
-  .logo-grid,
   .admin-grid {
     grid-template-columns: 1fr;
   }
@@ -754,6 +847,10 @@ li {
   .admin-save-row {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
   }
 }
 

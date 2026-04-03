@@ -49,7 +49,7 @@ export default async function HomePage() {
         <div className="shell">
           <div className="bento-grid about-grid">
             <article className="panel panel-large">
-              <p className="section-kicker">About</p>
+              <p className="section-kicker">{content.about.kicker}</p>
               <h2>{content.about.title}</h2>
               <p className="section-copy">{content.about.intro}</p>
               <p className="section-copy">{content.about.body}</p>
@@ -76,16 +76,24 @@ export default async function HomePage() {
           </div>
 
           <div className="section-heading">
-            <p className="section-kicker">Brands</p>
+            <p className="section-kicker">{content.about.organizationsKicker}</p>
             <h2>{content.about.organizationsTitle}</h2>
           </div>
 
-          <div className="logo-grid">
-            {content.about.organizations.map((org) => (
-              <article key={org.name} className="logo-card">
-                <img alt={org.alt} src={org.logo} />
-              </article>
-            ))}
+          <div className="logo-marquee" aria-label={content.about.organizationsTitle}>
+            <div className="logo-track">
+              {[...content.about.organizations, ...content.about.organizations].map((org, index) => (
+                <article key={`${org.name}-${index}`} className="logo-card">
+                  {org.href ? (
+                    <a href={org.href} rel="noreferrer" target="_blank">
+                      <img alt={org.alt} src={org.logo} />
+                    </a>
+                  ) : (
+                    <img alt={org.alt} src={org.logo} />
+                  )}
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -93,12 +101,12 @@ export default async function HomePage() {
       <section className="section-block" id="services">
         <div className="shell">
           <div className="section-heading">
-            <p className="section-kicker">Services</p>
-            <h2>Core expertise built for growth</h2>
+            <p className="section-kicker">{content.services.kicker}</p>
+            <h2>{content.services.title}</h2>
           </div>
 
           <div className="cards-grid">
-            {content.services.map((service) => (
+            {content.services.items.map((service) => (
               <article key={service.title} className="panel">
                 <div className="service-icon">
                   <AppIcon name={service.icon} />
@@ -114,7 +122,7 @@ export default async function HomePage() {
       <section className="section-block" id="projects">
         <div className="shell">
           <div className="section-heading">
-            <p className="section-kicker">Portfolio</p>
+            <p className="section-kicker">{content.projects.kicker}</p>
             <h2>{content.projects.title}</h2>
             <p className="section-copy">{content.projects.intro}</p>
           </div>
@@ -171,10 +179,16 @@ export default async function HomePage() {
       </section>
 
       <section className="section-block">
-        <div className="shell resume-grid">
-          <div>
-            <p className="section-kicker">Experience</p>
-            <div className="timeline-list">
+        <div className="shell">
+          <div className="section-heading">
+            <p className="section-kicker">{content.resume.kicker}</p>
+            <h2>{content.site.name} Resume Snapshot</h2>
+          </div>
+
+          <div className="resume-grid">
+            <div>
+              <p className="section-kicker">{content.resume.experienceTitle}</p>
+              <div className="timeline-list">
               {content.resume.experience.map((item) => (
                 <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
                   <h3>{item.title}</h3>
@@ -195,10 +209,10 @@ export default async function HomePage() {
                 </article>
               ))}
             </div>
-          </div>
+            </div>
 
-          <div>
-            <p className="section-kicker">Education</p>
+            <div>
+              <p className="section-kicker">{content.resume.educationTitle}</p>
             <div className="timeline-list">
               {content.resume.education.map((item) => (
                 <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
@@ -212,10 +226,10 @@ export default async function HomePage() {
                 </article>
               ))}
             </div>
-          </div>
+            </div>
 
-          <div>
-            <p className="section-kicker">Certifications</p>
+            <div>
+              <p className="section-kicker">{content.resume.certificationsTitle}</p>
             <div className="timeline-list">
               {content.resume.certifications.map((item) => (
                 <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
@@ -229,6 +243,7 @@ export default async function HomePage() {
                 </article>
               ))}
             </div>
+            </div>
           </div>
         </div>
       </section>
@@ -237,11 +252,11 @@ export default async function HomePage() {
         <div className="shell">
           <div className="section-heading section-heading-inline">
             <div>
-              <p className="section-kicker">Blogs</p>
-              <h2>Latest insights</h2>
+              <p className="section-kicker">{content.blog.kicker}</p>
+              <h2>{content.blog.listingTitle}</h2>
             </div>
             <Link className="button button-secondary" href="/blog">
-              View All
+              {content.blog.viewAllLabel}
             </Link>
           </div>
 
@@ -254,7 +269,7 @@ export default async function HomePage() {
                 <h3>{post.title}</h3>
                 <p>{post.excerpt}</p>
                 <Link className="text-link" href={`/blog/${post.slug}`}>
-                  Read blog
+                  {content.blog.readMoreLabel}
                 </Link>
               </article>
             ))}
@@ -265,7 +280,7 @@ export default async function HomePage() {
       <section className="section-block" id="contact">
         <div className="shell contact-grid">
           <div>
-            <p className="section-kicker">Contact</p>
+            <p className="section-kicker">{content.contact.kicker}</p>
             <h2>{content.contact.title}</h2>
             <p className="section-copy">{content.contact.intro}</p>
 
@@ -295,7 +310,7 @@ export default async function HomePage() {
               rel="noreferrer"
               target="_blank"
             >
-              Message on WhatsApp
+              {content.contact.whatsappButtonLabel}
             </a>
           </article>
         </div>

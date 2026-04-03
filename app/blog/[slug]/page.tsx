@@ -16,7 +16,8 @@ type PostPageProps = {
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  const { site } = await getSiteContent();
+  const content = await getSiteContent();
+  const { site } = content;
 
   if (!post) {
     return {
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       type: "article",
       images: [
         {
-          url: "/image/janakOG.webp",
+          url: site.ogImage,
           width: 1200,
           height: 630,
           alt: post.title
@@ -49,6 +50,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
+  const content = await getSiteContent();
   const post = await getPostBySlug(slug);
 
   if (!post) {
@@ -59,7 +61,7 @@ export default async function PostPage({ params }: PostPageProps) {
     <section className="section-block page-offset">
       <article className="shell article-shell">
         <Link className="back-link" href="/blog">
-          Back to blogs
+          {content.blog.backToBlogLabel}
         </Link>
 
         <header className="article-header">
@@ -71,17 +73,10 @@ export default async function PostPage({ params }: PostPageProps) {
           <p className="article-intro">{post.heroIntro}</p>
         </header>
 
-        <div className="article-body">
-          {post.sections.map((section) => (
-            <section key={section.heading} className="article-section">
-              <h2>{section.heading}</h2>
-              <p>{section.body}</p>
-            </section>
-          ))}
-        </div>
+        <div className="article-body rich-copy" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
 
         <section className="faq-block">
-          <h2>Frequently asked questions</h2>
+          <h2>{content.blog.faqTitle}</h2>
           <div className="faq-list">
             {post.faqs.map((faq) => (
               <article key={faq.question} className="faq-item">

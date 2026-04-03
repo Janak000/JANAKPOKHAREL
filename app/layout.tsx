@@ -19,14 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${site.name}`
     },
     description: site.description,
-    keywords: [
-      "Janak Pokharel",
-      "SEO expert Nepal",
-      "Meta Ads manager",
-      "Google Ads specialist",
-      "technical SEO",
-      "digital marketing consultant"
-    ],
+    keywords: site.keywords,
     alternates: {
       canonical: site.url
     },
@@ -37,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: site.name,
       images: [
         {
-          url: "/image/janakOG.webp",
+          url: site.ogImage,
           width: 1200,
           height: 630,
           alt: `${site.name} portfolio`
@@ -50,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: `${site.name} | ${site.role}`,
       description: site.description,
-      images: ["/image/janakOG.webp"]
+      images: [site.ogImage]
     },
     robots: {
       index: true,

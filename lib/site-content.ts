@@ -1,10 +1,10 @@
 import { cache } from "react";
 
 import { defaultSiteContent } from "@/data/site-content";
-import { readGithubSiteContent } from "@/lib/github-cms";
+import { readSupabaseSiteContent } from "@/lib/supabase-content";
 
 const loadSiteContent = cache(async () => {
-  return (await readGithubSiteContent()) ?? defaultSiteContent;
+  return (await readSupabaseSiteContent()) ?? defaultSiteContent;
 });
 
 export async function getSiteContent() {

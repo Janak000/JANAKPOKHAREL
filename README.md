@@ -1,60 +1,54 @@
 # Janak Pokharel Portfolio
 
-This project is now structured as a Vercel-ready Next.js app using the App Router and a GitHub-backed JSON CMS source.
+This portfolio now uses a Supabase-backed CMS instead of the previous GitHub JSON workflow. The public site reads dynamic content from Supabase, and `/admin` edits the same data model through a field-based CMS with a rich text editor for blog posts.
 
 ## Stack
 
 - Next.js App Router
 - TypeScript
-- Node.js deployment on Vercel
-- GitHub-backed JSON CMS through `data/site-content.json`
+- Supabase for content storage
+- TipTap editor for blog CMS authoring
 
-## Edit content
+## What is dynamic
 
-The live CMS content file is `data/site-content.json`. These sections are editable from `/admin`:
+The Supabase-backed model covers:
 
-- `site`: SEO metadata, contact info, domain settings
-- `navigation`: top navigation links
-- `hero`: homepage hero copy and CTAs
-- `about`: intro, stats, highlight cards, organization logos
-- `services`: expertise cards
-- `projects`: locked portfolio messaging
-- `resume`: experience, education, certifications
-- `blog`: blog page intro and all article content
-- `contact`: contact section and WhatsApp card
+- personal details, SEO metadata, navigation CTA, footer labels
+- hero copy, image, stat, and CTAs
+- about copy, stats, highlight cards, and associated organizations
+- expertise/services section heading and cards
+- projects section copy, cards, tags, and locked CTA
+- resume section labels, experience, education, and certifications
+- blog landing copy, blog post metadata, FAQs, and rich text article bodies
+- contact section copy and WhatsApp CTA
 
-## Required environment variables
+## Supabase setup
 
-Add these in Vercel Project Settings and locally in `.env.local` if you want the admin CMS to save changes:
+1. Create a Supabase project.
+2. Run [supabase/schema.sql](/C:/Users/janak/Downloads/portfolio-main%20(2)/JANAKPOKHAREL-git/supabase/schema.sql) in the SQL editor.
+3. Seed each singleton table with one row, or save from `/admin` after adding environment variables.
+4. Add yourself to `public.admin_users` if you want direct authenticated table writes later.
 
-- `GITHUB_REPO_OWNER`: GitHub username or organization
-- `GITHUB_REPO_NAME`: repository name
-- `GITHUB_REPO_BRANCH`: branch to update, usually `main`
-- `GITHUB_CONTENT_PATH`: content file path, default `data/site-content.json`
-- `GITHUB_TOKEN`: GitHub personal access token with repository contents access
-- `CMS_ADMIN_SECRET`: private password required to save from `/admin`
+The app still falls back to the bundled local content file when Supabase is not configured, so local development stays unblocked.
+
+## Environment variables
+
+Copy `.env.example` into `.env.local` and fill in:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `CMS_ADMIN_SECRET`
 
 ## Run locally
 
-Next.js official docs currently list a minimum Node.js version of `20.9` for modern installs.
+1. Install dependencies with `npm install`.
+2. Start development with `npm run dev`.
+3. Open `http://localhost:3000`.
+4. Open `http://localhost:3000/admin` for the CMS.
 
-1. Install Node.js 20.9 or newer.
-2. Install dependencies with `npm install`.
-3. Start development with `npm run dev`.
-4. Open `http://localhost:3000`.
-5. Open `http://localhost:3000/admin` to edit content.
+## Notes
 
-## Deploy to Vercel
-
-1. Push this folder to GitHub.
-2. Import the repo into Vercel.
-3. Add the environment variables from `.env.example`.
-4. Add your custom domain `janakpokharel.com.np` in the Vercel project settings.
-5. The website reads the latest JSON content from GitHub on each request, so CMS edits appear without waiting for a manual redeploy.
-
-## How the CMS works
-
-- `/admin` loads the current content JSON.
-- Saving from `/admin` commits the updated JSON file back to your GitHub repository.
-- The public site reads that same JSON from GitHub on Vercel, so homepage sections, blog pages, footer, and metadata stay in sync.
-- If GitHub CMS variables are missing, the app safely falls back to the bundled local JSON file.
+- Public reads use the Supabase anon key and RLS-safe `select` policies.
+- Admin saves go through the Next.js API route using the service role key plus `CMS_ADMIN_SECRET`.
+- Blog bodies are stored as `content_html`, which the CMS edits with TipTap and the public site renders directly.

@@ -18,7 +18,7 @@ export async function SiteFooter() {
         </div>
 
         <div>
-          <h3>Explore</h3>
+          <h3>{site.footer.exploreTitle}</h3>
           <ul className="footer-links">
             {navigation.map((item) => (
               <li key={item.href}>
@@ -29,7 +29,7 @@ export async function SiteFooter() {
         </div>
 
         <div>
-          <h3>Contact</h3>
+          <h3>{site.footer.contactTitle}</h3>
           <ul className="footer-links">
             <li>
               <a href={`mailto:${site.email}`}>{site.email}</a>
@@ -43,7 +43,7 @@ export async function SiteFooter() {
       </div>
 
       <div className="shell footer-meta">
-        <p>{site.name}. All rights reserved.</p>
+        <p>{site.footer.copyrightText}</p>
         <p>{contact.footerNote}</p>
       </div>
     </footer>

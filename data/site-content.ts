@@ -43,6 +43,7 @@ export type Organization = {
   name: string;
   logo: string;
   alt: string;
+  href?: string;
 };
 
 export type Service = {
@@ -73,11 +74,6 @@ export type Project = {
   locked?: boolean;
 };
 
-export type BlogSection = {
-  heading: string;
-  body: string;
-};
-
 export type BlogFaq = {
   question: string;
   answer: string;
@@ -92,7 +88,7 @@ export type BlogPost = {
   metaDescription: string;
   readTime: string;
   heroIntro: string;
-  sections: BlogSection[];
+  contentHtml: string;
   faqs: BlogFaq[];
   cta: {
     title: string;
@@ -117,6 +113,89 @@ export type SiteContent = {
     linkedin: string;
     gtmId: string;
     gaId: string;
+    ogImage: string;
+    keywords: string[];
+    navigationCta: {
+      label: string;
+      href: string;
+    };
+    footer: {
+      exploreTitle: string;
+      contactTitle: string;
+      copyrightText: string;
+    };
+  };
+  navigation: NavItem[];
+  hero: HeroContent;
+  about: {
+    kicker: string;
+    title: string;
+    intro: string;
+    body: string;
+    stats: SimpleStat[];
+    highlightCards: HighlightCard[];
+    organizationsKicker: string;
+    organizationsTitle: string;
+    organizations: Organization[];
+  };
+  services: {
+    kicker: string;
+    title: string;
+    items: Service[];
+  };
+  projects: {
+    kicker: string;
+    title: string;
+    intro: string;
+    lockedTitle: string;
+    lockedDescription: string;
+    lockedCtaLabel: string;
+    lockedCtaHref: string;
+    items: Project[];
+  };
+  resume: {
+    kicker: string;
+    experienceTitle: string;
+    educationTitle: string;
+    certificationsTitle: string;
+    experience: ResumeItem[];
+    education: ResumeItem[];
+    certifications: ResumeItem[];
+  };
+  blog: {
+    kicker: string;
+    title: string;
+    listingTitle: string;
+    description: string;
+    viewAllLabel: string;
+    readMoreLabel: string;
+    openPostLabel: string;
+    backToBlogLabel: string;
+    faqTitle: string;
+    posts: BlogPost[];
+  };
+  contact: {
+    kicker: string;
+    title: string;
+    intro: string;
+    whatsappTitle: string;
+    whatsappDescription: string;
+    whatsappButtonLabel: string;
+    footerNote: string;
+  };
+};
+
+type LegacySection = {
+  heading: string;
+  body: string;
+};
+
+type LegacyContent = {
+  site: SiteContent["site"] & {
+    keywords?: string[];
+    ogImage?: string;
+    navigationCta?: SiteContent["site"]["navigationCta"];
+    footer?: SiteContent["site"]["footer"];
   };
   navigation: NavItem[];
   hero: HeroContent;
@@ -129,33 +208,128 @@ export type SiteContent = {
     organizationsTitle: string;
     organizations: Organization[];
   };
-  services: Service[];
-  projects: {
-    title: string;
-    intro: string;
-    lockedTitle: string;
-    lockedDescription: string;
-    lockedCtaLabel: string;
-    lockedCtaHref: string;
+  services: Service[] | SiteContent["services"];
+  projects: Omit<SiteContent["projects"], "kicker"> & {
     items: Project[];
   };
-  resume: {
-    experience: ResumeItem[];
-    education: ResumeItem[];
-    certifications: ResumeItem[];
-  };
+  resume: Omit<SiteContent["resume"], "kicker" | "experienceTitle" | "educationTitle" | "certificationsTitle">;
   blog: {
     title: string;
     description: string;
-    posts: BlogPost[];
+    posts: Array<
+      Omit<BlogPost, "contentHtml"> & {
+        contentHtml?: string;
+        sections?: LegacySection[];
+      }
+    >;
   };
-  contact: {
-    title: string;
-    intro: string;
-    whatsappTitle: string;
-    whatsappDescription: string;
-    footerNote: string;
+  contact: SiteContent["contact"] & {
+    kicker?: string;
+    whatsappButtonLabel?: string;
   };
 };
 
-export const defaultSiteContent = siteContentData as SiteContent;
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function legacySectionsToHtml(sections: LegacySection[] | undefined) {
+  if (!sections || sections.length === 0) {
+    return "<p>Add your article content here.</p>";
+  }
+
+  return sections
+    .map(
+      (section) =>
+        `<section><h2>${escapeHtml(section.heading)}</h2><p>${escapeHtml(section.body)}</p></section>`
+    )
+    .join("");
+}
+
+function migrateLegacySiteContent(legacyData: LegacyContent): SiteContent {
+  const site = legacyData.site;
+  const services =
+    Array.isArray(legacyData.services) ?
+      {
+        kicker: "Services",
+        title: "Core expertise built for growth",
+        items: legacyData.services
+      }
+    : legacyData.services;
+
+  return {
+    site: {
+      ...site,
+      ogImage: site.ogImage ?? "/image/janakOG.webp",
+      keywords: site.keywords ?? [
+        "Janak Pokharel",
+        "SEO expert Nepal",
+        "Meta Ads manager",
+        "Google Ads specialist",
+        "technical SEO",
+        "digital marketing consultant"
+      ],
+      navigationCta: site.navigationCta ?? {
+        label: "Let's Talk",
+        href: "/#contact"
+      },
+      footer: site.footer ?? {
+        exploreTitle: "Explore",
+        contactTitle: "Contact",
+        copyrightText: `${site.name}. All rights reserved.`
+      }
+    },
+    navigation: legacyData.navigation,
+    hero: legacyData.hero,
+    about: {
+      kicker: "About",
+      title: legacyData.about.title,
+      intro: legacyData.about.intro,
+      body: legacyData.about.body,
+      stats: legacyData.about.stats,
+      highlightCards: legacyData.about.highlightCards,
+      organizationsKicker: "Brands",
+      organizationsTitle: legacyData.about.organizationsTitle,
+      organizations: legacyData.about.organizations
+    },
+    services,
+    projects: {
+      kicker: "Portfolio",
+      ...legacyData.projects
+    },
+    resume: {
+      kicker: "Resume",
+      experienceTitle: "Experience",
+      educationTitle: "Education",
+      certificationsTitle: "Certifications",
+      ...legacyData.resume
+    },
+    blog: {
+      kicker: "Blogs",
+      title: legacyData.blog.title,
+      listingTitle: "Latest insights",
+      description: legacyData.blog.description,
+      viewAllLabel: "View All",
+      readMoreLabel: "Read blog",
+      openPostLabel: "Open blog",
+      backToBlogLabel: "Back to blogs",
+      faqTitle: "Frequently asked questions",
+      posts: legacyData.blog.posts.map((post) => ({
+        ...post,
+        contentHtml: post.contentHtml ?? legacySectionsToHtml(post.sections)
+      }))
+    },
+    contact: {
+      ...legacyData.contact,
+      kicker: legacyData.contact.kicker ?? "Contact",
+      whatsappButtonLabel: legacyData.contact.whatsappButtonLabel ?? "Message on WhatsApp"
+    }
+  };
+}
+
+export const defaultSiteContent = migrateLegacySiteContent(siteContentData as LegacyContent);

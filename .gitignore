@@ -7,3 +7,6 @@ coverage
 *.tsbuildinfo
 .env.local
 .env
+.agents
+.claude
+skills-lock.json

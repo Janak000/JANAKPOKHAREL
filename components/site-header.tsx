@@ -22,8 +22,8 @@ export async function SiteHeader() {
           ))}
         </nav>
 
-        <Link className="header-cta" href="/#contact">
-          Let&apos;s Talk
+        <Link className="header-cta" href={site.navigationCta.href as Route}>
+          {site.navigationCta.label}
         </Link>
       </div>
     </header>

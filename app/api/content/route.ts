@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 import type { SiteContent } from "@/data/site-content";
-import { getBundledSiteContent, getCmsStatus, isSiteContent, readGithubSiteContent, writeGithubSiteContent } from "@/lib/github-cms";
+import { defaultSiteContent } from "@/data/site-content";
+import { getCmsStatus, readSupabaseSiteContent, writeSupabaseSiteContent } from "@/lib/supabase-content";
 
 export const runtime = "nodejs";
 
@@ -10,9 +11,18 @@ type UpdateContentRequest = {
   secret?: string;
 };
 
+function isSiteContent(value: unknown): value is SiteContent {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const requiredKeys = ["site", "navigation", "hero", "about", "services", "projects", "resume", "blog", "contact"];
+  return requiredKeys.every((key) => key in value);
+}
+
 export async function GET() {
-  const remoteContent = await readGithubSiteContent();
-  const content = remoteContent ?? getBundledSiteContent();
+  const remoteContent = await readSupabaseSiteContent();
+  const content = remoteContent ?? defaultSiteContent;
 
   return NextResponse.json({
     content,
@@ -32,11 +42,10 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Submitted content is invalid." }, { status: 400 });
     }
 
-    const result = await writeGithubSiteContent(body.content, body.secret);
+    const result = await writeSupabaseSiteContent(body.content, body.secret);
 
     return NextResponse.json({
-      message: "Content saved. Your live site will read the new version on the next request.",
-      commitUrl: result.commitUrl,
+      message: "Content saved to Supabase.",
       content: result.content
     });
   } catch (error) {
