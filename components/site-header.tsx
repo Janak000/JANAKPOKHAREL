@@ -1,4 +1,18 @@
-import type { Route } from "next";
+import { SiteHeaderClient } from "@/components/site-header-client";
+import { getSiteContent } from "@/lib/site-content";
+
+export async function SiteHeader() {
+  const { navigation, site } = await getSiteContent();
+
+  return (
+    <SiteHeaderClient
+      navigation={navigation}
+      siteName={site.shortName}
+      ctaHref={site.navigationCta.href}
+      ctaLabel={site.navigationCta.label}
+    />
+  );
+}import type { Route } from "next";
 import Link from "next/link";
 
 import { getSiteContent } from "@/lib/site-content";
