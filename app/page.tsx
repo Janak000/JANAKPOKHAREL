@@ -1,4 +1,355 @@
 import type { Route } from "next";
+import Image from "next/image";
+import Link from "next/link";
+
+import { AppIcon } from "@/components/icon";
+import { getSiteContent } from "@/lib/site-content";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const content = await getSiteContent();
+  const latestPosts = content.blog.posts.slice(0, 3);
+
+  return (
+    <>
+      <section className="hero-section" id="home" aria-labelledby="hero-heading">
+        <div className="shell hero-grid">
+          <div className="hero-copy">
+            <div className="availability-pill" role="status">{content.hero.availability}</div>
+            <p className="eyebrow">{content.hero.eyebrow}</p>
+            <h1 id="hero-heading">{content.hero.headline}</h1>
+            <p className="lede">{content.hero.description}</p>
+
+            <div className="cta-row">
+              <Link className="button button-primary" href={content.hero.primaryCta.href as Route}>
+                {content.hero.primaryCta.label}
+              </Link>
+              <Link className="button button-secondary" href={content.hero.secondaryCta.href as Route}>
+                {content.hero.secondaryCta.label}
+              </Link>
+            </div>
+          </div>
+
+          <div className="hero-visual">
+            <div className="hero-image-card">
+              <Image
+                alt={content.hero.image.alt}
+                className="hero-image"
+                src={content.hero.image.src}
+                width={1066}
+                height={1600}
+                priority
+                quality={85}
+              />
+            </div>
+            <div className="floating-stat" aria-label={`${content.hero.stat.value} ${content.hero.stat.label}`}>
+              <AppIcon className="stat-icon" name="trending-up" aria-hidden="true" />
+              <div>
+                <strong>{content.hero.stat.value}</strong>
+                <span>{content.hero.stat.label}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-block" id="about" aria-labelledby="about-heading">
+        <div className="shell">
+          <div className="bento-grid about-grid">
+            <article className="panel panel-large">
+              <p className="section-kicker">{content.about.kicker}</p>
+              <h2 id="about-heading">{content.about.title}</h2>
+              <p className="section-copy">{content.about.intro}</p>
+              <p className="section-copy">{content.about.body}</p>
+
+              <div className="stat-grid">
+                {content.about.stats.map((item) => (
+                  <div key={item.label} className="mini-stat">
+                    <strong>{item.value}</strong>
+                    <span>{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </article>
+
+            <div className="stacked-cards">
+              {content.about.highlightCards.map((item) => (
+                <article key={item.title} className="panel panel-tall">
+                  <AppIcon className="card-icon" name={item.icon} aria-hidden="true" />
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="section-heading">
+            <p className="section-kicker">{content.about.organizationsKicker}</p>
+            <h2>{content.about.organizationsTitle}</h2>
+          </div>
+
+          <div className="logo-marquee" aria-label={content.about.organizationsTitle} role="region">
+            <div className="logo-track" aria-hidden="true">
+              {[...content.about.organizations, ...content.about.organizations].map((org, index) => (
+                <article key={`${org.name}-${index}`} className="logo-card">
+                  {org.href ? (
+                    <a href={org.href} rel="noopener noreferrer" target="_blank" aria-label={org.name}>
+                      <Image
+                        alt={org.alt}
+                        src={org.logo}
+                        width={160}
+                        height={60}
+                        loading="lazy"
+                        style={{ objectFit: "contain", maxHeight: "60px", width: "100%" }}
+                      />
+                    </a>
+                  ) : (
+                    <Image
+                      alt={org.alt}
+                      src={org.logo}
+                      width={160}
+                      height={60}
+                      loading="lazy"
+                      style={{ objectFit: "contain", maxHeight: "60px", width: "100%" }}
+                    />
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-block" id="services" aria-labelledby="services-heading">
+        <div className="shell">
+          <div className="section-heading">
+            <p className="section-kicker">{content.services.kicker}</p>
+            <h2 id="services-heading">{content.services.title}</h2>
+          </div>
+
+          <div className="cards-grid">
+            {content.services.items.map((service) => (
+              <article key={service.title} className="panel">
+                <div className="service-icon" aria-hidden="true">
+                  <AppIcon name={service.icon} />
+                </div>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-block" id="projects" aria-labelledby="projects-heading">
+        <div className="shell">
+          <div className="section-heading">
+            <p className="section-kicker">{content.projects.kicker}</p>
+            <h2 id="projects-heading">{content.projects.title}</h2>
+            <p className="section-copy">{content.projects.intro}</p>
+          </div>
+
+          <div className="project-showcase">
+            {content.projects.items.map((project) => (
+              <article key={project.title} className="panel project-card">
+                <div className="project-image-wrap">
+                  <Image
+                    alt={project.image.alt}
+                    src={project.image.src}
+                    width={400}
+                    height={170}
+                    loading="lazy"
+                    style={{ objectFit: "contain", maxHeight: "170px", width: "100%" }}
+                  />
+                </div>
+
+                <div className="project-card-body">
+                  <p className="project-meta">{project.category}</p>
+
+                  <div className="project-heading">
+                    <h3>{project.title}</h3>
+                    {project.result ? <span className="project-result">{project.result}</span> : null}
+                  </div>
+
+                  <p>{project.description}</p>
+
+                  <div className="project-tags">
+                    {project.tags.map((tag) => (
+                      <span key={tag} className="project-tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {project.href ? (
+                    <Link className="text-link" href={project.href as Route}>
+                      {project.ctaLabel ?? "View project"}
+                    </Link>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <article className="panel project-note">
+            <div className="project-note-copy">
+              <AppIcon className="lock-icon" name="lock" aria-hidden="true" />
+              <div>
+                <h3>{content.projects.lockedTitle}</h3>
+                <p>{content.projects.lockedDescription}</p>
+              </div>
+            </div>
+
+            <Link className="button button-primary" href={content.projects.lockedCtaHref as Route}>
+              {content.projects.lockedCtaLabel}
+            </Link>
+          </article>
+        </div>
+      </section>
+
+      <section className="section-block" aria-labelledby="resume-heading">
+        <div className="shell">
+          <div className="section-heading">
+            <p className="section-kicker">{content.resume.kicker}</p>
+            <h2 id="resume-heading">{content.site.name} Resume Snapshot</h2>
+          </div>
+
+          <div className="resume-grid">
+            <div>
+              <p className="section-kicker">{content.resume.experienceTitle}</p>
+              <div className="timeline-list">
+              {content.resume.experience.map((item) => (
+                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
+                  <h3>{item.title}</h3>
+                  <p className="timeline-meta">
+                    {item.href ? (
+                      <a href={item.href} rel="noopener noreferrer" target="_blank">
+                        {item.subtitle}
+                      </a>
+                    ) : (
+                      item.subtitle
+                    )}
+                  </p>
+                  <ul>
+                    {item.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+            </div>
+
+            <div>
+              <p className="section-kicker">{content.resume.educationTitle}</p>
+            <div className="timeline-list">
+              {content.resume.education.map((item) => (
+                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
+                  <h3>{item.title}</h3>
+                  <p className="timeline-meta">{item.subtitle}</p>
+                  <ul>
+                    {item.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+            </div>
+
+            <div>
+              <p className="section-kicker">{content.resume.certificationsTitle}</p>
+            <div className="timeline-list">
+              {content.resume.certifications.map((item) => (
+                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
+                  <h3>{item.title}</h3>
+                  <p className="timeline-meta">{item.subtitle}</p>
+                  <ul>
+                    {item.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-block" id="blog" aria-labelledby="blog-heading">
+        <div className="shell">
+          <div className="section-heading section-heading-inline">
+            <div>
+              <p className="section-kicker">{content.blog.kicker}</p>
+              <h2 id="blog-heading">{content.blog.listingTitle}</h2>
+            </div>
+            <Link className="button button-secondary" href="/blog">
+              {content.blog.viewAllLabel}
+            </Link>
+          </div>
+
+          <div className="cards-grid">
+            {latestPosts.map((post) => (
+              <article key={post.slug} className="panel blog-card">
+                <p className="blog-meta">
+                  <time dateTime={post.date}>{post.date}</time> · {post.readTime}
+                </p>
+                <h3>{post.title}</h3>
+                <p>{post.excerpt}</p>
+                <Link className="text-link" href={`/blog/${post.slug}`}>
+                  {content.blog.readMoreLabel}
+                  <span className="visually-hidden"> – {post.title}</span>
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-block" id="contact" aria-labelledby="contact-heading">
+        <div className="shell contact-grid">
+          <div>
+            <p className="section-kicker">{content.contact.kicker}</p>
+            <h2 id="contact-heading">{content.contact.title}</h2>
+            <p className="section-copy">{content.contact.intro}</p>
+
+            <div className="contact-list">
+              <a href={`mailto:${content.site.email}`} aria-label={`Email ${content.site.name}`}>
+                <AppIcon name="mail" aria-hidden="true" />
+                <span>{content.site.email}</span>
+              </a>
+              <a href={`tel:${content.site.phone}`} aria-label={`Call ${content.site.name}`}>
+                <AppIcon name="phone" aria-hidden="true" />
+                <span>{content.site.phone}</span>
+              </a>
+              <div>
+                <AppIcon name="map-pin" aria-hidden="true" />
+                <span>{content.site.location}</span>
+              </div>
+            </div>
+          </div>
+
+          <article className="panel whatsapp-panel">
+            <AppIcon className="whatsapp-icon" name="message-circle" aria-hidden="true" />
+            <h3>{content.contact.whatsappTitle}</h3>
+            <p>{content.contact.whatsappDescription}</p>
+            <a
+              className="button button-primary"
+              href={`https://wa.me/${content.site.whatsapp}`}
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label={`${content.contact.whatsappButtonLabel} on WhatsApp`}
+            >
+              {content.contact.whatsappButtonLabel}
+            </a>
+          </article>
+        </div>
+      </section>
+    </>
+  );
+                    }import type { Route } from "next";
 import Link from "next/link";
 
 import { AppIcon } from "@/components/icon";
