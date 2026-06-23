@@ -121,8 +121,27 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           strategy="beforeInteractive"
         />
+        {/* Google Tag Manager */}
+        <Script id="gtm-loader" strategy="afterInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-524NNVWT');`}
+        </Script>
+        {/* End Google Tag Manager */}
       </head>
       <body>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-524NNVWT"
+            height={0}
+            width={0}
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+        {/* End Google Tag Manager (noscript) */}
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
@@ -130,77 +149,6 @@ export default async function RootLayout({
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>
-        <SiteFooter />
-      </body>
-    </html>
-  );
-}import type { Metadata } from "next";
-import type { ReactNode } from "react";
-
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-import { getSiteContent } from "@/lib/site-content";
-
-import "./globals.css";
-
-export const dynamic = "force-dynamic";
-
-export async function generateMetadata(): Promise<Metadata> {
-  const { site } = await getSiteContent();
-
-  return {
-    metadataBase: new URL(site.url),
-    title: {
-      default: `${site.name} | ${site.role}`,
-      template: `%s | ${site.name}`
-    },
-    description: site.description,
-    keywords: site.keywords,
-    alternates: {
-      canonical: site.url
-    },
-    openGraph: {
-      title: `${site.name} | ${site.role}`,
-      description: site.description,
-      url: site.url,
-      siteName: site.name,
-      images: [
-        {
-          url: site.ogImage,
-          width: 1200,
-          height: 630,
-          alt: `${site.name} portfolio`
-        }
-      ],
-      locale: "en_US",
-      type: "website"
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${site.name} | ${site.role}`,
-      description: site.description,
-      images: [site.ogImage]
-    },
-    robots: {
-      index: true,
-      follow: true
-    },
-    icons: {
-      icon: "/image/favicon.webp"
-    }
-  };
-}
-
-export default async function RootLayout({
-  children
-}: Readonly<{
-  children: ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body>
-        <SiteHeader />
-        <main>{children}</main>
         <SiteFooter />
       </body>
     </html>
