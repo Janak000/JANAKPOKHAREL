@@ -1,32 +1,63 @@
 import type { MetadataRoute } from "next";
+import {
+  getCategories,
+  getPosts,
+  getServices,
+  absoluteUrl,
+  categorySlug,
+} from "@/lib/cms";
 
-import { getBlogPosts, getSiteContent } from "@/lib/site-content";
+export const revalidate = 3600;
 
-export const dynamic = "force-dynamic";
-
+/**
+ * lastModified is emitted ONLY where a real content date exists.
+ *
+ * Previously every entry used `new Date()`, so the whole file changed on each
+ * regeneration. Google discards lastmod it detects as unreliable, which meant
+ * the sitemap contributed nothing to crawl scheduling. An absent lastmod is
+ * strictly better than a false one.
+ *
+ * Service rows carry no updatedAt column, so they intentionally omit it too.
+ * changeFrequency and priority are gone: Google has ignored both for years.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { site } = await getSiteContent();
-  const posts = await getBlogPosts();
-  const now = new Date().toISOString();
+  const [posts, services, categories] = await Promise.all([
+    getPosts(),
+    getServices(),
+    getCategories(),
+  ]);
 
-  return [
-    {
-      url: site.url,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 1
-    },
-    {
-      url: `${site.url}/blog`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8
-    },
-    ...posts.map((post) => ({
-      url: `${site.url}/blog/${post.slug}`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.7
-    }))
-  ];
+  const staticPages: MetadataRoute.Sitemap = [
+    "/",
+    "/about",
+    "/services",
+    "/portfolio",
+    "/blog",
+    "/contact",
+  ].map((path) => ({ url: absoluteUrl(path) }));
+
+  const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
+    url: absoluteUrl(`/services/${s.slug}`),
+  }));
+
+  const postPages: MetadataRoute.Sitemap = posts.map((p) => ({
+    url: absoluteUrl(`/blog/${p.slug}`),
+    lastModified: new Date(p.updatedAt),
+  }));
+
+  // Newest post in the category is the only honest date available here.
+  const categoryPages: MetadataRoute.Sitemap = categories.map((c) => {
+    const slug = categorySlug(c);
+    const newest = posts
+      .filter((p) => categorySlug(p.category) === slug)
+      .map((p) => new Date(p.updatedAt).getTime())
+      .sort((a, b) => b - a)[0];
+
+    return {
+      url: absoluteUrl(`/blog/category/${slug}`),
+      ...(newest ? { lastModified: new Date(newest) } : {}),
+    };
+  });
+
+  return [...staticPages, ...servicePages, ...postPages, ...categoryPages];
 }

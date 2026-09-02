@@ -1,44 +1,73 @@
-import { SiteHeaderClient } from "@/components/site-header-client";
-import { getSiteContent } from "@/lib/site-content";
+"use client";
 
-export async function SiteHeader() {
-  const { navigation, site } = await getSiteContent();
-
-  return (
-    <SiteHeaderClient
-      navigation={navigation}
-      siteName={site.shortName}
-      ctaHref={site.navigationCta.href}
-      ctaLabel={site.navigationCta.label}
-    />
-  );
-}import type { Route } from "next";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Icon } from "./icon";
 
-import { getSiteContent } from "@/lib/site-content";
+const links = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
+];
 
-export async function SiteHeader() {
-  const { navigation, site } = await getSiteContent();
+export function SiteHeader({ name }: { name: string }) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  if (pathname?.startsWith("/sanchalan")) return null;
 
   return (
-    <header className="site-header">
-      <div className="shell nav-shell">
-        <Link className="brand-mark" href="/">
-          {site.shortName}
-          <span>.</span>
+    <header className={`site-header ${scrolled ? "scrolled" : ""}`}>
+      <div className="container header-inner">
+        <Link href="/" className="brand" aria-label={`${name}, home`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/image/logo.webp" alt="Janak Pokharel logo" className="brand-logo" width={40} height={40} />
+          <span className="brand-name">{name}</span>
         </Link>
 
-        <nav className="site-nav" aria-label="Primary">
-          {navigation.map((item) => (
-            <Link key={item.href} href={item.href as Route}>
-              {item.label}
-            </Link>
-          ))}
+        <nav className={`main-nav ${open ? "open" : ""}`} aria-label="Main">
+          {links.map((l) => {
+            const active =
+              l.href === "/" ? pathname === "/" : pathname?.startsWith(l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`nav-link ${active ? "active" : ""}`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
+          <Link href="/contact" className="btn btn-primary nav-cta">
+            Start a Project
+          </Link>
         </nav>
 
-        <Link className="header-cta" href={site.navigationCta.href as Route}>
-          {site.navigationCta.label}
-        </Link>
+        <button
+          className="nav-toggle"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <Icon name={open ? "x" : "menu"} size={22} />
+        </button>
       </div>
     </header>
   );
