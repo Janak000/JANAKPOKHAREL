@@ -10,10 +10,12 @@ import {
   fallbackSettings,
 } from "@/lib/fallback-content";
 import { Field, NoticeBar, requestRevalidate, type Notice } from "./shared";
+import { MarkdownEditor } from "./markdown-editor";
 
 type FieldDef =
   | { key: string; label: string; type: "text" }
   | { key: string; label: string; type: "textarea"; rows?: number }
+  | { key: string; label: string; type: "markdown"; rows?: number }
   | { key: string; label: string; type: "csv" }
   | { key: string; label: string; type: "objects"; columns: { key: string; label: string }[] };
 
@@ -79,7 +81,7 @@ const blocks: BlockDef[] = [
       { key: "kicker", label: "Kicker", type: "text" },
       { key: "title", label: "Title", type: "text" },
       { key: "intro", label: "Intro", type: "textarea", rows: 3 },
-      { key: "body", label: "Body", type: "textarea", rows: 4 },
+      { key: "body", label: "Body (Markdown, supports links)", type: "markdown", rows: 10 },
       {
         key: "stats",
         label: "Stats",
@@ -192,6 +194,19 @@ export function BlocksEditor() {
             onChange={(e) => setData({ ...data, [field.key]: e.target.value })}
           />
         </Field>
+      );
+    }
+
+    if (field.type === "markdown") {
+      return (
+        <div className="field" key={field.key}>
+          <span>{field.label}</span>
+          <MarkdownEditor
+            rows={field.rows ?? 10}
+            value={String(value ?? "")}
+            onChange={(md) => setData({ ...data, [field.key]: md })}
+          />
+        </div>
       );
     }
 

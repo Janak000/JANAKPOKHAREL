@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getAbout, getHero, getResume, getSettings, absoluteUrl } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
+import { Markdown } from "@/components/markdown";
 
 export const revalidate = 120;
 
@@ -64,9 +65,9 @@ export default async function AboutPage() {
         <div className="container">
           <div className="hero-grid" style={{ alignItems: "start" }}>
             <div>
-              <p className="prose" style={{ marginBottom: 32 }}>
-                {about.body}
-              </p>
+              <div style={{ marginBottom: 32 }}>
+                <Markdown content={about.body} />
+              </div>
               <div className="card-grid card-grid-2">
                 {about.highlights.map((h) => (
                   <div key={h.title} className="card">

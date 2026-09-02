@@ -10,6 +10,7 @@ import {
   slugify,
   type Notice,
 } from "./shared";
+import { MarkdownEditor } from "./markdown-editor";
 
 /* ---------------- Services ---------------- */
 
@@ -134,14 +135,15 @@ export function ServicesEditor() {
               }
             />
           </Field>
-          <Field label="Detail page body (Markdown)">
-            <textarea
-              rows={14}
+          <div className="field">
+            <span>Detail page body (Markdown)</span>
+            <MarkdownEditor
+              rows={16}
               value={editing.body_md}
-              onChange={(e) => setEditing({ ...editing, body_md: e.target.value })}
-              style={{ fontFamily: "ui-monospace, monospace", fontSize: 14 }}
+              onChange={(md) => setEditing({ ...editing, body_md: md })}
+              placeholder="## What this covers"
             />
-          </Field>
+          </div>
           <div className="row-2">
             <Field label="Meta title (optional)">
               <input

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase-browser";
+import { LinkDialog, type LinkValue } from "./link-dialog";
 
 type Props = {
   value: string; // HTML
@@ -35,6 +36,11 @@ export function RichEditor({ value, onChange }: Props) {
   const [showColors, setShowColors] = useState(false);
   const [showHighlight, setShowHighlight] = useState(false);
   const savedRange = useRef<Range | null>(null);
+
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkInit, setLinkInit] = useState<LinkValue>({ url: "", text: "", newTab: false, nofollow: false });
+  const [linkCanEditText, setLinkCanEditText] = useState(true);
+  const linkAnchor = useRef<HTMLAnchorElement | null>(null);
 
   // Load initial HTML once (uncontrolled thereafter to preserve caret).
   useEffect(() => {
@@ -80,18 +86,102 @@ export function RichEditor({ value, onChange }: Props) {
     emit();
   }
 
-  function addLink() {
-    saveSelection();
-    const url = window.prompt("Link URL (include https://)", "https://");
-    if (!url) return;
-    exec("createLink", url);
-    // open links in a new tab
+  /** Find the <a> the caret currently sits inside, if any. */
+  function anchorAtSelection(): HTMLAnchorElement | null {
     const sel = window.getSelection();
-    const node = sel?.anchorNode?.parentElement;
-    if (node && node.tagName === "A") {
-      node.setAttribute("target", "_blank");
-      node.setAttribute("rel", "noopener noreferrer");
+    if (!sel || sel.rangeCount === 0) return null;
+    let node: Node | null = sel.getRangeAt(0).commonAncestorContainer;
+    while (node && node !== ref.current) {
+      if (node instanceof HTMLAnchorElement) return node;
+      node = node.parentNode;
     }
+    return null;
+  }
+
+  function openLinkDialog() {
+    saveSelection();
+    const sel = window.getSelection();
+    const selectedText = sel ? sel.toString() : "";
+    const existing = anchorAtSelection();
+    linkAnchor.current = existing;
+
+    if (existing) {
+      const rel = existing.getAttribute("rel") ?? "";
+      setLinkInit({
+        url: existing.getAttribute("href") ?? "",
+        text: existing.textContent ?? "",
+        newTab: existing.getAttribute("target") === "_blank",
+        nofollow: rel.includes("nofollow"),
+      });
+      setLinkCanEditText(true);
+    } else {
+      setLinkInit({ url: "", text: selectedText, newTab: false, nofollow: false });
+      // When text is already highlighted we wrap it, so the text is not editable here.
+      setLinkCanEditText(selectedText.trim().length === 0);
+    }
+    setLinkOpen(true);
+  }
+
+  function decorate(a: HTMLAnchorElement, v: LinkValue) {
+    a.setAttribute("href", v.url);
+    const rels: string[] = [];
+    if (v.newTab) {
+      a.setAttribute("target", "_blank");
+      rels.push("noopener", "noreferrer");
+    } else {
+      a.removeAttribute("target");
+    }
+    if (v.nofollow) rels.push("nofollow");
+    if (rels.length) a.setAttribute("rel", Array.from(new Set(rels)).join(" "));
+    else a.removeAttribute("rel");
+  }
+
+  function applyLink(v: LinkValue) {
+    const existing = linkAnchor.current;
+
+    if (existing) {
+      if (v.text && v.text !== existing.textContent) existing.textContent = v.text;
+      decorate(existing, v);
+    } else {
+      ref.current?.focus();
+      restoreSelection();
+      const sel = window.getSelection();
+      const hasSelection = sel ? sel.toString().length > 0 : false;
+
+      if (hasSelection) {
+        document.execCommand("createLink", false, v.url);
+        const made = anchorAtSelection();
+        if (made) decorate(made, v);
+      } else {
+        const a = document.createElement("a");
+        a.textContent = v.text || v.url;
+        decorate(a, v);
+        const range = sel && sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+        if (range) {
+          range.insertNode(a);
+          range.setStartAfter(a);
+          range.collapse(true);
+          sel?.removeAllRanges();
+          sel?.addRange(range);
+        } else {
+          ref.current?.appendChild(a);
+        }
+      }
+    }
+
+    linkAnchor.current = null;
+    setLinkOpen(false);
+    emit();
+  }
+
+  function removeLinkFromDialog() {
+    const existing = linkAnchor.current;
+    if (existing && existing.parentNode) {
+      const text = document.createTextNode(existing.textContent ?? "");
+      existing.parentNode.replaceChild(text, existing);
+    }
+    linkAnchor.current = null;
+    setLinkOpen(false);
     emit();
   }
 
@@ -296,7 +386,7 @@ export function RichEditor({ value, onChange }: Props) {
 
         <span className="re-sep" />
 
-        <Btn title="Insert link" onClick={addLink}>
+        <Btn title="Insert or edit link" onClick={openLinkDialog}>
           🔗
         </Btn>
         <Btn title="Remove link" onClick={() => exec("unlink")}>
@@ -341,6 +431,19 @@ export function RichEditor({ value, onChange }: Props) {
         suppressContentEditableWarning
         onInput={emit}
         onBlur={emit}
+      />
+
+      <LinkDialog
+        open={linkOpen}
+        initial={linkInit}
+        canEditText={linkCanEditText}
+        editingExisting={Boolean(linkAnchor.current)}
+        onSubmit={applyLink}
+        onRemove={removeLinkFromDialog}
+        onClose={() => {
+          linkAnchor.current = null;
+          setLinkOpen(false);
+        }}
       />
     </div>
   );
