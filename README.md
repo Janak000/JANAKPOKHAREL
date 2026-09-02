@@ -1,54 +1,86 @@
-# Janak Pokharel Portfolio
+# janakpokharel.com.np, Multipage Site + Sanchalan CMS
 
-This portfolio now uses a Supabase-backed CMS instead of the previous GitHub JSON workflow. The public site reads dynamic content from Supabase, and `/admin` edits the same data model through a field-based CMS with a rich text editor for blog posts.
+A fast, SEO-first multipage portfolio and blog for **Janak Pokharel**, built with
+Next.js (App Router) + Supabase, deployed on Vercel.
 
-## Stack
+## Pages
 
-- Next.js App Router
-- TypeScript
-- Supabase for content storage
-- TipTap editor for blog CMS authoring
+| Route | What it is |
+|---|---|
+| `/` | Homepage, hero, stats, services, featured work, latest posts |
+| `/about` | About, resume timeline (experience / education / certifications) |
+| `/services` + `/services/[slug]` | Services listing + one SEO page per service |
+| `/portfolio` | Brands and campaigns |
+| `/blog`, `/blog/[slug]`, `/blog/category/[slug]` | Blog listing, articles, categories |
+| `/contact` | Contact channels + form (saves to Supabase) |
+| `/sanchalan` | **CMS admin** (Supabase Auth protected, noindex) |
 
-## What is dynamic
+Every page reads its content from Supabase and falls back to built-in content if
+the database is empty or unreachable, so the site always renders.
 
-The Supabase-backed model covers:
+## SEO / AI-model (GEO) features
 
-- personal details, SEO metadata, navigation CTA, footer labels
-- hero copy, image, stat, and CTAs
-- about copy, stats, highlight cards, and associated organizations
-- expertise/services section heading and cards
-- projects section copy, cards, tags, and locked CTA
-- resume section labels, experience, education, and certifications
-- blog landing copy, blog post metadata, FAQs, and rich text article bodies
-- contact section copy and WhatsApp CTA
+- Per-page `generateMetadata` (title, description, canonical, Open Graph, Twitter)
+- JSON-LD: Person, WebSite, BlogPosting, FAQPage, BreadcrumbList, Service, Blog
+- Dynamic `sitemap.xml` (includes every post, service, and category)
+- `robots.txt` that explicitly allows AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended…)
+- RSS feed at `/feed.xml`
+- `llms.txt` at `/llms.txt`, machine-readable site summary for AI answer engines
+- Clean semantic HTML, ISR caching, instant revalidation after CMS saves
 
-## Supabase setup
+## Setup
 
-1. Create a Supabase project.
-2. Run [supabase/schema.sql](/C:/Users/janak/Downloads/portfolio-main%20(2)/JANAKPOKHAREL-git/supabase/schema.sql) in the SQL editor.
-3. Seed each singleton table with one row, or save from `/admin` after adding environment variables.
-4. Add yourself to `public.admin_users` if you want direct authenticated table writes later.
+### 1. Supabase (free tier)
 
-The app still falls back to the bundled local content file when Supabase is not configured, so local development stays unblocked.
+1. Create a project at [supabase.com](https://supabase.com).
+2. Open **SQL Editor** and run [`supabase/schema.sql`](supabase/schema.sql).
+3. Then run [`supabase/seed.sql`](supabase/seed.sql) to load the current content.
+4. Go to **Authentication → Users → Add user** and create your login
+   (email + password, check "auto confirm").
+5. Back in SQL Editor, grant that user admin access:
 
-## Environment variables
+   ```sql
+   insert into public.admin_users (user_id)
+   select id from auth.users where email = 'YOUR-EMAIL-HERE'
+   on conflict do nothing;
+   ```
 
-Copy `.env.example` into `.env.local` and fill in:
+### 2. Local development
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `CMS_ADMIN_SECRET`
+```bash
+cp .env.example .env.local   # fill in your Supabase URL + anon key
+npm install
+npm run dev
+```
 
-## Run locally
+Site: http://localhost:3000 · CMS: http://localhost:3000/sanchalan
 
-1. Install dependencies with `npm install`.
-2. Start development with `npm run dev`.
-3. Open `http://localhost:3000`.
-4. Open `http://localhost:3000/admin` for the CMS.
+### 3. Deploy to Vercel
+
+1. Push this folder to a GitHub repo.
+2. Import the repo at [vercel.com/new](https://vercel.com/new).
+3. Add the environment variables from `.env.example` in
+   **Project → Settings → Environment Variables**:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL` = `https://janakpokharel.com.np`
+4. Deploy, then add `janakpokharel.com.np` under **Settings → Domains** and
+   point your domain's DNS (A record → `76.76.21.21`, or CNAME `www` →
+   `cname.vercel-dns.com`) as Vercel instructs.
+
+### 4. Using the CMS (`/sanchalan`)
+
+- **Blog Posts**, Markdown editor with live preview, SEO meta fields, tags,
+  categories, and FAQs (FAQ rich results generated automatically).
+- **Page Content**, edit hero, about, contact, blog settings, and site settings.
+- **Services / Portfolio / Resume**, full CRUD for structured content.
+- **Messages**, contact form submissions inbox.
+- **Media**, upload images to Supabase Storage and copy URLs.
+- Saves trigger instant revalidation, so changes go live in seconds.
 
 ## Notes
 
-- Public reads use the Supabase anon key and RLS-safe `select` policies.
-- Admin saves go through the Next.js API route using the service role key plus `CMS_ADMIN_SECRET`.
-- Blog bodies are stored as `content_html`, which the CMS edits with TipTap and the public site renders directly.
+- Content is cached with ISR (`revalidate: 120`), so the site stays fast and
+  well within Supabase free-tier limits even with traffic.
+- The CMS writes Markdown; the site renders it server-side (good for SEO).
+- `/sanchalan` and `/api/*` are excluded from robots and the sitemap.

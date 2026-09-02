@@ -1,155 +1,196 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import type { Metadata, Viewport } from "next";
+import { Inter, Sora } from "next/font/google";
 import Script from "next/script";
-
-import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getSiteContent } from "@/lib/site-content";
-
+import { SiteFooter } from "@/components/site-footer";
+import { ChromeGate } from "@/components/chrome-gate";
+import { JsonLd } from "@/components/json-ld";
+import { getSettings, getServices, siteUrl, absoluteUrl } from "@/lib/cms";
 import "./globals.css";
 
-export const dynamic = "force-dynamic";
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const sora = Sora({ subsets: ["latin"], variable: "--font-sora", display: "swap" });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#06080f" },
+    { media: "(prefers-color-scheme: light)", color: "#d54835" },
+  ],
+};
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { site } = await getSiteContent();
-
+  const settings = await getSettings();
   return {
-    metadataBase: new URL(site.url),
+    metadataBase: new URL(siteUrl()),
     title: {
-      default: `${site.name} | ${site.role}`,
-      template: `%s | ${site.name}`
+      // Homepage title lengthened to the 50-60 char sweet spot with a local keyword.
+      default: `${settings.name} | ${settings.role} in Nepal`,
+      template: `%s | ${settings.name}`,
     },
-    description: site.description,
-    keywords: site.keywords,
-    alternates: {
-      canonical: site.url
-    },
+    description: settings.description,
+    keywords: settings.keywords,
+    authors: [{ name: settings.name, url: siteUrl() }],
+    creator: settings.name,
     openGraph: {
-      title: `${site.name} | ${site.role}`,
-      description: site.description,
-      url: site.url,
-      siteName: site.name,
-      images: [
-        {
-          url: site.ogImage,
-          width: 1200,
-          height: 630,
-          alt: `${site.name} – SEO & Ads Manager portfolio`
-        }
-      ],
+      type: "website",
       locale: "en_US",
-      type: "website"
+      url: siteUrl(),
+      siteName: settings.name,
+      title: `${settings.name} | ${settings.role}`,
+      description: settings.description,
+      images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${site.name} | ${site.role}`,
-      description: site.description,
-      images: [site.ogImage]
+      title: `${settings.name} | ${settings.role}`,
+      description: settings.description,
+      images: [settings.ogImage],
     },
+    // Only googleBot directives here. A top-level index/follow emitted a
+    // <meta name="robots" content="index, follow"> that was inherited by
+    // not-found, colliding with the noindex Next emits there - two conflicting
+    // robots tags on the most-crawled error surface. Indexing is the default
+    // when no robots tag is present, so the tag bought nothing.
     robots: {
-      index: true,
-      follow: true,
       googleBot: {
         index: true,
         follow: true,
-        "max-snippet": -1,
         "max-image-preview": "large",
-        "max-video-preview": -1
-      }
+        "max-snippet": -1,
+      },
+    },
+    alternates: {
+      canonical: "/",
+      // hreflang removed: it was emitted only on the homepage and only ever
+      // pointed at "/", so on a single-language site it said nothing while
+      // being inconsistent across pages - worse than absent.
+      // NOTE: this `alternates` block is replaced, not merged, by any route
+      // that sets its own alternates (the service and blog routes do), so the
+      // RSS link below still only reaches routes that do not override it.
+      types: { "application/rss+xml": absoluteUrl("/feed.xml") },
     },
     icons: {
-      icon: "/image/favicon.webp",
-      shortcut: "/image/favicon.webp"
-    }
+      icon: [
+        { url: "/image/favicon.png", type: "image/png", sizes: "64x64" },
+        { url: "/image/logo.webp", type: "image/webp" },
+      ],
+      apple: "/image/apple-icon.png",
+      shortcut: "/image/favicon.png",
+    },
   };
 }
 
 export default async function RootLayout({
-  children
-}: Readonly<{
-  children: ReactNode;
-}>) {
-  const { site } = await getSiteContent();
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [settings, services] = await Promise.all([getSettings(), getServices()]);
 
-  const jsonLd = {
+  const personLd = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Person",
-        "@id": `${site.url}/#person`,
-        name: site.name,
-        url: site.url,
-        image: {
-          "@type": "ImageObject",
-          url: `${site.url}/image/janak.webp`,
-          width: 1066,
-          height: 1600
-        },
-        jobTitle: site.role,
-        description: site.description,
-        email: site.email,
-        telephone: site.phone,
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Kathmandu",
-          addressCountry: "NP"
-        },
-        sameAs: [
-          site.linkedin ?? "https://www.linkedin.com/in/janak-pokharel",
-          site.facebook ?? "https://www.facebook.com/janak.pokharel7788"
-        ].filter(Boolean)
-      },
-      {
-        "@type": "WebSite",
-        "@id": `${site.url}/#website`,
-        url: site.url,
-        name: site.name,
-        description: site.description,
-        publisher: { "@id": `${site.url}/#person` }
-      }
-    ]
+    "@type": "Person",
+    "@id": `${siteUrl()}/#person`,
+    name: settings.name,
+    jobTitle: settings.role,
+    description: settings.description,
+    url: siteUrl(),
+    image: absoluteUrl("/image/logo.webp"),
+    logo: absoluteUrl("/image/logo.webp"),
+    email: `mailto:${settings.email}`,
+    telephone: settings.phone,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Kathmandu",
+      addressCountry: "NP",
+    },
+    sameAs: [settings.facebook, settings.linkedin],
+    knowsAbout: [
+      "Search Engine Optimization",
+      "Meta Ads",
+      "Google Ads",
+      "Technical SEO",
+      "Conversion Rate Optimization",
+      "Digital Marketing",
+    ],
   };
 
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${siteUrl()}/#website`,
+    name: settings.name,
+    url: siteUrl(),
+    description: settings.description,
+    publisher: { "@id": `${siteUrl()}/#person` },
+    inLanguage: "en",
+  };
+
+  // Local / professional-service schema — improves local search visibility
+  // for queries like "SEO expert Kathmandu / Nepal".
+  const businessLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${siteUrl()}/#business`,
+    name: `${settings.name} — ${settings.role}`,
+    image: absoluteUrl("/image/logo.webp"),
+    url: siteUrl(),
+    telephone: settings.phone,
+    email: settings.email,
+    priceRange: "$$",
+    founder: { "@id": `${siteUrl()}/#person` },
+    areaServed: "Worldwide",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Kathmandu",
+      addressRegion: "Bagmati",
+      addressCountry: "NP",
+    },
+    sameAs: [settings.facebook, settings.linkedin],
+  };
+
+  const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+
   return (
-    <html lang="en">
-      <head>
-        <meta name="theme-color" content="#08111d" />
-        <link rel="preconnect" href="https://atjlewpmixrtvenkrvnb.supabase.co" />
-        <Script
-          id="json-ld-person"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          strategy="beforeInteractive"
-        />
-        {/* Google Tag Manager */}
-        <Script id="gtm-loader" strategy="afterInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-524NNVWT');`}
-        </Script>
-        {/* End Google Tag Manager */}
-      </head>
+    <html lang="en" className={`${inter.variable} ${sora.variable}`}>
       <body>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-524NNVWT"
-            height={0}
-            width={0}
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
-        {/* End Google Tag Manager (noscript) */}
-        <a className="skip-link" href="#main-content">
-          Skip to main content
-        </a>
-        <SiteHeader />
-        <main id="main-content" tabIndex={-1}>
-          {children}
-        </main>
-        <SiteFooter />
+        {/* React hoists these resource hints into <head> */}
+        {supabaseOrigin && (
+          <>
+            <link rel="preconnect" href={supabaseOrigin} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={supabaseOrigin} />
+          </>
+        )}
+        {settings.gtmId && (
+          <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        )}
+        {settings.gtmId && (
+          <>
+            <Script id="gtm" strategy="afterInteractive">
+              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${settings.gtmId}');`}
+            </Script>
+            <noscript>
+              <iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${settings.gtmId}`}
+                height="0"
+                width="0"
+                style={{ display: "none", visibility: "hidden" }}
+              />
+            </noscript>
+          </>
+        )}
+        <JsonLd data={personLd} />
+        <JsonLd data={websiteLd} />
+        <JsonLd data={businessLd} />
+        <div className="bg-ambient" />
+        <div className="bg-grid" />
+        <SiteHeader name={settings.name} />
+        <main>{children}</main>
+        <ChromeGate>
+          <SiteFooter settings={settings} services={services} />
+        </ChromeGate>
       </body>
     </html>
   );

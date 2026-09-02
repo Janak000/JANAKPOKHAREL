@@ -1,669 +1,332 @@
-import type { Route } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
+import {
+  getAbout,
+  getHero,
+  getPosts,
+  getProjects,
+  getServices,
+  getSettings,
+} from "@/lib/cms";
+import { Icon } from "@/components/icon";
+import { PostCard } from "@/components/post-card";
+import { JsonLd } from "@/components/json-ld";
 
-import { AppIcon } from "@/components/icon";
-import { getSiteContent } from "@/lib/site-content";
+export const revalidate = 120;
 
-export const dynamic = "force-dynamic";
+const homeFaqs = [
+  {
+    question: "What does an SEO and Ads manager actually do?",
+    answer:
+      "I combine search engine optimization and paid advertising into one growth system. That means technical SEO audits, keyword and content strategy, and hands-on management of Meta Ads and Google Ads campaigns, all measured against real business results like leads and revenue rather than vanity metrics.",
+  },
+  {
+    question: "Do you work with businesses outside Nepal?",
+    answer:
+      "Yes. I am based in Kathmandu, Nepal and work with startups and growing businesses worldwide. Search and paid advertising are global channels, so most of my work is delivered remotely with clear reporting and direct communication over email or WhatsApp.",
+  },
+  {
+    question: "How long does SEO take to show results?",
+    answer:
+      "SEO is a compounding investment. Technical fixes can help within weeks, but durable ranking and organic traffic growth usually take three to six months of consistent optimization and content. Paid ads, by contrast, can generate leads within days, which is why I often pair the two.",
+  },
+  {
+    question: "Should I invest in SEO or paid ads first?",
+    answer:
+      "It depends on your timeline and budget. If you need leads quickly, start with Meta Ads or Google Ads for speed. If you want lower long-term acquisition costs, invest in SEO. The strongest strategy usually sequences both so paid traffic funds growth while organic visibility compounds.",
+  },
+];
 
 export default async function HomePage() {
-  const content = await getSiteContent();
-  const latestPosts = content.blog.posts.slice(0, 3);
+  const [settings, hero, about, services, projects, posts] = await Promise.all([
+    getSettings(),
+    getHero(),
+    getAbout(),
+    getServices(),
+    getProjects(),
+    getPosts(),
+  ]);
+
+  const latestPosts = posts.slice(0, 3);
+  const featuredProjects = projects.slice(0, 3);
+
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: homeFaqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
 
   return (
     <>
-      <section className="hero-section" id="home" aria-labelledby="hero-heading">
-        <div className="shell hero-grid">
-          <div className="hero-copy">
-            <div className="availability-pill" role="status">{content.hero.availability}</div>
-            <p className="eyebrow">{content.hero.eyebrow}</p>
-            <h1 id="hero-heading">{content.hero.headline}</h1>
-            <p className="lede">{content.hero.description}</p>
-
-            <div className="cta-row">
-              <Link className="button button-primary" href={content.hero.primaryCta.href as Route}>
-                {content.hero.primaryCta.label}
+      {/* Hero */}
+      <section className="hero">
+        <div className="container hero-grid">
+          <div>
+            <span className="hero-availability">
+              <span className="dot" />
+              {hero.availability}
+            </span>
+            <p className="hero-eyebrow">{hero.eyebrow}</p>
+            <h1>
+              <span className="gradient-text">{hero.headline.split(" ").slice(0, 3).join(" ")}</span>{" "}
+              {hero.headline.split(" ").slice(3).join(" ")}
+            </h1>
+            <p className="hero-description">{hero.description}</p>
+            <div className="hero-actions">
+              <Link href={hero.primaryCtaHref} className="btn btn-primary btn-lg">
+                {hero.primaryCtaLabel} <Icon name="arrow-right" size={18} />
               </Link>
-              <Link className="button button-secondary" href={content.hero.secondaryCta.href as Route}>
-                {content.hero.secondaryCta.label}
+              <Link href={hero.secondaryCtaHref} className="btn btn-ghost btn-lg">
+                {hero.secondaryCtaLabel}
               </Link>
             </div>
           </div>
-
-          <div className="hero-visual">
-            <div className="hero-image-card">
+          <div className="hero-figure">
+            <div className="hero-photo-wrap">
               <Image
-                alt={content.hero.image.alt}
-                className="hero-image"
-                src={content.hero.image.src}
-                width={1066}
-                height={1600}
+                src={hero.imageSrc}
+                alt={hero.imageAlt}
+                width={380}
+                height={475}
                 priority
-                quality={85}
               />
             </div>
-            <div className="floating-stat" aria-label={`${content.hero.stat.value} ${content.hero.stat.label}`}>
-              <AppIcon className="stat-icon" name="trending-up" aria-hidden="true" />
-              <div>
-                <strong>{content.hero.stat.value}</strong>
-                <span>{content.hero.stat.label}</span>
-              </div>
+            <div className="hero-stat">
+              <strong>{hero.statValue}</strong>
+              <span>{hero.statLabel}</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section-block" id="about" aria-labelledby="about-heading">
-        <div className="shell">
-          <div className="bento-grid about-grid">
-            <article className="panel panel-large">
-              <p className="section-kicker">{content.about.kicker}</p>
-              <h2 id="about-heading">{content.about.title}</h2>
-              <p className="section-copy">{content.about.intro}</p>
-              <p className="section-copy">{content.about.body}</p>
-
-              <div className="stat-grid">
-                {content.about.stats.map((item) => (
-                  <div key={item.label} className="mini-stat">
-                    <strong>{item.value}</strong>
-                    <span>{item.label}</span>
-                  </div>
-                ))}
+      {/* Stats */}
+      <section className="section" style={{ paddingTop: 20 }}>
+        <div className="container">
+          <div className="stats-band">
+            {about.stats.map((s) => (
+              <div key={s.label} className="stat-item">
+                <strong>{s.value}</strong>
+                <span>{s.label}</span>
               </div>
-            </article>
-
-            <div className="stacked-cards">
-              {content.about.highlightCards.map((item) => (
-                <article key={item.title} className="panel panel-tall">
-                  <AppIcon className="card-icon" name={item.icon} aria-hidden="true" />
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          <div className="section-heading">
-            <p className="section-kicker">{content.about.organizationsKicker}</p>
-            <h2>{content.about.organizationsTitle}</h2>
-          </div>
-
-          <div className="logo-marquee" aria-label={content.about.organizationsTitle} role="region">
-            <div className="logo-track" aria-hidden="true">
-              {[...content.about.organizations, ...content.about.organizations].map((org, index) => (
-                <article key={`${org.name}-${index}`} className="logo-card">
-                  {org.href ? (
-                    <a href={org.href} rel="noopener noreferrer" target="_blank" aria-label={org.name}>
-                      <Image
-                        alt={org.alt}
-                        src={org.logo}
-                        width={160}
-                        height={60}
-                        loading="lazy"
-                        style={{ objectFit: "contain", maxHeight: "60px", width: "100%" }}
-                      />
-                    </a>
-                  ) : (
-                    <Image
-                      alt={org.alt}
-                      src={org.logo}
-                      width={160}
-                      height={60}
-                      loading="lazy"
-                      style={{ objectFit: "contain", maxHeight: "60px", width: "100%" }}
-                    />
-                  )}
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-block" id="services" aria-labelledby="services-heading">
-        <div className="shell">
-          <div className="section-heading">
-            <p className="section-kicker">{content.services.kicker}</p>
-            <h2 id="services-heading">{content.services.title}</h2>
-          </div>
-
-          <div className="cards-grid">
-            {content.services.items.map((service) => (
-              <article key={service.title} className="panel">
-                <div className="service-icon" aria-hidden="true">
-                  <AppIcon name={service.icon} />
-                </div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section-block" id="projects" aria-labelledby="projects-heading">
-        <div className="shell">
-          <div className="section-heading">
-            <p className="section-kicker">{content.projects.kicker}</p>
-            <h2 id="projects-heading">{content.projects.title}</h2>
-            <p className="section-copy">{content.projects.intro}</p>
-          </div>
-
-          <div className="project-showcase">
-            {content.projects.items.map((project) => (
-              <article key={project.title} className="panel project-card">
-                <div className="project-image-wrap">
-                  <Image
-                    alt={project.image.alt}
-                    src={project.image.src}
-                    width={400}
-                    height={170}
-                    loading="lazy"
-                    style={{ objectFit: "contain", maxHeight: "170px", width: "100%" }}
-                  />
-                </div>
-
-                <div className="project-card-body">
-                  <p className="project-meta">{project.category}</p>
-
-                  <div className="project-heading">
-                    <h3>{project.title}</h3>
-                    {project.result ? <span className="project-result">{project.result}</span> : null}
-                  </div>
-
-                  <p>{project.description}</p>
-
-                  <div className="project-tags">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="project-tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {project.href ? (
-                    <Link className="text-link" href={project.href as Route}>
-                      {project.ctaLabel ?? "View project"}
-                    </Link>
-                  ) : null}
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <article className="panel project-note">
-            <div className="project-note-copy">
-              <AppIcon className="lock-icon" name="lock" aria-hidden="true" />
-              <div>
-                <h3>{content.projects.lockedTitle}</h3>
-                <p>{content.projects.lockedDescription}</p>
-              </div>
-            </div>
-
-            <Link className="button button-primary" href={content.projects.lockedCtaHref as Route}>
-              {content.projects.lockedCtaLabel}
-            </Link>
-          </article>
-        </div>
-      </section>
-
-      <section className="section-block" aria-labelledby="resume-heading">
-        <div className="shell">
-          <div className="section-heading">
-            <p className="section-kicker">{content.resume.kicker}</p>
-            <h2 id="resume-heading">{content.site.name} Resume Snapshot</h2>
-          </div>
-
-          <div className="resume-grid">
-            <div>
-              <p className="section-kicker">{content.resume.experienceTitle}</p>
-              <div className="timeline-list">
-              {content.resume.experience.map((item) => (
-                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
-                  <h3>{item.title}</h3>
-                  <p className="timeline-meta">
-                    {item.href ? (
-                      <a href={item.href} rel="noopener noreferrer" target="_blank">
-                        {item.subtitle}
-                      </a>
-                    ) : (
-                      item.subtitle
-                    )}
-                  </p>
-                  <ul>
-                    {item.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-            </div>
-
-            <div>
-              <p className="section-kicker">{content.resume.educationTitle}</p>
-            <div className="timeline-list">
-              {content.resume.education.map((item) => (
-                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
-                  <h3>{item.title}</h3>
-                  <p className="timeline-meta">{item.subtitle}</p>
-                  <ul>
-                    {item.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-            </div>
-
-            <div>
-              <p className="section-kicker">{content.resume.certificationsTitle}</p>
-            <div className="timeline-list">
-              {content.resume.certifications.map((item) => (
-                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
-                  <h3>{item.title}</h3>
-                  <p className="timeline-meta">{item.subtitle}</p>
-                  <ul>
-                    {item.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-block" id="blog" aria-labelledby="blog-heading">
-        <div className="shell">
-          <div className="section-heading section-heading-inline">
-            <div>
-              <p className="section-kicker">{content.blog.kicker}</p>
-              <h2 id="blog-heading">{content.blog.listingTitle}</h2>
-            </div>
-            <Link className="button button-secondary" href="/blog">
-              {content.blog.viewAllLabel}
-            </Link>
-          </div>
-
-          <div className="cards-grid">
-            {latestPosts.map((post) => (
-              <article key={post.slug} className="panel blog-card">
-                <p className="blog-meta">
-                  <time dateTime={post.date}>{post.date}</time> · {post.readTime}
-                </p>
-                <h3>{post.title}</h3>
-                <p>{post.excerpt}</p>
-                <Link className="text-link" href={`/blog/${post.slug}`}>
-                  {content.blog.readMoreLabel}
-                  <span className="visually-hidden"> – {post.title}</span>
-                </Link>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section-block" id="contact" aria-labelledby="contact-heading">
-        <div className="shell contact-grid">
-          <div>
-            <p className="section-kicker">{content.contact.kicker}</p>
-            <h2 id="contact-heading">{content.contact.title}</h2>
-            <p className="section-copy">{content.contact.intro}</p>
-
-            <div className="contact-list">
-              <a href={`mailto:${content.site.email}`} aria-label={`Email ${content.site.name}`}>
-                <AppIcon name="mail" aria-hidden="true" />
-                <span>{content.site.email}</span>
-              </a>
-              <a href={`tel:${content.site.phone}`} aria-label={`Call ${content.site.name}`}>
-                <AppIcon name="phone" aria-hidden="true" />
-                <span>{content.site.phone}</span>
-              </a>
-              <div>
-                <AppIcon name="map-pin" aria-hidden="true" />
-                <span>{content.site.location}</span>
-              </div>
-            </div>
-          </div>
-
-          <article className="panel whatsapp-panel">
-            <AppIcon className="whatsapp-icon" name="message-circle" aria-hidden="true" />
-            <h3>{content.contact.whatsappTitle}</h3>
-            <p>{content.contact.whatsappDescription}</p>
-            <a
-              className="button button-primary"
-              href={`https://wa.me/${content.site.whatsapp}`}
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label={`${content.contact.whatsappButtonLabel} on WhatsApp`}
-            >
-              {content.contact.whatsappButtonLabel}
-            </a>
-          </article>
-        </div>
-      </section>
-    </>
-  );
-                    }import type { Route } from "next";
-import Link from "next/link";
-
-import { AppIcon } from "@/components/icon";
-import { getSiteContent } from "@/lib/site-content";
-
-export const dynamic = "force-dynamic";
-
-export default async function HomePage() {
-  const content = await getSiteContent();
-  const latestPosts = content.blog.posts.slice(0, 3);
-
-  return (
-    <>
-      <section className="hero-section" id="home">
-        <div className="shell hero-grid">
-          <div className="hero-copy">
-            <div className="availability-pill">{content.hero.availability}</div>
-            <p className="eyebrow">{content.hero.eyebrow}</p>
-            <h1>{content.hero.headline}</h1>
-            <p className="lede">{content.hero.description}</p>
-
-            <div className="cta-row">
-              <Link className="button button-primary" href={content.hero.primaryCta.href as Route}>
-                {content.hero.primaryCta.label}
-              </Link>
-              <Link className="button button-secondary" href={content.hero.secondaryCta.href as Route}>
-                {content.hero.secondaryCta.label}
-              </Link>
-            </div>
-          </div>
-
-          <div className="hero-visual">
-            <div className="hero-image-card">
-              <img alt={content.hero.image.alt} className="hero-image" src={content.hero.image.src} />
-            </div>
-            <div className="floating-stat">
-              <AppIcon className="stat-icon" name="trending-up" />
-              <div>
-                <strong>{content.hero.stat.value}</strong>
-                <span>{content.hero.stat.label}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-block" id="about">
-        <div className="shell">
-          <div className="bento-grid about-grid">
-            <article className="panel panel-large">
-              <p className="section-kicker">{content.about.kicker}</p>
-              <h2>{content.about.title}</h2>
-              <p className="section-copy">{content.about.intro}</p>
-              <p className="section-copy">{content.about.body}</p>
-
-              <div className="stat-grid">
-                {content.about.stats.map((item) => (
-                  <div key={item.label} className="mini-stat">
-                    <strong>{item.value}</strong>
-                    <span>{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <div className="stacked-cards">
-              {content.about.highlightCards.map((item) => (
-                <article key={item.title} className="panel panel-tall">
-                  <AppIcon className="card-icon" name={item.icon} />
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          <div className="section-heading">
-            <p className="section-kicker">{content.about.organizationsKicker}</p>
-            <h2>{content.about.organizationsTitle}</h2>
-          </div>
-
-          <div className="logo-marquee" aria-label={content.about.organizationsTitle}>
+      {/* Organizations marquee */}
+      <section style={{ padding: "10px 0 60px" }}>
+        <div className="container">
+          <div className="logo-marquee">
             <div className="logo-track">
-              {[...content.about.organizations, ...content.about.organizations].map((org, index) => (
-                <article key={`${org.name}-${index}`} className="logo-card">
-                  {org.href ? (
-                    <a href={org.href} rel="noreferrer" target="_blank">
-                      <img alt={org.alt} src={org.logo} />
-                    </a>
-                  ) : (
-                    <img alt={org.alt} src={org.logo} />
-                  )}
-                </article>
+              {[...about.organizations, ...about.organizations].map((org, i) => (
+                <div key={`${org.name}-${i}`} className="logo-item">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={org.logo} alt={org.alt} loading="lazy" />
+                  <span>{org.name}</span>
+                </div>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section-block" id="services">
-        <div className="shell">
-          <div className="section-heading">
-            <p className="section-kicker">{content.services.kicker}</p>
-            <h2>{content.services.title}</h2>
+      {/* Services */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-head section-head-row">
+            <div>
+              <p className="kicker">What I Do</p>
+              <h2>Services built around measurable growth</h2>
+            </div>
+            <Link href="/services" className="text-link">
+              All services <Icon name="arrow-right" size={16} />
+            </Link>
           </div>
-
-          <div className="cards-grid">
-            {content.services.items.map((service) => (
-              <article key={service.title} className="panel">
-                <div className="service-icon">
-                  <AppIcon name={service.icon} />
+          <div className="card-grid">
+            {services.slice(0, 6).map((service) => (
+              <Link
+                key={service.slug}
+                href={`/services/${service.slug}`}
+                className="card"
+              >
+                <div className="card-icon">
+                  <Icon name={service.icon} size={24} />
                 </div>
                 <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </article>
+                <p>{service.shortDescription}</p>
+                <span className="text-link">
+                  Learn more <Icon name="arrow-right" size={15} />
+                </span>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section-block" id="projects">
-        <div className="shell">
-          <div className="section-heading">
-            <p className="section-kicker">{content.projects.kicker}</p>
-            <h2>{content.projects.title}</h2>
-            <p className="section-copy">{content.projects.intro}</p>
+      {/* Featured work */}
+      <section className="section">
+        <div className="container">
+          <div className="section-head section-head-row">
+            <div>
+              <p className="kicker">Selected Work</p>
+              <h2>Brands and campaigns I&apos;ve supported</h2>
+            </div>
+            <Link href="/portfolio" className="text-link">
+              Full portfolio <Icon name="arrow-right" size={16} />
+            </Link>
           </div>
-
-          <div className="project-showcase">
-            {content.projects.items.map((project) => (
-              <article key={project.title} className="panel project-card">
-                <div className="project-image-wrap">
-                  <img alt={project.image.alt} src={project.image.src} />
+          <div className="card-grid">
+            {featuredProjects.map((project) => (
+              <article key={project.title} className="project-card">
+                <div className="project-media">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={project.imageSrc} alt={project.imageAlt} loading="lazy" />
                 </div>
-
-                <div className="project-card-body">
-                  <p className="project-meta">{project.category}</p>
-
-                  <div className="project-heading">
-                    <h3>{project.title}</h3>
-                    {project.result ? <span className="project-result">{project.result}</span> : null}
-                  </div>
-
+                <div className="project-body">
+                  <span className="project-category">{project.category}</span>
+                  <h3>{project.title}</h3>
                   <p>{project.description}</p>
-
                   <div className="project-tags">
                     {project.tags.map((tag) => (
-                      <span key={tag} className="project-tag">
+                      <span key={tag} className="chip">
                         {tag}
                       </span>
                     ))}
                   </div>
-
-                  {project.href ? (
-                    <Link className="text-link" href={project.href as Route}>
-                      {project.ctaLabel ?? "View project"}
-                    </Link>
-                  ) : null}
+                  {project.result && (
+                    <span className="project-result">
+                      <Icon name="check" size={15} /> {project.result}
+                    </span>
+                  )}
                 </div>
               </article>
             ))}
           </div>
+        </div>
+      </section>
 
-          <article className="panel project-note">
-            <div className="project-note-copy">
-              <AppIcon className="lock-icon" name="lock" />
-              <div>
-                <h3>{content.projects.lockedTitle}</h3>
-                <p>{content.projects.lockedDescription}</p>
+      {/* Behind the work */}
+      <section className="section">
+        <div className="container">
+          <div className="photo-split">
+            <div className="photo-frame">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/image/janak-life-2.webp"
+                alt="Janak Pokharel working on a laptop"
+                loading="lazy"
+              />
+              <span className="photo-caption">
+                <Icon name="sparkles" size={14} /> Deep work mode
+              </span>
+            </div>
+            <div>
+              <p className="kicker">Behind the Work</p>
+              <h2 style={{ fontSize: "clamp(26px, 3.4vw, 38px)", marginBottom: 16 }}>
+                No account layers. No recycled playbooks. Just focused execution.
+              </h2>
+              <p style={{ color: "var(--text-muted)", fontSize: 16.5 }}>
+                When you work with me, the person building your strategy is the same
+                person executing it. That means faster decisions, honest reporting,
+                and campaigns shaped around your actual business, not a template.
+              </p>
+              <ul className="checklist">
+                <li>
+                  <Icon name="check" size={18} />
+                  Strategy, execution, and reporting handled by one accountable person
+                </li>
+                <li>
+                  <Icon name="check" size={18} />
+                  Weekly progress you can actually see, rankings, leads, and revenue
+                </li>
+                <li>
+                  <Icon name="check" size={18} />
+                  Direct communication on WhatsApp or email, no ticket queues
+                </li>
+              </ul>
+              <div className="hero-actions" style={{ marginTop: 30 }}>
+                <Link href="/about" className="btn btn-ghost">
+                  More about me <Icon name="arrow-right" size={16} />
+                </Link>
               </div>
             </div>
-
-            <Link className="button button-primary" href={content.projects.lockedCtaHref as Route}>
-              {content.projects.lockedCtaLabel}
-            </Link>
-          </article>
-        </div>
-      </section>
-
-      <section className="section-block">
-        <div className="shell">
-          <div className="section-heading">
-            <p className="section-kicker">{content.resume.kicker}</p>
-            <h2>{content.site.name} Resume Snapshot</h2>
-          </div>
-
-          <div className="resume-grid">
-            <div>
-              <p className="section-kicker">{content.resume.experienceTitle}</p>
-              <div className="timeline-list">
-              {content.resume.experience.map((item) => (
-                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
-                  <h3>{item.title}</h3>
-                  <p className="timeline-meta">
-                    {item.href ? (
-                      <a href={item.href} rel="noreferrer" target="_blank">
-                        {item.subtitle}
-                      </a>
-                    ) : (
-                      item.subtitle
-                    )}
-                  </p>
-                  <ul>
-                    {item.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-            </div>
-
-            <div>
-              <p className="section-kicker">{content.resume.educationTitle}</p>
-            <div className="timeline-list">
-              {content.resume.education.map((item) => (
-                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
-                  <h3>{item.title}</h3>
-                  <p className="timeline-meta">{item.subtitle}</p>
-                  <ul>
-                    {item.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-            </div>
-
-            <div>
-              <p className="section-kicker">{content.resume.certificationsTitle}</p>
-            <div className="timeline-list">
-              {content.resume.certifications.map((item) => (
-                <article key={`${item.title}-${item.subtitle}`} className="timeline-item">
-                  <h3>{item.title}</h3>
-                  <p className="timeline-meta">{item.subtitle}</p>
-                  <ul>
-                    {item.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-            </div>
           </div>
         </div>
       </section>
 
-      <section className="section-block" id="blog">
-        <div className="shell">
-          <div className="section-heading section-heading-inline">
+      {/* Latest posts */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-head section-head-row">
             <div>
-              <p className="section-kicker">{content.blog.kicker}</p>
-              <h2>{content.blog.listingTitle}</h2>
+              <p className="kicker">From the Blog</p>
+              <h2>Latest digital marketing insights</h2>
             </div>
-            <Link className="button button-secondary" href="/blog">
-              {content.blog.viewAllLabel}
+            <Link href="/blog" className="text-link">
+              All articles <Icon name="arrow-right" size={16} />
             </Link>
           </div>
-
-          <div className="cards-grid">
+          <div className="post-grid">
             {latestPosts.map((post) => (
-              <article key={post.slug} className="panel blog-card">
-                <p className="blog-meta">
-                  {post.date} - {post.readTime}
-                </p>
-                <h3>{post.title}</h3>
-                <p>{post.excerpt}</p>
-                <Link className="text-link" href={`/blog/${post.slug}`}>
-                  {content.blog.readMoreLabel}
-                </Link>
-              </article>
+              <PostCard key={post.slug} post={post} />
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section-block" id="contact">
-        <div className="shell contact-grid">
-          <div>
-            <p className="section-kicker">{content.contact.kicker}</p>
-            <h2>{content.contact.title}</h2>
-            <p className="section-copy">{content.contact.intro}</p>
+      {/* FAQ — real content + FAQ schema for search & AI answers */}
+      <section className="section">
+        <div className="container">
+          <JsonLd data={faqLd} />
+          <div className="section-head" style={{ maxWidth: 720 }}>
+            <p className="kicker">Common Questions</p>
+            <h2>SEO, Meta Ads &amp; Google Ads, answered</h2>
+            <p>
+              A few things business owners ask before starting a search and paid
+              advertising project with a dedicated SEO and Ads manager.
+            </p>
+          </div>
+          <div className="faq-list" style={{ maxWidth: 820 }}>
+            {homeFaqs.map((faq, i) => (
+              <details key={faq.question} className="faq-item" open={i === 0}>
+                <summary>{faq.question}</summary>
+                <div>{faq.answer}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <div className="contact-list">
-              <a href={`mailto:${content.site.email}`}>
-                <AppIcon name="mail" />
-                <span>{content.site.email}</span>
+      {/* CTA */}
+      <section className="section">
+        <div className="container">
+          <div className="cta-band">
+            <p className="kicker" style={{ justifyContent: "center" }}>
+              Ready When You Are
+            </p>
+            <h2>Let&apos;s build your next growth system</h2>
+            <p>
+              Whether it&apos;s SEO, paid ads, or a full-funnel strategy, tell me about
+              your business and I&apos;ll show you exactly where the opportunity is.
+            </p>
+            <div className="hero-actions" style={{ justifyContent: "center" }}>
+              <Link href="/contact" className="btn btn-primary btn-lg">
+                Start a Project <Icon name="arrow-right" size={18} />
+              </Link>
+              <a
+                href={`https://wa.me/${settings.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost btn-lg"
+              >
+                <Icon name="message-circle" size={18} /> WhatsApp Me
               </a>
-              <a href={`tel:${content.site.phone}`}>
-                <AppIcon name="phone" />
-                <span>{content.site.phone}</span>
-              </a>
-              <div>
-                <AppIcon name="map-pin" />
-                <span>{content.site.location}</span>
-              </div>
             </div>
           </div>
-
-          <article className="panel whatsapp-panel">
-            <AppIcon className="whatsapp-icon" name="message-circle" />
-            <h3>{content.contact.whatsappTitle}</h3>
-            <p>{content.contact.whatsappDescription}</p>
-            <a
-              className="button button-primary"
-              href={`https://wa.me/${content.site.whatsapp}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {content.contact.whatsappButtonLabel}
-            </a>
-          </article>
         </div>
       </section>
     </>

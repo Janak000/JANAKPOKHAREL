@@ -1,46 +1,101 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import {
+  getBlogSettings,
+  getCategories,
+  getPosts,
+  absoluteUrl,
+  categorySlug,
+} from "@/lib/cms";
+import { PostCard } from "@/components/post-card";
+import { JsonLd } from "@/components/json-ld";
 
-import { getSiteContent } from "@/lib/site-content";
-
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { blog } = await getSiteContent();
-
+  const blog = await getBlogSettings();
   return {
-    title: "Blogs",
-    description: blog.description
+    title: blog.title,
+    description: blog.description,
+    alternates: {
+      canonical: "/blog",
+      types: { "application/rss+xml": absoluteUrl("/feed.xml") },
+    },
+    openGraph: {
+      title: blog.title,
+      description: blog.description,
+      url: absoluteUrl("/blog"),
+    },
   };
 }
 
 export default async function BlogPage() {
-  const { blog } = await getSiteContent();
+  const [blog, posts, categories] = await Promise.all([
+    getBlogSettings(),
+    getPosts(),
+    getCategories(),
+  ]);
+
+  const [first, ...rest] = posts;
+
+  const blogLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": absoluteUrl("/blog"),
+    name: blog.title,
+    description: blog.description,
+    url: absoluteUrl("/blog"),
+    author: { "@id": `${absoluteUrl("/")}#person` },
+    blogPost: posts.map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.title,
+      url: absoluteUrl(`/blog/${p.slug}`),
+      datePublished: p.publishedAt,
+      description: p.excerpt,
+    })),
+  };
 
   return (
-    <section className="section-block page-offset">
-      <div className="shell">
-        <div className="section-heading">
-          <p className="section-kicker">{blog.kicker}</p>
+    <>
+      <JsonLd data={blogLd} />
+      <section className="page-hero">
+        <div className="container">
+          <nav className="breadcrumbs" aria-label="Breadcrumb">
+            <Link href="/">Home</Link>
+            <span className="sep">/</span>
+            <span>Blog</span>
+          </nav>
+          <p className="kicker">The Blog</p>
           <h1>{blog.title}</h1>
-          <p className="section-copy">{blog.description}</p>
+          <p>{blog.description}</p>
         </div>
+      </section>
 
-        <div className="cards-grid">
-          {blog.posts.map((post) => (
-            <article key={post.slug} className="panel blog-card blog-card-full">
-              <p className="blog-meta">
-                {post.category} - {post.date} - {post.readTime}
-              </p>
-              <h2>{post.title}</h2>
-              <p>{post.excerpt}</p>
-              <Link className="text-link" href={`/blog/${post.slug}`}>
-                {blog.openPostLabel}
+      <section className="section" style={{ paddingTop: 12 }}>
+        <div className="container">
+          <div className="category-filter">
+            <Link href="/blog" className="chip chip-accent">
+              All posts
+            </Link>
+            {categories.map((c) => (
+              <Link
+                key={c}
+                href={`/blog/category/${categorySlug(c)}`}
+                className="chip"
+              >
+                {c}
               </Link>
-            </article>
-          ))}
+            ))}
+          </div>
+
+          <div className="post-grid">
+            {first && <PostCard post={first} featured />}
+            {rest.map((post) => (
+              <PostCard key={post.slug} post={post} />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

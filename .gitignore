@@ -1,12 +1,4 @@
-node_modules
-.next
-.vercel
-dist
-coverage
-*.log
-*.tsbuildinfo
-.env.local
-.env
-.agents
-.claude
-skills-lock.json
+node_modules/
+.next/
+.env*.local
+tsconfig.tsbuildinfo

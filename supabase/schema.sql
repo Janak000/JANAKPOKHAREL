@@ -1,5 +1,11 @@
+-- ============================================================
+-- janakpokharel.com.np, CMS schema
+-- Run this in Supabase: SQL Editor → New query → paste → Run
+-- ============================================================
+
 create extension if not exists pgcrypto;
 
+-- ---------- Admin access ----------
 create table if not exists public.admin_users (
   user_id uuid primary key references auth.users (id) on delete cascade,
   created_at timestamptz not null default now()
@@ -9,290 +15,201 @@ create or replace function public.is_admin_user()
 returns boolean
 language sql
 stable
+security definer
+set search_path = public
 as $$
   select exists (
-    select 1
-    from public.admin_users
-    where user_id = auth.uid()
+    select 1 from public.admin_users where user_id = auth.uid()
   );
 $$;
 
-create type public.resume_entry_kind as enum ('experience', 'education', 'certification');
-
-create table if not exists public.site_settings (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  short_name text not null,
-  role text not null,
-  tagline text not null,
-  description text not null,
-  url text not null,
-  email text not null,
-  phone text not null,
-  whatsapp text not null,
-  location text not null,
-  facebook_url text,
-  linkedin_url text,
-  gtm_id text,
-  ga_id text,
-  og_image_url text,
-  keywords jsonb not null default '[]'::jsonb,
-  navigation_cta_label text not null,
-  navigation_cta_href text not null,
-  footer_explore_title text not null,
-  footer_contact_title text not null,
-  footer_copyright_text text not null,
-  created_at timestamptz not null default now(),
+-- ---------- Flexible page content (hero, about, contact, blog, settings) ----------
+create table if not exists public.content_blocks (
+  key text primary key,
+  data jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
 
-create table if not exists public.navigation_links (
-  id uuid primary key default gen_random_uuid(),
-  label text not null,
-  href text not null,
-  sort_order integer not null default 0
-);
-create index if not exists navigation_links_sort_idx on public.navigation_links (sort_order);
-
-create table if not exists public.hero_sections (
-  id uuid primary key default gen_random_uuid(),
-  availability text not null,
-  eyebrow text not null,
-  headline text not null,
-  description text not null,
-  primary_cta_label text not null,
-  primary_cta_href text not null,
-  secondary_cta_label text not null,
-  secondary_cta_href text not null,
-  image_src text not null,
-  image_alt text not null,
-  stat_value text not null,
-  stat_label text not null
-);
-
-create table if not exists public.about_sections (
-  id uuid primary key default gen_random_uuid(),
-  kicker text not null,
-  title text not null,
-  intro text not null,
-  body text not null,
-  organizations_kicker text not null,
-  organizations_title text not null
-);
-
-create table if not exists public.about_stats (
-  id uuid primary key default gen_random_uuid(),
-  value text not null,
-  label text not null,
-  sort_order integer not null default 0
-);
-create index if not exists about_stats_sort_idx on public.about_stats (sort_order);
-
-create table if not exists public.highlight_cards (
-  id uuid primary key default gen_random_uuid(),
-  icon text not null,
-  title text not null,
-  description text not null,
-  sort_order integer not null default 0
-);
-create index if not exists highlight_cards_sort_idx on public.highlight_cards (sort_order);
-
-create table if not exists public.organizations (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  logo_url text not null,
-  alt text not null,
-  href text,
-  sort_order integer not null default 0
-);
-create index if not exists organizations_sort_idx on public.organizations (sort_order);
-
-create table if not exists public.services_sections (
-  id uuid primary key default gen_random_uuid(),
-  kicker text not null,
-  title text not null
-);
-
+-- ---------- Services (each gets its own SEO page at /services/[slug]) ----------
 create table if not exists public.services (
   id uuid primary key default gen_random_uuid(),
-  icon text not null,
+  slug text not null unique,
+  icon text not null default 'sparkles',
   title text not null,
-  description text not null,
-  sort_order integer not null default 0
+  short_description text not null default '',
+  body_md text not null default '',
+  meta_title text,
+  meta_description text,
+  sort_order integer not null default 0,
+  published boolean not null default true,
+  created_at timestamptz not null default now()
 );
-create index if not exists services_sort_idx on public.services (sort_order);
+create index if not exists services_sort_idx on public.services (published, sort_order);
 
-create table if not exists public.projects_sections (
-  id uuid primary key default gen_random_uuid(),
-  kicker text not null,
-  title text not null,
-  intro text not null,
-  locked_title text not null,
-  locked_description text not null,
-  locked_cta_label text not null,
-  locked_cta_href text not null
-);
-
+-- ---------- Portfolio projects ----------
 create table if not exists public.projects (
   id uuid primary key default gen_random_uuid(),
   title text not null,
-  category text not null,
-  description text not null,
-  image_src text not null,
-  image_alt text not null,
+  category text not null default '',
+  description text not null default '',
+  image_src text not null default '',
+  image_alt text not null default '',
+  tags text[] not null default '{}',
   result text,
-  href text,
-  cta_label text,
-  is_locked boolean not null default false,
-  sort_order integer not null default 0
+  sort_order integer not null default 0,
+  published boolean not null default true,
+  created_at timestamptz not null default now()
 );
-create index if not exists projects_sort_idx on public.projects (sort_order);
+create index if not exists projects_sort_idx on public.projects (published, sort_order);
 
-create table if not exists public.project_tags (
-  id uuid primary key default gen_random_uuid(),
-  project_id uuid not null references public.projects (id) on delete cascade,
-  tag text not null,
-  sort_order integer not null default 0
-);
-create index if not exists project_tags_project_idx on public.project_tags (project_id, sort_order);
-
-create table if not exists public.resume_sections (
-  id uuid primary key default gen_random_uuid(),
-  kicker text not null,
-  experience_title text not null,
-  education_title text not null,
-  certifications_title text not null
-);
+-- ---------- Resume ----------
+do $$ begin
+  create type public.resume_kind as enum ('experience', 'education', 'certification');
+exception when duplicate_object then null; end $$;
 
 create table if not exists public.resume_entries (
   id uuid primary key default gen_random_uuid(),
-  kind public.resume_entry_kind not null,
+  kind public.resume_kind not null,
   title text not null,
-  subtitle text not null,
+  subtitle text not null default '',
   href text,
+  points text[] not null default '{}',
   sort_order integer not null default 0
 );
-create index if not exists resume_entries_kind_sort_idx on public.resume_entries (kind, sort_order);
+create index if not exists resume_entries_idx on public.resume_entries (kind, sort_order);
 
-create table if not exists public.resume_entry_points (
-  id uuid primary key default gen_random_uuid(),
-  resume_entry_id uuid not null references public.resume_entries (id) on delete cascade,
-  point text not null,
-  sort_order integer not null default 0
-);
-create index if not exists resume_entry_points_idx on public.resume_entry_points (resume_entry_id, sort_order);
-
-create table if not exists public.blog_settings (
-  id uuid primary key default gen_random_uuid(),
-  kicker text not null,
-  title text not null,
-  listing_title text not null,
-  description text not null,
-  view_all_label text not null,
-  read_more_label text not null,
-  open_post_label text not null,
-  back_to_blog_label text not null,
-  faq_title text not null
-);
-
-create table if not exists public.blog_posts (
+-- ---------- Blog posts ----------
+create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
   title text not null,
-  display_date text not null,
-  category text not null,
-  excerpt text not null,
-  meta_description text not null,
-  read_time text not null,
-  hero_intro text not null,
-  content_html text not null,
-  cta_title text not null,
-  cta_button_label text not null,
-  cta_button_href text not null,
-  is_published boolean not null default true,
-  sort_order integer not null default 0,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  category text not null default 'General',
+  tags text[] not null default '{}',
+  excerpt text not null default '',
+  meta_title text,
+  meta_description text not null default '',
+  cover_image text,
+  read_time text not null default '5 min read',
+  hero_intro text not null default '',
+  body_md text not null default '',
+  faqs jsonb not null default '[]'::jsonb,
+  featured boolean not null default false,
+  published boolean not null default false,
+  published_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  created_at timestamptz not null default now()
 );
-create index if not exists blog_posts_sort_idx on public.blog_posts (is_published, sort_order);
+create index if not exists posts_published_idx on public.posts (published, published_at desc);
 
-create table if not exists public.blog_post_faqs (
+-- ---------- Contact form messages ----------
+create table if not exists public.messages (
   id uuid primary key default gen_random_uuid(),
-  blog_post_id uuid not null references public.blog_posts (id) on delete cascade,
-  question text not null,
-  answer text not null,
-  sort_order integer not null default 0
-);
-create index if not exists blog_post_faqs_idx on public.blog_post_faqs (blog_post_id, sort_order);
-
-create table if not exists public.contact_sections (
-  id uuid primary key default gen_random_uuid(),
-  kicker text not null,
-  title text not null,
-  intro text not null,
-  whatsapp_title text not null,
-  whatsapp_description text not null,
-  whatsapp_button_label text not null,
-  footer_note text not null
+  name text not null,
+  email text not null,
+  topic text,
+  message text not null,
+  created_at timestamptz not null default now()
 );
 
+-- ============================================================
+-- Row Level Security
+-- ============================================================
 alter table public.admin_users enable row level security;
-alter table public.site_settings enable row level security;
-alter table public.navigation_links enable row level security;
-alter table public.hero_sections enable row level security;
-alter table public.about_sections enable row level security;
-alter table public.about_stats enable row level security;
-alter table public.highlight_cards enable row level security;
-alter table public.organizations enable row level security;
-alter table public.services_sections enable row level security;
+alter table public.content_blocks enable row level security;
 alter table public.services enable row level security;
-alter table public.projects_sections enable row level security;
 alter table public.projects enable row level security;
-alter table public.project_tags enable row level security;
-alter table public.resume_sections enable row level security;
 alter table public.resume_entries enable row level security;
-alter table public.resume_entry_points enable row level security;
-alter table public.blog_settings enable row level security;
-alter table public.blog_posts enable row level security;
-alter table public.blog_post_faqs enable row level security;
-alter table public.contact_sections enable row level security;
+alter table public.posts enable row level security;
+alter table public.messages enable row level security;
 
-create policy "public_read_site_settings" on public.site_settings for select using (true);
-create policy "public_read_navigation_links" on public.navigation_links for select using (true);
-create policy "public_read_hero_sections" on public.hero_sections for select using (true);
-create policy "public_read_about_sections" on public.about_sections for select using (true);
-create policy "public_read_about_stats" on public.about_stats for select using (true);
-create policy "public_read_highlight_cards" on public.highlight_cards for select using (true);
-create policy "public_read_organizations" on public.organizations for select using (true);
-create policy "public_read_services_sections" on public.services_sections for select using (true);
-create policy "public_read_services" on public.services for select using (true);
-create policy "public_read_projects_sections" on public.projects_sections for select using (true);
-create policy "public_read_projects" on public.projects for select using (true);
-create policy "public_read_project_tags" on public.project_tags for select using (true);
-create policy "public_read_resume_sections" on public.resume_sections for select using (true);
-create policy "public_read_resume_entries" on public.resume_entries for select using (true);
-create policy "public_read_resume_entry_points" on public.resume_entry_points for select using (true);
-create policy "public_read_blog_settings" on public.blog_settings for select using (true);
-create policy "public_read_blog_posts" on public.blog_posts for select using (is_published = true);
-create policy "public_read_blog_post_faqs" on public.blog_post_faqs for select using (true);
-create policy "public_read_contact_sections" on public.contact_sections for select using (true);
+-- Admins can see their own admin row (used to verify admin status)
+drop policy if exists "own_admin_row" on public.admin_users;
+create policy "own_admin_row" on public.admin_users
+  for select using (auth.uid() = user_id);
 
-create policy "admin_manage_site_settings" on public.site_settings for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_navigation_links" on public.navigation_links for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_hero_sections" on public.hero_sections for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_about_sections" on public.about_sections for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_about_stats" on public.about_stats for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_highlight_cards" on public.highlight_cards for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_organizations" on public.organizations for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_services_sections" on public.services_sections for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_services" on public.services for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_projects_sections" on public.projects_sections for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_projects" on public.projects for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_project_tags" on public.project_tags for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_resume_sections" on public.resume_sections for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_resume_entries" on public.resume_entries for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_resume_entry_points" on public.resume_entry_points for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_blog_settings" on public.blog_settings for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_blog_posts" on public.blog_posts for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_blog_post_faqs" on public.blog_post_faqs for all using (public.is_admin_user()) with check (public.is_admin_user());
-create policy "admin_manage_contact_sections" on public.contact_sections for all using (public.is_admin_user()) with check (public.is_admin_user());
+-- Public read for site content
+drop policy if exists "public_read_content_blocks" on public.content_blocks;
+create policy "public_read_content_blocks" on public.content_blocks
+  for select using (true);
+
+drop policy if exists "public_read_services" on public.services;
+create policy "public_read_services" on public.services
+  for select using (published = true or public.is_admin_user());
+
+drop policy if exists "public_read_projects" on public.projects;
+create policy "public_read_projects" on public.projects
+  for select using (published = true or public.is_admin_user());
+
+drop policy if exists "public_read_resume" on public.resume_entries;
+create policy "public_read_resume" on public.resume_entries
+  for select using (true);
+
+drop policy if exists "public_read_posts" on public.posts;
+create policy "public_read_posts" on public.posts
+  for select using (published = true or public.is_admin_user());
+
+-- Anyone can submit a contact message; only admins can read/delete them
+drop policy if exists "anon_insert_messages" on public.messages;
+create policy "anon_insert_messages" on public.messages
+  for insert with check (true);
+
+drop policy if exists "admin_read_messages" on public.messages;
+create policy "admin_read_messages" on public.messages
+  for select using (public.is_admin_user());
+
+drop policy if exists "admin_delete_messages" on public.messages;
+create policy "admin_delete_messages" on public.messages
+  for delete using (public.is_admin_user());
+
+-- Admins manage everything
+drop policy if exists "admin_all_content_blocks" on public.content_blocks;
+create policy "admin_all_content_blocks" on public.content_blocks
+  for all using (public.is_admin_user()) with check (public.is_admin_user());
+
+drop policy if exists "admin_all_services" on public.services;
+create policy "admin_all_services" on public.services
+  for all using (public.is_admin_user()) with check (public.is_admin_user());
+
+drop policy if exists "admin_all_projects" on public.projects;
+create policy "admin_all_projects" on public.projects
+  for all using (public.is_admin_user()) with check (public.is_admin_user());
+
+drop policy if exists "admin_all_resume" on public.resume_entries;
+create policy "admin_all_resume" on public.resume_entries
+  for all using (public.is_admin_user()) with check (public.is_admin_user());
+
+drop policy if exists "admin_all_posts" on public.posts;
+create policy "admin_all_posts" on public.posts
+  for all using (public.is_admin_user()) with check (public.is_admin_user());
+
+-- ============================================================
+-- Storage: public "media" bucket for CMS image uploads
+-- ============================================================
+insert into storage.buckets (id, name, public)
+values ('media', 'media', true)
+on conflict (id) do nothing;
+
+drop policy if exists "public_read_media" on storage.objects;
+create policy "public_read_media" on storage.objects
+  for select using (bucket_id = 'media');
+
+drop policy if exists "admin_insert_media" on storage.objects;
+create policy "admin_insert_media" on storage.objects
+  for insert with check (bucket_id = 'media' and public.is_admin_user());
+
+drop policy if exists "admin_update_media" on storage.objects;
+create policy "admin_update_media" on storage.objects
+  for update using (bucket_id = 'media' and public.is_admin_user());
+
+drop policy if exists "admin_delete_media" on storage.objects;
+create policy "admin_delete_media" on storage.objects
+  for delete using (bucket_id = 'media' and public.is_admin_user());
+
+-- ============================================================
+-- AFTER creating your login user (Authentication → Users → Add user),
+-- grant it admin access by running (replace the email):
+--
+--   insert into public.admin_users (user_id)
+--   select id from auth.users where email = 'janak.pokharel@nomor.tech'
+--   on conflict do nothing;
+-- ============================================================

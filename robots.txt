@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://janakpokharel.com.np/sitemap.xml
