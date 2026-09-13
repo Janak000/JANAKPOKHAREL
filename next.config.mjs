@@ -27,6 +27,14 @@ const nextConfig = {
         permanent: true,
       },
 
+      // Deleted service page Google still has queued as "Discovered". No
+      // rebuild planned: seo-services-nepal covers the same intent.
+      {
+        source: "/services/ecommerce-seo-nepal",
+        destination: "/services/seo-services-nepal",
+        permanent: true,
+      },
+
       // Never existed, but /services/advanced-seo links to it. Point at the hub
       // until a real GEO service page is written, then remove this rule.
       {
