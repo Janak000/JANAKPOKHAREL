@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: `Contact ${settings.name} for SEO, Meta Ads, and Google Ads projects. Based in ${settings.location}, working worldwide. Reply within 24 hours.`,
     alternates: { canonical: "/contact" },
     openGraph: {
+      images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
       title: `Contact ${settings.name} | SEO & Ads Manager`,
       description: `Start an SEO, Meta Ads, or Google Ads project with ${settings.name}. Based in ${settings.location}, working worldwide.`,
       url: absoluteUrl("/contact"),
