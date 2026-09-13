@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   getBlogSettings,
+  getSettings,
   getCategories,
   getPosts,
   absoluteUrl,
@@ -13,7 +14,7 @@ import { JsonLd } from "@/components/json-ld";
 export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const blog = await getBlogSettings();
+  const [blog, settings] = await Promise.all([getBlogSettings(), getSettings()]);
   return {
     title: blog.title,
     description: blog.description,
@@ -22,6 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
       types: { "application/rss+xml": absoluteUrl("/feed.xml") },
     },
     openGraph: {
+      images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
       title: blog.title,
       description: blog.description,
       url: absoluteUrl("/blog"),
