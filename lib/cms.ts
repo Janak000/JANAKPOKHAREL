@@ -28,25 +28,62 @@ export const cmsEnabled = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
 export const REVALIDATE_SECONDS = 120;
 
+/**
+ * A single failed fetch used to be indistinguishable from "no CMS configured",
+ * so one transient error during an ISR regeneration replaced a page with
+ * hardcoded fallback content and cached that for the full revalidate window.
+ * Observed live: roughly one request in six served fallback copy, which means
+ * Googlebot can crawl the wrong version of a page at random.
+ *
+ * Two changes: retry once before giving up, and let callers tell a genuine
+ * failure apart from an unconfigured CMS.
+ */
+export class CmsUnavailableError extends Error {
+  constructor(path: string) {
+    super(`CMS fetch failed: ${path}`);
+    this.name = "CmsUnavailableError";
+  }
+}
+
 async function rest<T>(path: string): Promise<T | null> {
   if (!cmsEnabled) return null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY as string,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        next: { revalidate: REVALIDATE_SECONDS, tags: ["content"] },
+      });
+      if (res.ok) return (await res.json()) as T;
+    } catch {
+      // fall through to retry
+    }
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 250));
+  }
+
+  throw new CmsUnavailableError(path);
+}
+
+/**
+ * Used by the content-critical getters. When the CMS is configured but
+ * unreachable we rethrow, so Next keeps serving the last good generated page
+ * instead of overwriting it with fallback copy. Fallbacks are then only for a
+ * site with no CMS credentials at all.
+ */
+async function restOrNull<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY as string,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-      next: { revalidate: REVALIDATE_SECONDS, tags: ["content"] },
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
+    return await rest<T>(path);
+  } catch (err) {
+    if (err instanceof CmsUnavailableError && !cmsEnabled) return null;
+    throw err;
   }
 }
 
 async function getBlock<T>(key: string, fallback: T): Promise<T> {
-  const rows = await rest<{ data: T }[]>(
+  const rows = await restOrNull<{ data: T }[]>(
     `content_blocks?key=eq.${key}&select=data&limit=1`
   );
   if (rows && rows.length > 0 && rows[0].data) {
@@ -98,6 +135,7 @@ type ServiceRow = {
   slug: string;
   icon: string;
   title: string;
+  h1: string | null;
   short_description: string;
   body_md: string;
   meta_title: string | null;
@@ -107,7 +145,7 @@ type ServiceRow = {
 };
 
 export async function getServices(): Promise<Service[]> {
-  const rows = await rest<ServiceRow[]>(
+  const rows = await restOrNull<ServiceRow[]>(
     "services?published=eq.true&order=sort_order.asc&select=*"
   );
   if (!rows || rows.length === 0) return fallbackServices;
@@ -116,6 +154,7 @@ export async function getServices(): Promise<Service[]> {
     slug: r.slug,
     icon: r.icon,
     title: r.title,
+    h1: r.h1 ?? undefined,
     shortDescription: r.short_description,
     body: r.body_md,
     metaTitle: r.meta_title ?? undefined,

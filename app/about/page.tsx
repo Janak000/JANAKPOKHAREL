@@ -15,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: about.intro,
     alternates: { canonical: "/about" },
     openGraph: {
+      images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
       title: `About ${settings.name}`,
       description: about.intro,
       url: absoluteUrl("/about"),
