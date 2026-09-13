@@ -41,7 +41,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       modifiedTime: post.updatedAt,
       authors: [settings.name],
       tags: post.tags,
-      images: post.coverImage ? [{ url: post.coverImage }] : undefined,
+      // Fall back to the site OG image: no post has a cover yet, and an
+      // undefined images array meant every shared post rendered a blank card.
+      images: post.coverImage
+        ? [{ url: post.coverImage }]
+        : [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
     },
     twitter: {
       card: "summary_large_image",
