@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: `Brands and campaigns ${settings.name} has supported across SEO, Meta Ads, Google Ads, content, and growth, from local businesses to clients worldwide.`,
     alternates: { canonical: "/portfolio" },
     openGraph: {
+      images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
       title: `Portfolio | ${settings.name}`,
       description: `SEO and ads work across brands and campaigns by ${settings.name}.`,
       url: absoluteUrl("/portfolio"),
