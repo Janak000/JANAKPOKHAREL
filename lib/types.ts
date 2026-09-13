@@ -60,6 +60,8 @@ export type Service = {
   slug: string;
   icon: string;
   title: string;
+  /** Page heading. Falls back to `title`, which stays short for nav and cards. */
+  h1?: string;
   shortDescription: string;
   body: string;
   metaTitle?: string;
