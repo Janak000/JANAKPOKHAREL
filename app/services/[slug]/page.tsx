@@ -5,6 +5,7 @@ import { getService, getServices, getSettings, absoluteUrl } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
+import { extractFaqs, faqPageLd } from "@/lib/faq";
 
 export const revalidate = 120;
 
@@ -24,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: service.metaDescription || service.shortDescription,
     alternates: { canonical: `/services/${service.slug}` },
     openGraph: {
+      images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
       title: `${service.title} | ${settings.name}`,
       description: service.shortDescription,
       url: absoluteUrl(`/services/${service.slug}`),
@@ -57,6 +59,11 @@ export default async function ServiceDetailPage({ params }: Props) {
     serviceType: service.title,
   };
 
+  // Service bodies end with "## Frequently asked questions" and one H3 per
+  // question. Blog posts already emit FAQPage from a structured column; these
+  // live in markdown, so they are parsed out here. Empty array means no schema.
+  const faqs = extractFaqs(service.body);
+
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -76,6 +83,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     <>
       <JsonLd data={serviceLd} />
       <JsonLd data={breadcrumbLd} />
+      {faqs.length > 0 && <JsonLd data={faqPageLd(faqs)} />}
       <section className="page-hero">
         <div className="container">
           <nav className="breadcrumbs" aria-label="Breadcrumb">
@@ -88,7 +96,7 @@ export default async function ServiceDetailPage({ params }: Props) {
           <div className="card-icon" style={{ marginBottom: 22 }}>
             <Icon name={service.icon} size={26} />
           </div>
-          <h1>{service.title}</h1>
+          <h1>{service.h1 || service.title}</h1>
           <p>{service.shortDescription}</p>
         </div>
       </section>
