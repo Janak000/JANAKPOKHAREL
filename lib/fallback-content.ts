@@ -3,10 +3,13 @@ import type {
   BlogSettings,
   ContactContent,
   Hero,
+  HomeContent,
+  PortfolioPageContent,
   Post,
   Project,
   ResumeEntry,
   Service,
+  ServicesPageContent,
   SiteSettings,
 } from "./types";
 
@@ -97,6 +100,44 @@ export const fallbackAbout: AboutContent = {
     { name: "Click Dribble", logo: "/image/click dribble.webp", alt: "Click Dribble logo" },
     { name: "Nomor Tech", logo: "/image/nomor tech.webp", alt: "Nomor Tech logo" },
   ],
+  workKicker: "How I Work",
+  journeyKicker: "My Journey",
+  journeyTitle: "Experience, education & credentials",
+  trustedKicker: "Trusted By",
+  ctaTitle: "Want to work together?",
+  ctaText:
+    "I'm currently available for new SEO and ads projects. Let's talk about what growth looks like for your business.",
+  ctaLabel: "Get in Touch",
+  faqKicker: "About Janak",
+  faqTitle: "Questions people ask about me",
+  faqIntro: "Short answers about who I am, what I work on and how to reach me.",
+  faqs: [
+    {
+      question: "Who is Janak Pokharel?",
+      answer:
+        "Janak Pokharel is an SEO and paid ads service provider based in Kathmandu, Nepal, and the co-founder of Limi Creatives, a digital marketing agency. He works on organic SEO, answer engine optimization, Google Ads and Meta Ads for businesses all over the world.",
+    },
+    {
+      question: "What does Janak work on?",
+      answer:
+        "The work splits roughly 60 percent organic search and 40 percent paid advertising. Organic covers technical SEO, schema markup, content strategy, internal linking and local SEO. Paid covers Google Ads and Meta Ads across Facebook and Instagram.",
+    },
+    {
+      question: "What is answer engine optimization?",
+      answer:
+        "It is the practice of structuring content so systems such as ChatGPT, Perplexity, Google AI Overviews and Gemini can retrieve, understand and cite it. In practice that means self contained answers, explicit entity relationships and valid structured data rather than keyword density.",
+    },
+    {
+      question: "What is Limi Creatives?",
+      answer:
+        "Limi Creatives is the digital marketing agency Janak co-founded. When a project also needs design, video or motion graphics, the agency handles that alongside the search and ads work.",
+    },
+    {
+      question: "How can I get in touch?",
+      answer:
+        "Use the [contact page](/contact) or WhatsApp. Every genuine enquiry gets a reply within 24 hours, usually much sooner.",
+    },
+  ],
 };
 
 export const fallbackContact: ContactContent = {
@@ -106,6 +147,249 @@ export const fallbackContact: ContactContent = {
   whatsappTitle: "Let's Chat on WhatsApp",
   whatsappDescription:
     "Get quick responses for digital marketing questions, project discussions, or new campaign planning.",
+  nextKicker: "What Happens Next",
+  nextTitle: "From first message to a clear plan",
+  nextIntro:
+    "Reaching out costs nothing and there is no obligation. Here is exactly how the first conversation works.",
+  steps: [
+    {
+      icon: "message-circle",
+      title: "1. You get in touch",
+      description:
+        "Send a message with your website and goals. The more context you share about your business, the sharper my first response can be.",
+    },
+    {
+      icon: "search",
+      title: "2. I review your situation",
+      description:
+        "I look at your site, search visibility, and current ads, then reply within 24 hours with honest, specific direction, not a generic pitch.",
+    },
+    {
+      icon: "target",
+      title: "3. We map the opportunity",
+      description:
+        "On a short call we agree where the fastest wins are across SEO, Meta Ads, and Google Ads, and what a realistic plan and budget look like.",
+    },
+  ],
+  nextNote:
+    "Not sure what you need yet? Browse the [services](/services), or read [what SEO costs in Nepal](/blog/seo-price-nepal) and [what Google Ads costs per click](/blog/google-ads-cost-nepal) before we talk. If you want to see past work first, the [portfolio](/portfolio) lists the brands I have supported.",
+  faqKicker: "Before You Reach Out",
+  faqTitle: "Contact FAQs",
+  faqIntro: "Quick answers to what people ask before getting in touch.",
+  faqs: [
+    {
+      question: "How quickly will you respond?",
+      answer:
+        "I reply to every genuine enquiry within 24 hours, usually much sooner. For quick questions, WhatsApp is the fastest way to reach me.",
+    },
+    {
+      question: "How much do your SEO and ads services cost?",
+      answer:
+        "Pricing depends on scope, competition, and goals. After a short conversation I give you a clear, honest quote with no long lock-in contracts, so you always know what you are paying for.",
+    },
+    {
+      question: "Do you work with small businesses and startups?",
+      answer:
+        "Yes. Most of my clients are small and growing businesses that want focused execution and direct communication rather than a large agency retainer.",
+    },
+    {
+      question: "Which locations do you serve?",
+      answer:
+        "I am based in Kathmandu, Nepal and work with clients worldwide. Search and paid advertising are delivered remotely, with clear reporting throughout.",
+    },
+  ],
+};
+
+export const fallbackHome: HomeContent = {
+  servicesKicker: "What I Do",
+  servicesTitle: "Services built around measurable growth",
+  servicesLinkLabel: "All services",
+  workKicker: "Selected Work",
+  workTitle: "Brands and campaigns I've supported",
+  workLinkLabel: "Full portfolio",
+  behindKicker: "Behind the Work",
+  behindTitle: "No account layers. No recycled playbooks. Just focused execution.",
+  behindBody:
+    "When you work with me, the person building your strategy is the same person executing it. That means faster decisions, honest reporting, and campaigns shaped around your actual business, not a template.",
+  behindPoints: [
+    { text: "Strategy, execution, and reporting handled by one accountable person" },
+    { text: "Weekly progress you can actually see, rankings, leads, and revenue" },
+    { text: "Direct communication on WhatsApp or email, no ticket queues" },
+  ],
+  behindLinkLabel: "More about me",
+  blogKicker: "From the Blog",
+  blogTitle: "Latest digital marketing insights",
+  blogLinkLabel: "All articles",
+  faqKicker: "Common Questions",
+  faqTitle: "SEO, Meta Ads & Google Ads, answered",
+  faqIntro:
+    "A few things business owners ask before starting a search and paid advertising project with a dedicated SEO and Ads manager.",
+  faqs: [
+    {
+      question: "What does an SEO and Ads manager actually do?",
+      answer:
+        "I combine search engine optimization and paid advertising into one growth system. That means technical SEO audits, keyword and content strategy, and hands-on management of Meta Ads and Google Ads campaigns, all measured against real business results like leads and revenue rather than vanity metrics.",
+    },
+    {
+      question: "Do you work with businesses outside Nepal?",
+      answer:
+        "Yes. I am based in Kathmandu, Nepal and work with startups and growing businesses worldwide. Search and paid advertising are global channels, so most of my work is delivered remotely with clear reporting and direct communication over email or WhatsApp.",
+    },
+    {
+      question: "How long does SEO take to show results?",
+      answer:
+        "SEO is a compounding investment. Technical fixes can help within weeks, but durable ranking and organic traffic growth usually take three to six months of consistent optimization and content. Paid ads, by contrast, can generate leads within days, which is why I often pair the two.",
+    },
+    {
+      question: "Should I invest in SEO or paid ads first?",
+      answer:
+        "It depends on your timeline and budget. If you need leads quickly, start with Meta Ads or Google Ads for speed. If you want lower long-term acquisition costs, invest in SEO. The strongest strategy usually sequences both so paid traffic funds growth while organic visibility compounds.",
+    },
+  ],
+  ctaKicker: "Ready When You Are",
+  ctaTitle: "Let's build your next growth system",
+  ctaText:
+    "Whether it's SEO, paid ads, or a full-funnel strategy, tell me about your business and I'll show you exactly where the opportunity is.",
+  ctaPrimaryLabel: "Start a Project",
+  ctaSecondaryLabel: "WhatsApp Me",
+};
+
+export const fallbackServicesPage: ServicesPageContent = {
+  metaTitle: "Digital Marketing Services in Nepal: SEO and Ads",
+  metaDescription:
+    "SEO and ads services in Nepal and worldwide: technical SEO, local SEO in Kathmandu, Google Ads, Meta Ads, CRO and analytics. Run by Janak Pokharel.",
+  kicker: "Services",
+  title: "Digital marketing services in Nepal that pay for themselves",
+  intro:
+    "I am Janak Pokharel, an SEO and ads analyst based in Kathmandu. The services below split into two groups: pages written for businesses operating in Nepal, where payment limits and local search behave differently, and general pages for clients elsewhere. Every one of them is run by me directly rather than passed to an account manager.",
+  guideKicker: "Decision Guide",
+  guideTitle: "Which of these do you actually need?",
+  guideIntro:
+    "Most enquiries I get name a tactic when the real question is a sequence. Here is the short version of how I would decide.",
+  guideItems: [
+    {
+      icon: "search",
+      title: "If your site is invisible on Google",
+      description:
+        "Start with [technical SEO](/services/technical-seo). Search for `site:` followed by your domain, and if far fewer pages come back than you published, nothing else is worth paying for until that is fixed. Ranking work on an unindexed site is money spent on a page Google has never read.",
+    },
+    {
+      icon: "map-pin",
+      title: "If you have a shop, clinic or restaurant",
+      description:
+        "[Local SEO](/services/seo-services-nepal) moves faster than anything else on this list. The three-result map pack is decided mostly by your Google Business Profile, and correcting a category can change what shows within weeks rather than months.",
+    },
+    {
+      icon: "target",
+      title: "If you need enquiries this month",
+      description:
+        "Paid comes first. [Google Ads](/services/google-ads-ppc) captures people already searching; [Meta Ads](/services/meta-ads) creates demand where nobody is searching yet. Which one fits depends on whether your category has search volume, and that takes about twenty minutes to check.",
+    },
+    {
+      icon: "bar-chart",
+      title: "If you are already spending and it is not converting",
+      description:
+        "The problem is usually measurement rather than traffic. [Conversion tracking and analytics](/services/digital-marketing-nepal) comes before buying more clicks, because without conversion tracking you cannot tell which half of the budget is working.",
+    },
+  ],
+  guideNote:
+    "Not sure which applies? [Send me the URL](/contact) and I will tell you which one I would start with, including when the answer is that you do not need me yet.",
+  faqKicker: "Common Questions",
+  faqTitle: "Frequently asked questions",
+  faqIntro: "Quick answers on choosing between SEO and ads, timelines, and working with me.",
+  faqs: [
+    {
+      question: "Do I need SEO or ads first?",
+      answer:
+        "If people already search for what you sell, ads produce leads this week and SEO produces cheaper leads later. If nobody searches for it yet, ads are the only option that works at all, because SEO can only capture demand that already exists. Most businesses run one channel properly before adding the second.",
+    },
+    {
+      question: "What is the difference between the Nepal pages and the others?",
+      answer:
+        "The Nepal pages cover the parts that only matter here: the Nepal Rastra Bank limit on foreign currency for ad payments, Google Business Profile verification, and how Nepali and Romanized Nepali queries behave. The general service pages cover the same disciplines without that local layer, for clients outside Nepal.",
+    },
+    {
+      question: "How long before I see results?",
+      answer:
+        "Paid campaigns produce data in days and dependable numbers in two to four weeks. SEO on a site with technical faults spends its first month getting crawled and indexed before anything can rank. Local SEO sits in between, because fixing a Google Business Profile category can move a listing within weeks.",
+    },
+    {
+      question: "Do you work with businesses outside Nepal?",
+      answer:
+        "Yes. I have run paid search and SEO for clients in the United States and the United Kingdom alongside Nepali work. The general service pages are written for that audience, and the method does not change with the country, only the auction and the search behaviour do.",
+    },
+    {
+      question: "Can I hire you for a one-off audit instead of ongoing work?",
+      answer:
+        "Yes, and for a site that has never been looked at properly it is usually the sensible first step. An audit tells you whether the problem is worth paying to fix before you commit to a monthly arrangement.",
+    },
+  ],
+  ctaTitle: "Not sure which service you need?",
+  ctaText:
+    "Tell me about your business and goals, I'll recommend the channel mix with the fastest path to results, honestly.",
+  ctaPrimaryLabel: "Get a Free Recommendation",
+  ctaSecondaryLabel: "WhatsApp",
+};
+
+export const fallbackPortfolioPage: PortfolioPageContent = {
+  metaTitle: "SEO & Ads Portfolio, Brands & Campaigns",
+  metaDescription:
+    "Brands and campaigns Janak Pokharel has supported across SEO, Meta Ads, Google Ads, content, and growth, from local businesses to clients worldwide.",
+  kicker: "Selected Work",
+  title: "Featured brands and campaigns",
+  intro:
+    "Brands and projects I have supported across SEO, paid media, content, and growth execution.",
+  approachKicker: "How I Work With Brands",
+  approachTitle: "Search and paid growth across industries",
+  approachIntro:
+    "Every brand above came to me with a different goal, more qualified traffic, lower ad costs, stronger local visibility, or a cleaner path from click to customer. My role is the same each time: connect technical SEO, content, and paid advertising into one system measured against real business results.",
+  approachCards: [
+    {
+      icon: "search",
+      title: "SEO & content",
+      description:
+        "Technical audits, intent-mapped keywords, and content that earns rankings and links, so brands compound organic traffic over time.",
+    },
+    {
+      icon: "target",
+      title: "Meta & Google Ads",
+      description:
+        "Full-funnel paid campaigns with sharp targeting, creative testing, and landing pages aligned to the offer, built for profitable scale.",
+    },
+    {
+      icon: "bar-chart",
+      title: "Tracking & growth",
+      description:
+        "Clean analytics, conversion tracking, and honest reporting tied to leads and revenue, from local service brands to worldwide clients.",
+    },
+  ],
+  approachNote:
+    "The services behind this work are [SEO services in Nepal](/services/seo-services-nepal), [technical SEO](/services/technical-seo), [Google Ads and PPC](/services/google-ads-ppc) and [Meta Ads](/services/meta-ads). If you are still deciding on a budget, read [what SEO costs in Nepal](/blog/seo-price-nepal) and [what Google Ads costs per click](/blog/google-ads-cost-nepal) first.",
+  faqKicker: "Portfolio FAQs",
+  faqTitle: "Questions about the work",
+  faqIntro: "Short answers about the work, case studies and how a project starts.",
+  faqs: [
+    {
+      question: "Can I see detailed case studies?",
+      answer:
+        "Many campaigns are protected by client agreements, so detailed case studies and reporting snapshots are shared privately on request. Use the [contact page](/contact) to ask.",
+    },
+    {
+      question: "What kinds of projects are in the portfolio?",
+      answer:
+        "Brands and projects supported across SEO, paid media, content and growth execution, from local service businesses to clients worldwide. The role is the same each time: connect technical SEO, content and paid advertising into one system measured against real business results.",
+    },
+    {
+      question: "How do I start a project?",
+      answer:
+        "Send a message with your website and goals through the contact page or WhatsApp. I reply within 24 hours with specific direction, and a short call follows to agree where the fastest wins are.",
+    },
+  ],
+  ctaKicker: "Confidential Portfolio",
+  ctaTitle: "Detailed case studies available on request",
+  ctaText:
+    "Many campaigns are protected by client agreements, so detailed case studies and reporting snapshots are shared privately.",
+  ctaLabel: "Request Access",
 };
 
 export const fallbackBlogSettings: BlogSettings = {
