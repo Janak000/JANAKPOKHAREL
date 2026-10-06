@@ -5,6 +5,8 @@ import { getAbout, getHero, getResume, getSettings, absoluteUrl } from "@/lib/cm
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
+import { FaqSection } from "@/components/faq-section";
+import { CtaBand, SplitText } from "@/components/sections";
 
 export const revalidate = 120;
 
@@ -105,8 +107,8 @@ export default async function AboutPage() {
       <section className="section section-alt">
         <div className="container">
           <div className="section-head">
-            <p className="kicker">My Journey</p>
-            <h2>Experience, education &amp; credentials</h2>
+            <p className="kicker">{about.journeyKicker ?? "My Journey"}</p>
+            <h2>{about.journeyTitle ?? "Experience, education & credentials"}</h2>
           </div>
           <div className="timeline-columns">
             {(["experience", "education", "certification"] as const).map((kind) => {
@@ -151,7 +153,7 @@ export default async function AboutPage() {
       <section className="section">
         <div className="container">
           <div className="section-head">
-            <p className="kicker">Trusted By</p>
+            <p className="kicker">{about.trustedKicker ?? "Trusted By"}</p>
             <h2>{about.organizationsTitle}</h2>
           </div>
           <div className="logo-marquee">
@@ -169,33 +171,23 @@ export default async function AboutPage() {
       </section>
 
       {/* Heading and text are editable in the CMS (Page Content > About page). */}
-      {(about.workTitle || about.workBody) && (
-        <section className="section" style={{ paddingTop: 0 }}>
-          <div className="container">
-            {about.workTitle && (
-              <div className="prose prose-wide">
-                <h2>{about.workTitle}</h2>
-              </div>
-            )}
-            {about.workBody && <Markdown content={about.workBody} className="prose-wide" />}
-          </div>
-        </section>
-      )}
+      <SplitText kicker={about.workKicker} title={about.workTitle} body={about.workBody} />
 
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container">
-          <div className="cta-band">
-            <h2>Want to work together?</h2>
-            <p>
-              I&apos;m currently available for new SEO and ads projects. Let&apos;s talk
-              about what growth looks like for your business.
-            </p>
-            <Link href="/contact" className="btn btn-primary btn-lg">
-              Get in Touch <Icon name="arrow-right" size={18} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FaqSection
+        kicker={about.faqKicker}
+        title={about.faqTitle || "Frequently asked questions"}
+        intro={about.faqIntro}
+        faqs={about.faqs}
+        pageUrl={absoluteUrl("/about")}
+        ctaHref="/contact"
+      />
+
+      <CtaBand
+        title={about.ctaTitle ?? "Want to work together?"}
+        text={about.ctaText}
+        primaryLabel={about.ctaLabel ?? "Get in Touch"}
+        primaryHref="/contact"
+      />
     </>
   );
 }
