@@ -2309,3 +2309,8 @@ button {
   white-space: nowrap;
   border: 0;
 }
+
+/* Page hero with more than one intro paragraph (the blog intro) needs spacing between them. */
+.page-hero .container > p + p {
+  margin-top: 14px;
+}
