@@ -65,22 +65,8 @@ export default async function AboutPage() {
       <section className="section" style={{ paddingTop: 24 }}>
         <div className="container">
           <div className="hero-grid" style={{ alignItems: "start" }}>
-            <div>
-              <div style={{ marginBottom: 32 }}>
-                <Markdown content={about.body} />
-              </div>
-              <h2 className="sr-only">What I do and how I work</h2>
-              <div className="card-grid card-grid-2">
-                {about.highlights.map((h) => (
-                  <div key={h.title} className="card">
-                    <div className="card-icon">
-                      <Icon name={h.icon} size={22} />
-                    </div>
-                    <h3>{h.title}</h3>
-                    <p>{h.description}</p>
-                  </div>
-                ))}
-              </div>
+            <div style={{ alignSelf: "center" }}>
+              <Markdown content={about.body} />
             </div>
             <div className="hero-figure">
               <div className="photo-frame" style={{ width: "min(420px, 88vw)" }}>
@@ -98,6 +84,20 @@ export default async function AboutPage() {
                 <span>{settings.location}</span>
               </div>
             </div>
+          </div>
+
+          {/* Full width, so every highlight card sits on one row. */}
+          <h2 className="sr-only">What I do and how I work</h2>
+          <div className="card-grid card-grid-auto" style={{ marginTop: 40 }}>
+            {about.highlights.map((h) => (
+              <div key={h.title} className="card">
+                <div className="card-icon">
+                  <Icon name={h.icon} size={22} />
+                </div>
+                <h3>{h.title}</h3>
+                <p>{h.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
