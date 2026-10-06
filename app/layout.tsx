@@ -14,10 +14,7 @@ const sora = Sora({ subsets: ["latin"], variable: "--font-sora", display: "swap"
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#06080f" },
-    { media: "(prefers-color-scheme: light)", color: "#d54835" },
-  ],
+  themeColor: "#f7f8fc",
 };
 
 export async function generateMetadata(): Promise<Metadata> {
