@@ -20,12 +20,6 @@ const nextConfig = {
       },
       { source: "/hire-seo-ads-manager/seo-service.html", destination: "/services", permanent: true },
 
-      // Deleted post Google still has indexed. 301 rather than restore: only 3 impressions.
-      {
-        source: "/blog/are-meta-ads-worth-it-2026",
-        destination: "/blog",
-        permanent: true,
-      },
 
       // Deleted service page Google still has queued as "Discovered". No
       // rebuild planned: seo-services-nepal covers the same intent.
