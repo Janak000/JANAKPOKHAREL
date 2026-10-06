@@ -479,6 +479,13 @@ button {
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* Fits however many cards the CMS holds on a single row, and only wraps when
+   the screen is genuinely too narrow. The double class beats the responsive
+   .card-grid rules further down. */
+.card-grid.card-grid-auto {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
 .card {
   position: relative;
   padding: 30px 28px;
