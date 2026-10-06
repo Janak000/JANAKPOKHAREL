@@ -47,7 +47,7 @@ export default async function HomePage() {
     getPosts(),
   ]);
 
-  const latestPosts = posts.slice(0, 3);
+  const latestPosts = posts.slice(0, 6);
   const featuredProjects = projects.slice(0, 3);
 
   const faqLd = {
@@ -125,7 +125,7 @@ export default async function HomePage() {
               {[...about.organizations, ...about.organizations].map((org, i) => (
                 <div key={`${org.name}-${i}`} className="logo-item">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={org.logo} alt={org.alt} loading="lazy" />
+                  <img src={org.logo} alt={org.alt} width={44} height={44} loading="lazy" />
                   <span>{org.name}</span>
                 </div>
               ))}
@@ -147,7 +147,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="card-grid">
-            {services.slice(0, 6).map((service) => (
+            {services.map((service) => (
               <Link
                 key={service.slug}
                 href={`/services/${service.slug}`}
@@ -184,7 +184,13 @@ export default async function HomePage() {
               <article key={project.title} className="project-card">
                 <div className="project-media">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={project.imageSrc} alt={project.imageAlt} loading="lazy" />
+                  <img
+                    src={project.imageSrc}
+                    alt={project.imageAlt}
+                    width={88}
+                    height={88}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="project-body">
                   <span className="project-category">{project.category}</span>
@@ -214,11 +220,13 @@ export default async function HomePage() {
         <div className="container">
           <div className="photo-split">
             <div className="photo-frame">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/image/janak-life-2.webp"
                 alt="Janak Pokharel working on a laptop"
-                loading="lazy"
+                width={800}
+                height={1067}
+                sizes="(max-width: 900px) 100vw, 520px"
+                style={{ width: "100%", height: "auto" }}
               />
               <span className="photo-caption">
                 <Icon name="sparkles" size={14} /> Deep work mode
