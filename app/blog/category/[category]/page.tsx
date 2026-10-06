@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${result.category} Articles`,
     description: `All articles about ${result.category.toLowerCase()}, practical strategies and guides by Janak Pokharel.`,
     alternates: { canonical: `/blog/category/${category}` },
+    robots: { index: false, follow: true },
   };
 }
 
