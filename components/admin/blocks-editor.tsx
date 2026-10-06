@@ -7,17 +7,40 @@ import {
   fallbackBlogSettings,
   fallbackContact,
   fallbackHero,
+  fallbackHome,
+  fallbackPortfolioPage,
+  fallbackServicesPage,
   fallbackSettings,
 } from "@/lib/fallback-content";
 import { Field, NoticeBar, requestRevalidate, type Notice } from "./shared";
 import { MarkdownEditor } from "./markdown-editor";
 
+type Column = { key: string; label: string; multiline?: boolean };
+
 type FieldDef =
+  | { key: string; label: string; type: "heading" }
   | { key: string; label: string; type: "text" }
   | { key: string; label: string; type: "textarea"; rows?: number }
   | { key: string; label: string; type: "markdown"; rows?: number }
   | { key: string; label: string; type: "csv" }
-  | { key: string; label: string; type: "objects"; columns: { key: string; label: string }[] };
+  | { key: string; label: string; type: "objects"; columns: Column[] };
+
+/** Rows for a page's FAQ section; the same four fields everywhere. */
+const faqFields: FieldDef[] = [
+  { key: "h-faq", label: "FAQ section (also published as FAQ schema; leave the list empty to hide it)", type: "heading" },
+  { key: "faqKicker", label: "FAQ kicker", type: "text" },
+  { key: "faqTitle", label: "FAQ heading", type: "text" },
+  { key: "faqIntro", label: "FAQ intro (optional)", type: "textarea", rows: 2 },
+  {
+    key: "faqs",
+    label: "Questions and answers (answers can use Markdown links)",
+    type: "objects",
+    columns: [
+      { key: "question", label: "Question" },
+      { key: "answer", label: "Answer", multiline: true },
+    ],
+  },
+];
 
 type BlockDef = {
   key: string;
@@ -73,6 +96,44 @@ const blocks: BlockDef[] = [
     ],
   },
   {
+    key: "home",
+    title: "Homepage sections",
+    description: "Headings, text, FAQ and closing call to action for the sections below the homepage hero.",
+    fallback: fallbackHome as unknown as Record<string, unknown>,
+    fields: [
+      { key: "h-services", label: "Services section", type: "heading" },
+      { key: "servicesKicker", label: "Kicker", type: "text" },
+      { key: "servicesTitle", label: "Heading", type: "text" },
+      { key: "servicesLinkLabel", label: "Link label", type: "text" },
+      { key: "h-work", label: "Selected work section", type: "heading" },
+      { key: "workKicker", label: "Kicker", type: "text" },
+      { key: "workTitle", label: "Heading", type: "text" },
+      { key: "workLinkLabel", label: "Link label", type: "text" },
+      { key: "h-behind", label: "Behind the work section", type: "heading" },
+      { key: "behindKicker", label: "Kicker", type: "text" },
+      { key: "behindTitle", label: "Heading", type: "textarea", rows: 2 },
+      { key: "behindBody", label: "Text", type: "textarea", rows: 4 },
+      {
+        key: "behindPoints",
+        label: "Checklist",
+        type: "objects",
+        columns: [{ key: "text", label: "Point" }],
+      },
+      { key: "behindLinkLabel", label: "Button label", type: "text" },
+      { key: "h-blog", label: "Blog section", type: "heading" },
+      { key: "blogKicker", label: "Kicker", type: "text" },
+      { key: "blogTitle", label: "Heading", type: "text" },
+      { key: "blogLinkLabel", label: "Link label", type: "text" },
+      ...faqFields,
+      { key: "h-cta", label: "Closing call to action", type: "heading" },
+      { key: "ctaKicker", label: "Kicker", type: "text" },
+      { key: "ctaTitle", label: "Heading", type: "text" },
+      { key: "ctaText", label: "Text", type: "textarea", rows: 3 },
+      { key: "ctaPrimaryLabel", label: "Primary button label", type: "text" },
+      { key: "ctaSecondaryLabel", label: "WhatsApp button label", type: "text" },
+    ],
+  },
+  {
     key: "about",
     title: "About page",
     description: "About intro, stats, highlight cards, and associated organizations.",
@@ -83,8 +144,11 @@ const blocks: BlockDef[] = [
       { key: "intro", label: "Intro", type: "textarea", rows: 3 },
       { key: "metaDescription", label: "Search snippet (max 155 characters, falls back to Intro)", type: "textarea", rows: 2 },
       { key: "body", label: "Body (Markdown, supports links)", type: "markdown", rows: 10 },
-      { key: "workTitle", label: "Work section heading (full-width text under the cards)", type: "text" },
-      { key: "workBody", label: "Work section text (Markdown, supports links)", type: "markdown", rows: 8 },
+      { key: "h-work", label: "Work section (panel under the highlight cards)", type: "heading" },
+      { key: "workKicker", label: "Kicker", type: "text" },
+      { key: "workTitle", label: "Heading", type: "text" },
+      { key: "workBody", label: "Text (Markdown, supports links)", type: "markdown", rows: 8 },
+      { key: "h-numbers", label: "Stats and highlight cards", type: "heading" },
       {
         key: "stats",
         label: "Stats",
@@ -104,6 +168,10 @@ const blocks: BlockDef[] = [
           { key: "description", label: "Description" },
         ],
       },
+      { key: "h-journey", label: "Experience and organizations headings", type: "heading" },
+      { key: "journeyKicker", label: "Experience kicker", type: "text" },
+      { key: "journeyTitle", label: "Experience heading", type: "text" },
+      { key: "trustedKicker", label: "Organizations kicker", type: "text" },
       { key: "organizationsTitle", label: "Organizations section title", type: "text" },
       {
         key: "organizations",
@@ -115,6 +183,83 @@ const blocks: BlockDef[] = [
           { key: "alt", label: "Alt text" },
         ],
       },
+      ...faqFields,
+      { key: "h-cta", label: "Closing call to action", type: "heading" },
+      { key: "ctaTitle", label: "Heading", type: "text" },
+      { key: "ctaText", label: "Text", type: "textarea", rows: 3 },
+      { key: "ctaLabel", label: "Button label", type: "text" },
+    ],
+  },
+  {
+    key: "servicesPage",
+    title: "Services page",
+    description: "Services overview: intro, decision guide, FAQ and closing call to action. Each service itself is edited under Services.",
+    fallback: fallbackServicesPage as unknown as Record<string, unknown>,
+    fields: [
+      { key: "h-seo", label: "Search listing", type: "heading" },
+      { key: "metaTitle", label: "Search title (max 60 characters)", type: "text" },
+      { key: "metaDescription", label: "Search snippet (max 155 characters)", type: "textarea", rows: 2 },
+      { key: "h-hero", label: "Page heading", type: "heading" },
+      { key: "kicker", label: "Kicker", type: "text" },
+      { key: "title", label: "Heading (H1)", type: "text" },
+      { key: "intro", label: "Intro", type: "textarea", rows: 4 },
+      { key: "h-guide", label: "Decision guide (cards under the service list)", type: "heading" },
+      { key: "guideKicker", label: "Kicker", type: "text" },
+      { key: "guideTitle", label: "Heading", type: "text" },
+      { key: "guideIntro", label: "Intro", type: "textarea", rows: 2 },
+      {
+        key: "guideItems",
+        label: "Guide cards (text can use Markdown links)",
+        type: "objects",
+        columns: [
+          { key: "icon", label: "Icon" },
+          { key: "title", label: "Title" },
+          { key: "description", label: "Text", multiline: true },
+        ],
+      },
+      { key: "guideNote", label: "Closing line under the cards (Markdown)", type: "textarea", rows: 2 },
+      ...faqFields,
+      { key: "h-cta", label: "Closing call to action", type: "heading" },
+      { key: "ctaTitle", label: "Heading", type: "text" },
+      { key: "ctaText", label: "Text", type: "textarea", rows: 3 },
+      { key: "ctaPrimaryLabel", label: "Primary button label", type: "text" },
+      { key: "ctaSecondaryLabel", label: "WhatsApp button label", type: "text" },
+    ],
+  },
+  {
+    key: "portfolioPage",
+    title: "Portfolio page",
+    description: "Portfolio intro, approach section, FAQ and closing call to action. The projects themselves are edited under Portfolio.",
+    fallback: fallbackPortfolioPage as unknown as Record<string, unknown>,
+    fields: [
+      { key: "h-seo", label: "Search listing", type: "heading" },
+      { key: "metaTitle", label: "Search title (max 60 characters)", type: "text" },
+      { key: "metaDescription", label: "Search snippet (max 155 characters)", type: "textarea", rows: 2 },
+      { key: "h-hero", label: "Page heading", type: "heading" },
+      { key: "kicker", label: "Kicker", type: "text" },
+      { key: "title", label: "Heading (H1)", type: "text" },
+      { key: "intro", label: "Intro", type: "textarea", rows: 3 },
+      { key: "h-approach", label: "Approach section (under the projects)", type: "heading" },
+      { key: "approachKicker", label: "Kicker", type: "text" },
+      { key: "approachTitle", label: "Heading", type: "text" },
+      { key: "approachIntro", label: "Intro", type: "textarea", rows: 4 },
+      {
+        key: "approachCards",
+        label: "Cards",
+        type: "objects",
+        columns: [
+          { key: "icon", label: "Icon" },
+          { key: "title", label: "Title" },
+          { key: "description", label: "Text", multiline: true },
+        ],
+      },
+      { key: "approachNote", label: "Closing line under the cards (Markdown)", type: "textarea", rows: 3 },
+      ...faqFields,
+      { key: "h-cta", label: "Closing call to action", type: "heading" },
+      { key: "ctaKicker", label: "Kicker", type: "text" },
+      { key: "ctaTitle", label: "Heading", type: "text" },
+      { key: "ctaText", label: "Text", type: "textarea", rows: 3 },
+      { key: "ctaLabel", label: "Button label", type: "text" },
     ],
   },
   {
@@ -127,6 +272,25 @@ const blocks: BlockDef[] = [
       { key: "intro", label: "Intro", type: "textarea", rows: 3 },
       { key: "whatsappTitle", label: "WhatsApp card title", type: "text" },
       { key: "whatsappDescription", label: "WhatsApp card description", type: "textarea", rows: 2 },
+      { key: "h-seo", label: "Search listing (optional, falls back to the defaults)", type: "heading" },
+      { key: "metaTitle", label: "Search title (max 60 characters)", type: "text" },
+      { key: "metaDescription", label: "Search snippet (max 155 characters)", type: "textarea", rows: 2 },
+      { key: "h-next", label: "What happens next (cards under the form)", type: "heading" },
+      { key: "nextKicker", label: "Kicker", type: "text" },
+      { key: "nextTitle", label: "Heading", type: "text" },
+      { key: "nextIntro", label: "Intro", type: "textarea", rows: 2 },
+      {
+        key: "steps",
+        label: "Steps",
+        type: "objects",
+        columns: [
+          { key: "icon", label: "Icon" },
+          { key: "title", label: "Title" },
+          { key: "description", label: "Text", multiline: true },
+        ],
+      },
+      { key: "nextNote", label: "Closing line under the steps (Markdown)", type: "textarea", rows: 3 },
+      ...faqFields,
     ],
   },
   {
@@ -189,6 +353,13 @@ export function BlocksEditor() {
 
   function renderField(field: FieldDef) {
     if (!data) return null;
+    if (field.type === "heading") {
+      return (
+        <h3 key={field.key} className="field-group">
+          {field.label}
+        </h3>
+      );
+    }
     const value = data[field.key];
 
     if (field.type === "text") {
@@ -250,31 +421,39 @@ export function BlocksEditor() {
       <div key={field.key} className="field">
         <span>{field.label}</span>
         {items.map((item, i) => (
-          <div
-            key={i}
-            style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}
-          >
-            {field.columns.map((col) => (
-              <Field key={col.key} label={col.label}>
-                <input
-                  style={{ minWidth: 160 }}
-                  value={item[col.key] ?? ""}
-                  onChange={(e) => {
-                    const next = [...items];
-                    next[i] = { ...next[i], [col.key]: e.target.value };
-                    setData({ ...data, [field.key]: next });
-                  }}
-                />
-              </Field>
-            ))}
-            <button
-              className="btn btn-danger btn-sm"
-              onClick={() =>
-                setData({ ...data, [field.key]: items.filter((_, j) => j !== i) })
-              }
-            >
-              Remove
-            </button>
+          <div key={i} className="repeat-item">
+            {field.columns.map((col) => {
+              const update = (text: string) => {
+                const next = [...items];
+                next[i] = { ...next[i], [col.key]: text };
+                setData({ ...data, [field.key]: next });
+              };
+              return (
+                <div key={col.key} className={col.multiline ? "repeat-wide" : undefined}>
+                  <Field label={col.label}>
+                    {col.multiline ? (
+                      <textarea
+                        rows={4}
+                        value={item[col.key] ?? ""}
+                        onChange={(e) => update(e.target.value)}
+                      />
+                    ) : (
+                      <input value={item[col.key] ?? ""} onChange={(e) => update(e.target.value)} />
+                    )}
+                  </Field>
+                </div>
+              );
+            })}
+            <div className="repeat-actions">
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() =>
+                  setData({ ...data, [field.key]: items.filter((_, j) => j !== i) })
+                }
+              >
+                Remove
+              </button>
+            </div>
           </div>
         ))}
         <button
