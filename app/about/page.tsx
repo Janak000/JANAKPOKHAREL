@@ -168,29 +168,19 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container">
-          <div className="prose" style={{ maxWidth: 760 }}>
-            <h2>The work I take on</h2>
-            <p>
-              Most of what I do falls into two groups. For rankings and indexing,
-              that means <Link href="/services/seo-services-nepal">SEO services in Nepal</Link>{" "}
-              and <Link href="/services/technical-seo">technical SEO</Link>. For paid
-              acquisition, it means <Link href="/services/google-ads-ppc">Google Ads</Link>{" "}
-              and <Link href="/services/meta-ads">Meta Ads</Link>. When a project also
-              needs design, video or motion graphics, my agency{" "}
-              <Link href="/services/digital-marketing-agency-nepal">Limi Creatives</Link>{" "}
-              handles that alongside the search and ads work.
-            </p>
-            <p>
-              If you would rather see how I think before getting in touch, the{" "}
-              <Link href="/blog">blog</Link> has plain-English guides on costs,
-              indexing and ad budgets, and the <Link href="/portfolio">portfolio</Link>{" "}
-              lists the brands I have supported.
-            </p>
+      {/* Heading and text are editable in the CMS (Page Content > About page). */}
+      {(about.workTitle || about.workBody) && (
+        <section className="section" style={{ paddingTop: 0 }}>
+          <div className="container">
+            {about.workTitle && (
+              <div className="prose prose-wide">
+                <h2>{about.workTitle}</h2>
+              </div>
+            )}
+            {about.workBody && <Markdown content={about.workBody} className="prose-wide" />}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
