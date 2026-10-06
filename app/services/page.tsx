@@ -133,7 +133,7 @@ export default async function ServicesPage() {
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <div className="prose" style={{ maxWidth: 760 }}>
+          <div className="prose prose-wide">
             <h2>Which of these do you actually need?</h2>
             <p>
               Most enquiries I get name a tactic when the real question is a
