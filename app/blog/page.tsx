@@ -16,16 +16,16 @@ export const revalidate = 120;
 export async function generateMetadata(): Promise<Metadata> {
   const [blog, settings] = await Promise.all([getBlogSettings(), getSettings()]);
   return {
-    title: blog.title,
-    description: blog.description,
+    title: blog.metaTitle || blog.title,
+    description: blog.metaDescription || blog.description,
     alternates: {
       canonical: "/blog",
       types: { "application/rss+xml": absoluteUrl("/feed.xml") },
     },
     openGraph: {
       images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
-      title: blog.title,
-      description: blog.description,
+      title: blog.metaTitle || blog.title,
+      description: blog.metaDescription || blog.description,
       url: absoluteUrl("/blog"),
     },
   };
@@ -45,7 +45,7 @@ export default async function BlogPage() {
     "@type": "Blog",
     "@id": absoluteUrl("/blog"),
     name: blog.title,
-    description: blog.description,
+    description: blog.metaDescription || blog.description,
     url: absoluteUrl("/blog"),
     author: { "@id": `${absoluteUrl("/")}#person` },
     blogPost: posts.map((p) => ({
@@ -69,7 +69,13 @@ export default async function BlogPage() {
           </nav>
           <p className="kicker">The Blog</p>
           <h1>{blog.title}</h1>
-          <p>{blog.description}</p>
+          {blog.description
+            .split(/\n{2,}/)
+            .map((para) => para.replace(/\s+/g, " ").trim())
+            .filter(Boolean)
+            .map((para) => (
+              <p key={para.slice(0, 40)}>{para}</p>
+            ))}
         </div>
       </section>
 
@@ -90,6 +96,7 @@ export default async function BlogPage() {
             ))}
           </div>
 
+          <h2 className="sr-only">All articles</h2>
           <div className="post-grid">
             {first && <PostCard post={first} featured />}
             {rest.map((post) => (
