@@ -20,7 +20,6 @@ const nextConfig = {
       },
       { source: "/hire-seo-ads-manager/seo-service.html", destination: "/services", permanent: true },
 
-
       // Deleted service page Google still has queued as "Discovered". No
       // rebuild planned: seo-services-nepal covers the same intent.
       {
@@ -44,6 +43,11 @@ const nextConfig = {
         permanent: true,
       },
     ];
+  },
+  async rewrites() {
+    // Browsers request /favicon.ico on their own; serve the existing PNG there
+    // instead of returning a 404 on every first visit.
+    return [{ source: "/favicon.ico", destination: "/image/favicon.png" }];
   },
   async headers() {
     // Security headers applied to every route. The CSP intentionally omits
@@ -71,6 +75,17 @@ const nextConfig = {
     ];
     return [
       { source: "/:path*", headers: securityHeaders },
+      {
+        // Brand and photo files keep stable names, so let browsers and the CDN
+        // hold them for 30 days instead of revalidating on every visit.
+        source: "/image/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
+          },
+        ],
+      },
       {
         // Admin panel: noindex via header, so robots.txt no longer has to
         // publish the path to every scanner that reads it.
