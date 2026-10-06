@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getProjects, getSettings, absoluteUrl } from "@/lib/cms";
+import { getPortfolioPage, getProjects, getSettings, absoluteUrl } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
+import { FaqSection } from "@/components/faq-section";
+import { CtaBand, SectionNote } from "@/components/sections";
 
 export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getSettings();
+  const [settings, page] = await Promise.all([getSettings(), getPortfolioPage()]);
   return {
-    title: "SEO & Ads Portfolio, Brands & Campaigns",
-    description: `Brands and campaigns ${settings.name} has supported across SEO, Meta Ads, Google Ads, content, and growth, from local businesses to clients worldwide.`,
+    title: page.metaTitle,
+    description: page.metaDescription,
     alternates: { canonical: "/portfolio" },
     openGraph: {
       images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
@@ -22,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PortfolioPage() {
-  const projects = await getProjects();
+  const [page, projects] = await Promise.all([getPortfolioPage(), getProjects()]);
 
   const breadcrumbLd = {
     "@context": "https://schema.org",
@@ -66,12 +68,9 @@ export default async function PortfolioPage() {
             <span className="sep">/</span>
             <span>Portfolio</span>
           </nav>
-          <p className="kicker">Selected Work</p>
-          <h1>Featured brands and campaigns</h1>
-          <p>
-            Brands and projects I have supported across SEO, paid media, content,
-            and growth execution.
-          </p>
+          <p className="kicker">{page.kicker}</p>
+          <h1>{page.title}</h1>
+          <p>{page.intro}</p>
         </div>
       </section>
 
@@ -114,79 +113,47 @@ export default async function PortfolioPage() {
         </div>
       </section>
 
-      {/* Context + capabilities — adds real content and keyword coverage */}
+      {/* Context and capabilities: real content and keyword coverage. Editable in the CMS. */}
       <section className="section section-alt">
         <div className="container">
-          <div className="section-head" style={{ maxWidth: 720 }}>
-            <p className="kicker">How I Work With Brands</p>
-            <h2>Search and paid growth across industries</h2>
-            <p>
-              Every brand above came to me with a different goal, more qualified
-              traffic, lower ad costs, stronger local visibility, or a cleaner path
-              from click to customer. My role is the same each time: connect
-              technical SEO, content, and paid advertising into one system measured
-              against real business results.
-            </p>
+          <div className="section-head section-head-center">
+            <p className="kicker">{page.approachKicker}</p>
+            <h2>{page.approachTitle}</h2>
+            <p>{page.approachIntro}</p>
           </div>
-          <div className="card-grid">
-            <div className="card">
-              <div className="card-icon"><Icon name="search" size={22} /></div>
-              <h3>SEO &amp; content</h3>
-              <p>
-                Technical audits, intent-mapped keywords, and content that earns
-                rankings and links, so brands compound organic traffic over time.
-              </p>
-            </div>
-            <div className="card">
-              <div className="card-icon"><Icon name="target" size={22} /></div>
-              <h3>Meta &amp; Google Ads</h3>
-              <p>
-                Full-funnel paid campaigns with sharp targeting, creative testing,
-                and landing pages aligned to the offer, built for profitable scale.
-              </p>
-            </div>
-            <div className="card">
-              <div className="card-icon"><Icon name="bar-chart" size={22} /></div>
-              <h3>Tracking &amp; growth</h3>
-              <p>
-                Clean analytics, conversion tracking, and honest reporting tied to
-                leads and revenue, from local service brands to worldwide clients.
-              </p>
-            </div>
+          <div className="card-grid card-grid-auto">
+            {(page.approachCards ?? []).map((card) => (
+              <div key={card.title} className="card">
+                {card.icon && (
+                  <div className="card-icon">
+                    <Icon name={card.icon} size={22} />
+                  </div>
+                )}
+                <h3>{card.title}</h3>
+                <p>{card.description}</p>
+              </div>
+            ))}
           </div>
-          <div className="prose prose-wide" style={{ marginTop: 40 }}>
-            <p>
-              The services behind this work are{" "}
-              <Link href="/services/seo-services-nepal">SEO services in Nepal</Link>,{" "}
-              <Link href="/services/technical-seo">technical SEO</Link>,{" "}
-              <Link href="/services/google-ads-ppc">Google Ads and PPC</Link> and{" "}
-              <Link href="/services/meta-ads">Meta Ads</Link>. If you are still
-              deciding on a budget, read{" "}
-              <Link href="/blog/seo-price-nepal">what SEO costs in Nepal</Link> and{" "}
-              <Link href="/blog/google-ads-cost-nepal">what Google Ads costs per click</Link>{" "}
-              first.
-            </p>
-          </div>
+          <SectionNote note={page.approachNote} />
         </div>
       </section>
 
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container">
-          <div className="cta-band">
-            <p className="kicker" style={{ justifyContent: "center" }}>
-              Confidential Portfolio
-            </p>
-            <h2>Detailed case studies available on request</h2>
-            <p>
-              Many campaigns are protected by client agreements, so detailed case
-              studies and reporting snapshots are shared privately.
-            </p>
-            <Link href="/contact" className="btn btn-primary btn-lg">
-              Request Access <Icon name="arrow-right" size={18} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FaqSection
+        kicker={page.faqKicker}
+        title={page.faqTitle || "Frequently asked questions"}
+        intro={page.faqIntro}
+        faqs={page.faqs}
+        pageUrl={absoluteUrl("/portfolio")}
+        ctaHref="/contact"
+      />
+
+      <CtaBand
+        kicker={page.ctaKicker}
+        title={page.ctaTitle}
+        text={page.ctaText}
+        primaryLabel={page.ctaLabel}
+        primaryHref="/contact"
+      />
     </>
   );
 }
