@@ -39,6 +39,9 @@ export type AboutContent = {
   /** Optional search snippet; the page falls back to `intro`. */
   metaDescription?: string;
   body: string;
+  /** Optional heading and Markdown text for the "work I take on" section under the highlight cards. */
+  workTitle?: string;
+  workBody?: string;
   stats: { value: string; label: string }[];
   highlights: { icon: string; title: string; description: string }[];
   organizationsTitle: string;
