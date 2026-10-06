@@ -5,14 +5,18 @@ import { getContact, getSettings, absoluteUrl } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
 import { ContactForm } from "@/components/contact-form";
+import { FaqSection } from "@/components/faq-section";
+import { SectionNote } from "@/components/sections";
 
 export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getSettings();
+  const [settings, contact] = await Promise.all([getSettings(), getContact()]);
   return {
-    title: "Contact an SEO & Ads Manager in Nepal",
-    description: `Contact ${settings.name} for SEO, Meta Ads, and Google Ads projects. Based in ${settings.location}, working worldwide. Reply within 24 hours.`,
+    title: contact.metaTitle || "Contact an SEO & Ads Manager in Nepal",
+    description:
+      contact.metaDescription ||
+      `Contact ${settings.name} for SEO, Meta Ads, and Google Ads projects. Based in ${settings.location}, working worldwide. Reply within 24 hours.`,
     alternates: { canonical: "/contact" },
     openGraph: {
       images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
@@ -162,107 +166,40 @@ export default async function ContactPage() {
         </div>
       </section>
 
-      {/* What to expect — adds real content, sets expectations, aids conversion */}
-      <section className="section section-alt">
-        <div className="container">
-          <div className="section-head" style={{ maxWidth: 680 }}>
-            <p className="kicker">What Happens Next</p>
-            <h2>From first message to a clear plan</h2>
-            <p>
-              Reaching out costs nothing and there is no obligation. Here is
-              exactly how the first conversation works.
-            </p>
-          </div>
-          <div className="card-grid">
-            <div className="card">
-              <div className="card-icon"><Icon name="message-circle" size={22} /></div>
-              <h3>1. You get in touch</h3>
-              <p>
-                Send a message with your website and goals. The more context you
-                share about your business, the sharper my first response can be.
-              </p>
+      {/* What to expect: sets expectations and aids conversion. Editable in the CMS. */}
+      {(contact.steps?.length ?? 0) > 0 && (
+        <section className="section section-alt">
+          <div className="container">
+            <div className="section-head section-head-center">
+              {contact.nextKicker && <p className="kicker">{contact.nextKicker}</p>}
+              {contact.nextTitle && <h2>{contact.nextTitle}</h2>}
+              {contact.nextIntro && <p>{contact.nextIntro}</p>}
             </div>
-            <div className="card">
-              <div className="card-icon"><Icon name="search" size={22} /></div>
-              <h3>2. I review your situation</h3>
-              <p>
-                I look at your site, search visibility, and current ads, then reply
-                within 24 hours with honest, specific direction, not a generic pitch.
-              </p>
+            <div className="card-grid card-grid-auto">
+              {(contact.steps ?? []).map((step) => (
+                <div key={step.title} className="card">
+                  {step.icon && (
+                    <div className="card-icon">
+                      <Icon name={step.icon} size={22} />
+                    </div>
+                  )}
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+              ))}
             </div>
-            <div className="card">
-              <div className="card-icon"><Icon name="target" size={22} /></div>
-              <h3>3. We map the opportunity</h3>
-              <p>
-                On a short call we agree where the fastest wins are across SEO,
-                Meta Ads, and Google Ads, and what a realistic plan and budget look like.
-              </p>
-            </div>
+            <SectionNote note={contact.nextNote} />
           </div>
-          <div className="prose prose-wide" style={{ marginTop: 40 }}>
-            <p>
-              Not sure what you need yet? Browse the{" "}
-              <Link href="/services">services</Link>, or read{" "}
-              <Link href="/blog/seo-price-nepal">what SEO costs in Nepal</Link> and{" "}
-              <Link href="/blog/google-ads-cost-nepal">what Google Ads costs per click</Link>{" "}
-              before we talk. If you want to see past work first, the{" "}
-              <Link href="/portfolio">portfolio</Link> lists the brands I have
-              supported.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="section">
-        <div className="container">
-          <JsonLd data={contactFaqLd} />
-          <div className="section-head" style={{ maxWidth: 680 }}>
-            <p className="kicker">Before You Reach Out</p>
-            <h2>Contact FAQs</h2>
-          </div>
-          <div className="faq-list" style={{ maxWidth: 820 }}>
-            {contactFaqs.map((faq, i) => (
-              <details key={faq.question} className="faq-item" open={i === 0}>
-                <summary>{faq.question}</summary>
-                <div>{faq.answer}</div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FaqSection
+        kicker={contact.faqKicker}
+        title={contact.faqTitle || "Contact FAQs"}
+        intro={contact.faqIntro}
+        faqs={contact.faqs}
+        pageUrl={absoluteUrl("/contact")}
+      />
     </>
   );
 }
-
-const contactFaqs = [
-  {
-    question: "How quickly will you respond?",
-    answer:
-      "I reply to every genuine enquiry within 24 hours, usually much sooner. For quick questions, WhatsApp is the fastest way to reach me.",
-  },
-  {
-    question: "How much do your SEO and ads services cost?",
-    answer:
-      "Pricing depends on scope, competition, and goals. After a short conversation I give you a clear, honest quote with no long lock-in contracts, so you always know what you are paying for.",
-  },
-  {
-    question: "Do you work with small businesses and startups?",
-    answer:
-      "Yes. Most of my clients are small and growing businesses that want focused execution and direct communication rather than a large agency retainer.",
-  },
-  {
-    question: "Which locations do you serve?",
-    answer:
-      "I am based in Kathmandu, Nepal and work with clients worldwide. Search and paid advertising are delivered remotely, with clear reporting throughout.",
-  },
-];
-
-const contactFaqLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: contactFaqs.map((f) => ({
-    "@type": "Question",
-    name: f.question,
-    acceptedAnswer: { "@type": "Answer", text: f.answer },
-  })),
-};
