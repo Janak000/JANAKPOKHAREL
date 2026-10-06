@@ -159,7 +159,7 @@ export default async function AboutPage() {
               {[...about.organizations, ...about.organizations].map((org, i) => (
                 <div key={`${org.name}-${i}`} className="logo-item">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={org.logo} alt={org.alt} loading="lazy" />
+                  <img src={org.logo} alt={org.alt} width={44} height={44} loading="lazy" />
                   <span>{org.name}</span>
                 </div>
               ))}
