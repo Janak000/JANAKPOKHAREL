@@ -199,7 +199,7 @@ export default async function ContactPage() {
               </p>
             </div>
           </div>
-          <div className="prose" style={{ maxWidth: 760, marginTop: 40 }}>
+          <div className="prose prose-wide" style={{ marginTop: 40 }}>
             <p>
               Not sure what you need yet? Browse the{" "}
               <Link href="/services">services</Link>, or read{" "}
