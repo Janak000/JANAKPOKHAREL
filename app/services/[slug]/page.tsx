@@ -5,7 +5,8 @@ import { getService, getServices, getSettings, absoluteUrl } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
-import { extractFaqs, faqPageLd } from "@/lib/faq";
+import { FaqSection } from "@/components/faq-section";
+import { splitFaqs } from "@/lib/faq";
 
 export const revalidate = 120;
 
@@ -66,10 +67,11 @@ export default async function ServiceDetailPage({ params }: Props) {
     serviceType: service.title,
   };
 
-  // Service bodies end with "## Frequently asked questions" and one H3 per
-  // question. Blog posts already emit FAQPage from a structured column; these
-  // live in markdown, so they are parsed out here. Empty array means no schema.
-  const faqs = extractFaqs(service.body);
+  // Service bodies carry their FAQ as "## Frequently asked questions" plus one
+  // H3 per question. It is lifted out of the Markdown and shown with the same
+  // accordion and FAQPage markup as every other page. No FAQ block means the
+  // body renders untouched and no schema is emitted.
+  const { before, heading, intro, faqs, after } = splitFaqs(service.body);
 
   const breadcrumbLd = {
     "@context": "https://schema.org",
@@ -90,7 +92,6 @@ export default async function ServiceDetailPage({ params }: Props) {
     <>
       <JsonLd data={serviceLd} />
       <JsonLd data={breadcrumbLd} />
-      {faqs.length > 0 && <JsonLd data={faqPageLd(faqs)} />}
       <section className="page-hero">
         <div className="container">
           <nav className="breadcrumbs" aria-label="Breadcrumb">
@@ -111,7 +112,17 @@ export default async function ServiceDetailPage({ params }: Props) {
       <section className="section" style={{ paddingTop: 12 }}>
         <div className="container">
           <div className="article-layout">
-            <Markdown content={service.body} />
+            <div className="article-main">
+              {before && <Markdown content={before} />}
+              <FaqSection
+                layout="inline"
+                title={heading || "Frequently asked questions"}
+                intro={intro ? intro.replace(/\s+/g, " ") : undefined}
+                faqs={faqs}
+                pageUrl={absoluteUrl(`/services/${service.slug}`)}
+              />
+              {after && <Markdown content={after} />}
+            </div>
             <aside className="article-sidebar">
               <div className="sidebar-card">
                 <h3>Start with this service</h3>
