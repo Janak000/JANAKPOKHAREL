@@ -1,21 +1,25 @@
 :root {
-  --bg: #06080f;
-  --bg-elevated: #0b0f1c;
-  --surface: rgba(255, 255, 255, 0.04);
-  --surface-strong: rgba(255, 255, 255, 0.07);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text: #e8ecf6;
-  --text-muted: #9aa3b8;
-  --text-faint: #6b7590;
+  color-scheme: light;
+  --bg: #f7f8fc;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-strong: #eef0f7;
+  --border: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(15, 23, 42, 0.18);
+  --text: #0b1020;
+  --text-muted: #475069;
+  --text-faint: #646d84;
   --accent: #d54835;
-  --accent-2: #ff8a73;
+  /* Text-sized accent: the old #ff8a73 only reads on dark backgrounds. */
+  --accent-2: #b53525;
   --accent-3: #fb7185;
-  --gradient: linear-gradient(135deg, #f2604a 0%, #d54835 50%, #b02f22 100%);
-  --gradient-text: linear-gradient(100deg, #ff9d88 0%, #f2604a 45%, #ffb4a1 100%);
+  --gradient: linear-gradient(135deg, #d4442f 0%, #c43a28 50%, #a8311f 100%);
+  --gradient-text: linear-gradient(100deg, #e0553f 0%, #c43a28 50%, #d4452f 100%);
   --radius: 18px;
   --radius-sm: 12px;
-  --shadow-glow: 0 0 40px rgba(213, 72, 53, 0.28);
+  --shadow-glow: 0 10px 36px rgba(213, 72, 53, 0.2);
+  --shadow-card: 0 18px 48px rgba(15, 23, 42, 0.12);
+  --shadow-soft: 0 22px 70px rgba(15, 23, 42, 0.16);
   --font-heading: var(--font-sora), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
   --header-h: 72px;
@@ -42,8 +46,8 @@ body {
 }
 
 ::selection {
-  background: rgba(213, 72, 53, 0.4);
-  color: #fff;
+  background: rgba(213, 72, 53, 0.22);
+  color: var(--text);
 }
 
 h1, h2, h3, h4 {
@@ -80,9 +84,9 @@ button {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(600px 400px at 85% -5%, rgba(213, 72, 53, 0.16), transparent 65%),
+    radial-gradient(600px 400px at 85% -5%, rgba(213, 72, 53, 0.1), transparent 65%),
     radial-gradient(700px 500px at -10% 30%, rgba(255, 138, 115, 0.1), transparent 65%),
-    radial-gradient(500px 500px at 60% 110%, rgba(213, 72, 53, 0.1), transparent 65%);
+    radial-gradient(500px 500px at 60% 110%, rgba(213, 72, 53, 0.07), transparent 65%);
 }
 
 .bg-grid {
@@ -91,8 +95,8 @@ button {
   z-index: -1;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 40%, transparent 100%);
 }
@@ -118,12 +122,12 @@ button {
 .btn-primary {
   background: var(--gradient);
   color: #fff;
-  box-shadow: 0 4px 24px rgba(213, 72, 53, 0.35);
+  box-shadow: 0 4px 24px rgba(213, 72, 53, 0.28);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(213, 72, 53, 0.5);
+  box-shadow: 0 8px 32px rgba(213, 72, 53, 0.38);
 }
 
 .btn-ghost {
@@ -160,9 +164,9 @@ button {
 }
 
 .chip-accent {
-  background: rgba(213, 72, 53, 0.14);
-  border-color: rgba(213, 72, 53, 0.35);
-  color: #ffab97;
+  background: rgba(213, 72, 53, 0.1);
+  border-color: rgba(213, 72, 53, 0.3);
+  color: var(--accent-2);
 }
 
 .chip-accent:hover {
@@ -223,7 +227,7 @@ button {
 }
 
 .site-header.scrolled {
-  background: rgba(6, 8, 15, 0.78);
+  background: rgba(247, 248, 252, 0.82);
   backdrop-filter: blur(16px);
   border-bottom-color: var(--border);
 }
@@ -327,9 +331,9 @@ button {
   gap: 9px;
   padding: 7px 16px;
   border-radius: 999px;
-  background: rgba(255, 138, 115, 0.08);
-  border: 1px solid rgba(255, 138, 115, 0.25);
-  color: #ffb4a1;
+  background: rgba(213, 72, 53, 0.08);
+  border: 1px solid rgba(213, 72, 53, 0.25);
+  color: var(--accent-2);
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 26px;
@@ -387,7 +391,7 @@ button {
   border-radius: 28px;
   overflow: hidden;
   border: 1px solid var(--border-strong);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), var(--shadow-glow);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.22), var(--shadow-glow);
 }
 
 .hero-photo-wrap::before {
@@ -395,7 +399,7 @@ button {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, transparent 55%, rgba(6, 8, 15, 0.75) 100%);
+  background: linear-gradient(180deg, transparent 55%, rgba(11, 16, 32, 0.32) 100%);
 }
 
 .hero-photo-wrap img {
@@ -411,10 +415,10 @@ button {
   z-index: 2;
   padding: 16px 22px;
   border-radius: 16px;
-  background: rgba(11, 15, 28, 0.9);
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--border-strong);
   backdrop-filter: blur(14px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
 }
 
 .hero-stat strong {
@@ -438,7 +442,7 @@ button {
 }
 
 .section-alt {
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.015) 20%, rgba(255, 255, 255, 0.015) 80%, transparent);
+  background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.035) 20%, rgba(15, 23, 42, 0.035) 80%, transparent);
 }
 
 .section-head {
@@ -489,7 +493,7 @@ button {
   transform: translateY(-5px);
   border-color: rgba(213, 72, 53, 0.45);
   background: var(--surface-strong);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4), 0 0 32px rgba(213, 72, 53, 0.12);
+  box-shadow: var(--shadow-card), 0 0 32px rgba(213, 72, 53, 0.08);
 }
 
 .card-icon {
@@ -498,9 +502,9 @@ button {
   width: 50px;
   height: 50px;
   border-radius: 14px;
-  background: rgba(213, 72, 53, 0.14);
+  background: rgba(213, 72, 53, 0.1);
   border: 1px solid rgba(213, 72, 53, 0.3);
-  color: #ffab97;
+  color: var(--accent-2);
   margin-bottom: 20px;
 }
 
@@ -531,8 +535,8 @@ button {
 
 .project-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(255, 138, 115, 0.4);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+  border-color: rgba(213, 72, 53, 0.4);
+  box-shadow: var(--shadow-card);
 }
 
 .project-media {
@@ -540,8 +544,8 @@ button {
   place-items: center;
   height: 170px;
   background:
-    radial-gradient(300px 150px at 50% 0%, rgba(213, 72, 53, 0.14), transparent),
-    var(--bg-elevated);
+    radial-gradient(300px 150px at 50% 0%, rgba(213, 72, 53, 0.08), transparent),
+    var(--surface-strong);
   border-bottom: 1px solid var(--border);
 }
 
@@ -589,7 +593,7 @@ button {
   align-items: center;
   gap: 8px;
   font-size: 13.5px;
-  color: #6ee7b7;
+  color: #0b6b49;
   font-weight: 600;
 }
 
@@ -614,13 +618,13 @@ button {
 .post-card:hover {
   transform: translateY(-5px);
   border-color: rgba(213, 72, 53, 0.45);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-card);
 }
 
 .post-card-featured {
   grid-column: 1 / -1;
   background:
-    radial-gradient(600px 200px at 90% 0%, rgba(213, 72, 53, 0.12), transparent),
+    radial-gradient(600px 200px at 90% 0%, rgba(213, 72, 53, 0.07), transparent),
     var(--surface);
 }
 
@@ -738,7 +742,8 @@ button {
   width: 44px;
   object-fit: contain;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #fff;
+  border: 1px solid var(--border);
   padding: 4px;
 }
 
@@ -755,9 +760,9 @@ button {
   text-align: center;
   padding: 72px 32px;
   border-radius: 26px;
-  border: 1px solid rgba(213, 72, 53, 0.35);
+  border: 1px solid rgba(213, 72, 53, 0.3);
   background:
-    radial-gradient(500px 240px at 50% -20%, rgba(213, 72, 53, 0.28), transparent 70%),
+    radial-gradient(500px 240px at 50% -20%, rgba(213, 72, 53, 0.14), transparent 70%),
     var(--bg-elevated);
   overflow: hidden;
 }
@@ -787,7 +792,7 @@ button {
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid var(--border-strong);
-  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.55), var(--shadow-glow);
+  box-shadow: var(--shadow-soft), var(--shadow-glow);
 }
 
 .photo-frame img {
@@ -818,8 +823,8 @@ button {
   z-index: 2;
   padding: 8px 16px;
   border-radius: 999px;
-  background: rgba(6, 8, 15, 0.72);
-  border: 1px solid var(--border-strong);
+  background: rgba(11, 16, 32, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(10px);
   font-size: 13px;
   font-weight: 600;
@@ -895,7 +900,7 @@ button {
 /* ---------- Prose (markdown) ---------- */
 .prose {
   font-size: 17px;
-  color: #c6cddc;
+  color: #2a3347;
   line-height: 1.8;
 }
 
@@ -1348,7 +1353,7 @@ button {
 }
 
 .form-error {
-  color: #fca5a5;
+  color: #b42318;
   font-size: 14px;
 }
 
@@ -1356,9 +1361,9 @@ button {
   text-align: center;
   padding: 60px 30px;
   border-radius: 22px;
-  background: rgba(52, 211, 153, 0.07);
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #0b6b49;
 }
 
 .form-success h3 {
@@ -1418,9 +1423,9 @@ button {
 }
 
 .footer-socials a:hover {
-  color: #fff;
+  color: var(--accent-2);
   border-color: rgba(213, 72, 53, 0.5);
-  background: rgba(213, 72, 53, 0.15);
+  background: rgba(213, 72, 53, 0.1);
   transform: translateY(-2px);
 }
 
@@ -1458,10 +1463,38 @@ button {
   color: var(--text-faint);
 }
 
+/* Light surfaces need a hint of depth that the dark theme got from contrast. */
+.card,
+.project-card,
+.post-card,
+.sidebar-card,
+.stats-band,
+.contact-channel,
+.contact-form,
+.faq-item {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
 /* ---------- Admin (CMS) ---------- */
 .admin-root {
+  /* The public site is light; the CMS keeps the original dark palette. */
+  color-scheme: dark;
+  --bg: #06080f;
+  --bg-elevated: #0b0f1c;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #e8ecf6;
+  --text-muted: #9aa3b8;
+  --text-faint: #6b7590;
+  --accent-2: #ff8a73;
+  --gradient: linear-gradient(135deg, #f2604a 0%, #d54835 50%, #b02f22 100%);
+  --gradient-text: linear-gradient(100deg, #ff9d88 0%, #f2604a 45%, #ffb4a1 100%);
+  --shadow-glow: 0 0 40px rgba(213, 72, 53, 0.28);
   min-height: 100vh;
   background: var(--bg);
+  color: var(--text);
 }
 
 .admin-login {
@@ -1968,7 +2001,7 @@ button {
     flex-direction: column;
     align-items: stretch;
     padding: 18px 20px 26px;
-    background: rgba(6, 8, 15, 0.97);
+    background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--border);
     transform: translateY(-12px);
