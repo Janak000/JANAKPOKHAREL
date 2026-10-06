@@ -3,10 +3,13 @@ import type {
   BlogSettings,
   ContactContent,
   Hero,
+  HomeContent,
+  PortfolioPageContent,
   Post,
   Project,
   ResumeEntry,
   Service,
+  ServicesPageContent,
   SiteSettings,
 } from "./types";
 import {
@@ -14,10 +17,13 @@ import {
   fallbackBlogSettings,
   fallbackContact,
   fallbackHero,
+  fallbackHome,
+  fallbackPortfolioPage,
   fallbackPosts,
   fallbackProjects,
   fallbackResume,
   fallbackServices,
+  fallbackServicesPage,
   fallbackSettings,
 } from "./fallback-content";
 
@@ -128,6 +134,18 @@ export function getContact(): Promise<ContactContent> {
 
 export function getBlogSettings(): Promise<BlogSettings> {
   return getBlock("blog", fallbackBlogSettings);
+}
+
+export function getHome(): Promise<HomeContent> {
+  return getBlock("home", fallbackHome);
+}
+
+export function getServicesPage(): Promise<ServicesPageContent> {
+  return getBlock("servicesPage", fallbackServicesPage);
+}
+
+export function getPortfolioPage(): Promise<PortfolioPageContent> {
+  return getBlock("portfolioPage", fallbackPortfolioPage);
 }
 
 type ServiceRow = {
