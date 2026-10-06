@@ -109,6 +109,7 @@ export default async function ServicesPage() {
 
       <section className="section" style={{ paddingTop: 24 }}>
         <div className="container">
+          <h2 className="sr-only">All services</h2>
           <div className="card-grid">
             {services.map((service) => (
               <Link
@@ -148,23 +149,23 @@ export default async function ServicesPage() {
             </p>
             <p>
               <strong>If you have a shop, clinic or restaurant,</strong>{" "}
-              <Link href="/services/local-seo-kathmandu">local SEO</Link> moves faster
+              <Link href="/services/seo-services-nepal">local SEO</Link> moves faster
               than anything else on this list. The three-result map pack is decided
               mostly by your Google Business Profile, and correcting a category can
               change what shows within weeks rather than months.
             </p>
             <p>
               <strong>If you need enquiries this month,</strong> paid comes first.{" "}
-              <Link href="/services/google-ads-nepal">Google Ads</Link> captures people
+              <Link href="/services/google-ads-ppc">Google Ads</Link> captures people
               already searching;{" "}
-              <Link href="/services/meta-ads-nepal">Meta Ads</Link> creates demand where
+              <Link href="/services/meta-ads">Meta Ads</Link> creates demand where
               nobody is searching yet. Which one fits depends on whether your category
               has search volume, and that takes about twenty minutes to check.
             </p>
             <p>
               <strong>If you are already spending and it is not converting,</strong> the
               problem is usually measurement rather than traffic.{" "}
-              <Link href="/services/cro-analytics">CRO and analytics</Link> comes before
+              <Link href="/services/digital-marketing-nepal">Conversion tracking and analytics</Link> comes before
               buying more clicks, because without conversion tracking you cannot tell
               which half of the budget is working.
             </p>
