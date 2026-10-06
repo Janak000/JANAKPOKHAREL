@@ -36,6 +36,8 @@ export type AboutContent = {
   kicker: string;
   title: string;
   intro: string;
+  /** Optional search snippet; the page falls back to `intro`. */
+  metaDescription?: string;
   body: string;
   stats: { value: string; label: string }[];
   highlights: { icon: string; title: string; description: string }[];
@@ -53,6 +55,9 @@ export type ContactContent = {
 export type BlogSettings = {
   title: string;
   description: string;
+  /** Optional <title> and snippet, so the long on-page intro can stay long. */
+  metaTitle?: string;
+  metaDescription?: string;
 };
 
 export type Service = {
