@@ -12,12 +12,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const [settings, about] = await Promise.all([getSettings(), getAbout()]);
   return {
     title: `About ${settings.name}, ${settings.role}`,
-    description: about.intro,
+    description: about.metaDescription || about.intro,
     alternates: { canonical: "/about" },
     openGraph: {
       images: [{ url: settings.ogImage, width: 1200, height: 630, alt: settings.name }],
       title: `About ${settings.name}`,
-      description: about.intro,
+      description: about.metaDescription || about.intro,
       url: absoluteUrl("/about"),
     },
   };
@@ -69,6 +69,7 @@ export default async function AboutPage() {
               <div style={{ marginBottom: 32 }}>
                 <Markdown content={about.body} />
               </div>
+              <h2 className="sr-only">What I do and how I work</h2>
               <div className="card-grid card-grid-2">
                 {about.highlights.map((h) => (
                   <div key={h.title} className="card">
@@ -163,6 +164,30 @@ export default async function AboutPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container">
+          <div className="prose" style={{ maxWidth: 760 }}>
+            <h2>The work I take on</h2>
+            <p>
+              Most of what I do falls into two groups. For rankings and indexing,
+              that means <Link href="/services/seo-services-nepal">SEO services in Nepal</Link>{" "}
+              and <Link href="/services/technical-seo">technical SEO</Link>. For paid
+              acquisition, it means <Link href="/services/google-ads-ppc">Google Ads</Link>{" "}
+              and <Link href="/services/meta-ads">Meta Ads</Link>. When a project also
+              needs design, video or motion graphics, my agency{" "}
+              <Link href="/services/digital-marketing-agency-nepal">Limi Creatives</Link>{" "}
+              handles that alongside the search and ads work.
+            </p>
+            <p>
+              If you would rather see how I think before getting in touch, the{" "}
+              <Link href="/blog">blog</Link> has plain-English guides on costs,
+              indexing and ad budgets, and the <Link href="/portfolio">portfolio</Link>{" "}
+              lists the brands I have supported.
+            </p>
           </div>
         </div>
       </section>
