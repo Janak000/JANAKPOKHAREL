@@ -154,7 +154,7 @@ export default async function PortfolioPage() {
               </p>
             </div>
           </div>
-          <div className="prose" style={{ maxWidth: 760, marginTop: 40 }}>
+          <div className="prose prose-wide" style={{ marginTop: 40 }}>
             <p>
               The services behind this work are{" "}
               <Link href="/services/seo-services-nepal">SEO services in Nepal</Link>,{" "}
