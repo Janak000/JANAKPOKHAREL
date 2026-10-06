@@ -46,14 +46,97 @@ export type AboutContent = {
   highlights: { icon: string; title: string; description: string }[];
   organizationsTitle: string;
   organizations: { name: string; logo: string; alt: string }[];
-};
+  /** Kicker above the "work I take on" heading. */
+  workKicker?: string;
+  journeyKicker?: string;
+  journeyTitle?: string;
+  trustedKicker?: string;
+  ctaTitle?: string;
+  ctaText?: string;
+  ctaLabel?: string;
+} & FaqFields;
 
 export type ContactContent = {
   title: string;
   intro: string;
   whatsappTitle: string;
   whatsappDescription: string;
+  /** Optional overrides for the search title and snippet. */
+  metaTitle?: string;
+  metaDescription?: string;
+  nextKicker?: string;
+  nextTitle?: string;
+  nextIntro?: string;
+  steps?: CardItem[];
+  nextNote?: string;
+} & FaqFields;
+
+export type FaqItem = { question: string; answer: string };
+export type CardItem = { icon: string; title: string; description: string };
+
+/** Heading and rows for a page's FAQ section. Leave `faqs` empty to hide the section and its FAQPage markup. */
+export type FaqFields = {
+  faqKicker?: string;
+  faqTitle?: string;
+  faqIntro?: string;
+  faqs?: FaqItem[];
 };
+
+export type HomeContent = {
+  servicesKicker: string;
+  servicesTitle: string;
+  servicesLinkLabel: string;
+  workKicker: string;
+  workTitle: string;
+  workLinkLabel: string;
+  behindKicker: string;
+  behindTitle: string;
+  behindBody: string;
+  behindPoints: { text: string }[];
+  behindLinkLabel: string;
+  blogKicker: string;
+  blogTitle: string;
+  blogLinkLabel: string;
+  ctaKicker: string;
+  ctaTitle: string;
+  ctaText: string;
+  ctaPrimaryLabel: string;
+  ctaSecondaryLabel: string;
+} & FaqFields;
+
+export type ServicesPageContent = {
+  metaTitle: string;
+  metaDescription: string;
+  kicker: string;
+  title: string;
+  intro: string;
+  guideKicker: string;
+  guideTitle: string;
+  guideIntro: string;
+  guideItems: CardItem[];
+  guideNote: string;
+  ctaTitle: string;
+  ctaText: string;
+  ctaPrimaryLabel: string;
+  ctaSecondaryLabel: string;
+} & FaqFields;
+
+export type PortfolioPageContent = {
+  metaTitle: string;
+  metaDescription: string;
+  kicker: string;
+  title: string;
+  intro: string;
+  approachKicker: string;
+  approachTitle: string;
+  approachIntro: string;
+  approachCards: CardItem[];
+  approachNote: string;
+  ctaKicker: string;
+  ctaTitle: string;
+  ctaText: string;
+  ctaLabel: string;
+} & FaqFields;
 
 export type BlogSettings = {
   title: string;
