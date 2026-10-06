@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   getPost,
   getPosts,
+  getServices,
   getSettings,
   absoluteUrl,
   categorySlug,
@@ -16,6 +18,29 @@ import { Markdown } from "@/components/markdown";
 export const revalidate = 120;
 
 type Props = { params: Promise<{ slug: string }> };
+
+/**
+ * Which service pages each article should point at. Post bodies carry no
+ * internal links of their own, so without this an article was a dead end that
+ * never passed anything to the pages that actually sell. Unknown slugs fall
+ * back to the category list, and anything missing from the CMS is dropped.
+ */
+const SERVICES_FOR_POST: Record<string, string[]> = {
+  "google-business-profile-nepal": ["seo-services-nepal", "digital-marketing-nepal"],
+  "seo-price-nepal": ["seo-services-nepal", "technical-seo", "digital-marketing-agency-nepal"],
+  "best-seo-company-nepal": ["seo-services-nepal", "digital-marketing-agency-nepal"],
+  "facebook-boosting-nepal": ["meta-ads", "digital-marketing-nepal"],
+  "seo-vs-meta-ads": ["seo-services-nepal", "meta-ads", "advanced-seo"],
+  "google-ads-cost-nepal": ["google-ads-ppc", "digital-marketing-agency-nepal"],
+  "hire-seo-ads-freelancer": ["digital-marketing-agency-nepal", "seo-services-nepal", "google-ads-ppc"],
+  "are-meta-ads-worth-it-2026": ["meta-ads", "google-ads-ppc"],
+};
+
+const SERVICES_FOR_CATEGORY: Record<string, string[]> = {
+  "SEO Strategy": ["seo-services-nepal", "technical-seo", "advanced-seo"],
+  "Paid Media": ["meta-ads", "google-ads-ppc", "digital-marketing-nepal"],
+  "Google Ads": ["google-ads-ppc", "meta-ads", "digital-marketing-nepal"],
+};
 
 export async function generateStaticParams() {
   const posts = await getPosts();
@@ -57,14 +82,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const [settings, post, allPosts] = await Promise.all([
+  const [settings, post, allPosts, services] = await Promise.all([
     getSettings(),
     getPost(slug),
     getPosts(),
+    getServices(),
   ]);
   if (!post) notFound();
 
-  const related = allPosts.filter((p) => p.slug !== slug).slice(0, 4);
+  // Rotate the list so every article is linked from the ones around it, rather
+  // than the same four newest posts collecting all the inbound links. Posts in
+  // the same category come first because they are the most relevant next read.
+  const idx = allPosts.findIndex((p) => p.slug === slug);
+  const rotated = [...allPosts.slice(idx + 1), ...allPosts.slice(0, Math.max(idx, 0))];
+  const related = [
+    ...rotated.filter((p) => p.category === post.category),
+    ...rotated.filter((p) => p.category !== post.category),
+  ].slice(0, 4);
+
+  const relatedServices = (
+    SERVICES_FOR_POST[slug] ?? SERVICES_FOR_CATEGORY[post.category] ?? []
+  )
+    .map((s) => services.find((svc) => svc.slug === s))
+    .filter((s): s is NonNullable<typeof s> => Boolean(s));
 
   const articleLd = {
     "@context": "https://schema.org",
@@ -153,8 +193,7 @@ export default async function BlogPostPage({ params }: Props) {
               <h1>{post.title}</h1>
               <div className="article-meta">
                 <span className="author">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/image/janak.webp" alt={settings.name} />
+                  <Image src="/image/janak.webp" alt={settings.name} width={34} height={34} />
                   {settings.name}
                 </span>
                 <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
@@ -181,6 +220,27 @@ export default async function BlogPostPage({ params }: Props) {
                       </span>
                     ))}
                   </div>
+                )}
+
+                {relatedServices.length > 0 && (
+                  <section aria-labelledby="related-services-heading">
+                    <h2 id="related-services-heading" style={{ fontSize: 26, marginTop: 48 }}>
+                      Related services
+                    </h2>
+                    <div className="prose">
+                      <p>
+                        If you would rather have this handled than read about it, these are
+                        the services closest to this article:{" "}
+                        {relatedServices.map((s, i) => (
+                          <span key={s.slug}>
+                            {i > 0 && (i === relatedServices.length - 1 ? " and " : ", ")}
+                            <Link href={`/services/${s.slug}`}>{s.title}</Link>
+                          </span>
+                        ))}
+                        .
+                      </p>
+                    </div>
+                  </section>
                 )}
 
                 {post.faqs.length > 0 && (
@@ -214,8 +274,7 @@ export default async function BlogPostPage({ params }: Props) {
               <aside className="article-sidebar">
                 <div className="sidebar-card">
                   <div className="author-block">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/image/janak.webp" alt={settings.name} />
+                    <Image src="/image/janak.webp" alt={settings.name} width={52} height={52} />
                     <div>
                       <h3 style={{ marginBottom: 2 }}>{settings.name}</h3>
                       <p style={{ fontSize: 13 }}>{settings.role}</p>
