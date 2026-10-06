@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getContact, getSettings, absoluteUrl } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
@@ -76,6 +77,7 @@ export default async function ContactPage() {
 
       <section className="section" style={{ paddingTop: 24 }}>
         <div className="container">
+          <h2 className="sr-only">Ways to contact me</h2>
           <div className="contact-layout">
             <div className="contact-channels">
               <a
@@ -124,11 +126,13 @@ export default async function ContactPage() {
               </div>
 
               <div className="photo-frame">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src="/image/janak-life-3.webp"
                   alt="Janak Pokharel seated in traditional Nepali carved-wood architecture in Kathmandu"
-                  loading="lazy"
+                  width={800}
+                  height={1067}
+                  sizes="(max-width: 900px) 100vw, 480px"
+                  style={{ width: "100%", height: "auto" }}
                 />
                 <span className="photo-caption">
                   <Icon name="map-pin" size={13} /> Rooted in Kathmandu, working worldwide
@@ -194,6 +198,17 @@ export default async function ContactPage() {
                 Meta Ads, and Google Ads, and what a realistic plan and budget look like.
               </p>
             </div>
+          </div>
+          <div className="prose" style={{ maxWidth: 760, marginTop: 40 }}>
+            <p>
+              Not sure what you need yet? Browse the{" "}
+              <Link href="/services">services</Link>, or read{" "}
+              <Link href="/blog/seo-price-nepal">what SEO costs in Nepal</Link> and{" "}
+              <Link href="/blog/google-ads-cost-nepal">what Google Ads costs per click</Link>{" "}
+              before we talk. If you want to see past work first, the{" "}
+              <Link href="/portfolio">portfolio</Link> lists the brands I have
+              supported.
+            </p>
           </div>
         </div>
       </section>
