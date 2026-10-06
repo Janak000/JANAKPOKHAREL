@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: {
       // Homepage title lengthened to the 50-60 char sweet spot with a local keyword.
       default: `${settings.name} | ${settings.role} in Nepal`,
-      template: `%s | ${settings.name}`,
+      template: `%s`,
     },
     description: settings.description,
     keywords: settings.keywords,
