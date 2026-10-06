@@ -61,6 +61,9 @@ export const fallbackAbout: AboutContent = {
     "I help small and growing businesses build sustainable visibility through technical SEO, content strategy, and paid acquisition systems.",
   body:
     "My work blends search intent, site performance, persuasive messaging, and campaign optimization. That means cleaner rankings, stronger lead flow, and better return on every marketing dollar you invest.",
+  workTitle: "The work I take on",
+  workBody:
+    "Most of what I do falls into two groups. For rankings and indexing, that means [SEO services in Nepal](/services/seo-services-nepal) and [technical SEO](/services/technical-seo). For paid acquisition, it means [Google Ads](/services/google-ads-ppc) and [Meta Ads](/services/meta-ads). When a project also needs design, video or motion graphics, my agency [Limi Creatives](/services/digital-marketing-agency-nepal) handles that alongside the search and ads work.\n\nIf you would rather see how I think before getting in touch, the [blog](/blog) has plain-English guides on costs, indexing and ad budgets, and the [portfolio](/portfolio) lists the brands I have supported.",
   stats: [
     { value: "3+", label: "Years Experience" },
     { value: "16+", label: "Projects Delivered" },
