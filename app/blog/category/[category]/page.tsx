@@ -91,6 +91,7 @@ export default async function CategoryPage({ params }: Props) {
               </Link>
             ))}
           </div>
+          <h2 className="sr-only">Articles in {result.category}</h2>
           <div className="post-grid">
             {result.posts.map((post) => (
               <PostCard key={post.slug} post={post} />
