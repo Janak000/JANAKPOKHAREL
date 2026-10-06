@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   getBlogSettings,
@@ -61,21 +62,36 @@ export default async function BlogPage() {
     <>
       <JsonLd data={blogLd} />
       <section className="page-hero">
-        <div className="container">
-          <nav className="breadcrumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span className="sep">/</span>
-            <span>Blog</span>
-          </nav>
-          <p className="kicker">The Blog</p>
-          <h1>{blog.title}</h1>
-          {blog.description
-            .split(/\n{2,}/)
-            .map((para) => para.replace(/\s+/g, " ").trim())
-            .filter(Boolean)
-            .map((para) => (
-              <p key={para.slice(0, 40)}>{para}</p>
-            ))}
+        <div className="container page-hero-split">
+          <div className="page-hero-text">
+            <nav className="breadcrumbs" aria-label="Breadcrumb">
+              <Link href="/">Home</Link>
+              <span className="sep">/</span>
+              <span>Blog</span>
+            </nav>
+            <p className="kicker">The Blog</p>
+            <h1>{blog.title}</h1>
+            {blog.description
+              .split(/\n{2,}/)
+              .map((para) => para.replace(/\s+/g, " ").trim())
+              .filter(Boolean)
+              .map((para) => (
+                <p key={para.slice(0, 40)}>{para}</p>
+              ))}
+          </div>
+          <div className="page-hero-figure">
+            <div className="photo-frame">
+              <Image
+                src="/image/janak-blog.webp"
+                alt="Janak Pokharel in a black blazer and sunglasses, standing in front of a green hedge"
+                width={676}
+                height={772}
+                sizes="(max-width: 980px) 88vw, 380px"
+                priority
+                style={{ width: "100%", height: "auto" }}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
