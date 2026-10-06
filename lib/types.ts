@@ -68,6 +68,7 @@ export type Service = {
   metaDescription?: string;
   sortOrder: number;
   published: boolean;
+  updatedAt?: string;
 };
 
 export type Project = {
