@@ -83,6 +83,8 @@ const blocks: BlockDef[] = [
       { key: "intro", label: "Intro", type: "textarea", rows: 3 },
       { key: "metaDescription", label: "Search snippet (max 155 characters, falls back to Intro)", type: "textarea", rows: 2 },
       { key: "body", label: "Body (Markdown, supports links)", type: "markdown", rows: 10 },
+      { key: "workTitle", label: "Work section heading (full-width text under the cards)", type: "text" },
+      { key: "workBody", label: "Work section text (Markdown, supports links)", type: "markdown", rows: 8 },
       {
         key: "stats",
         label: "Stats",
