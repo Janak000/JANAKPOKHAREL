@@ -142,6 +142,7 @@ type ServiceRow = {
   meta_description: string | null;
   sort_order: number;
   published: boolean;
+  updated_at?: string | null;
 };
 
 export async function getServices(): Promise<Service[]> {
@@ -161,6 +162,7 @@ export async function getServices(): Promise<Service[]> {
     metaDescription: r.meta_description ?? undefined,
     sortOrder: r.sort_order,
     published: r.published,
+    updatedAt: r.updated_at ?? undefined,
   }));
 }
 
