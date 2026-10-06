@@ -14,6 +14,7 @@ import {
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
+import { FaqSection } from "@/components/faq-section";
 
 export const revalidate = 120;
 
@@ -139,19 +140,6 @@ export default async function BlogPostPage({ params }: Props) {
     },
   };
 
-  const faqLd =
-    post.faqs.length > 0
-      ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: post.faqs.map((f) => ({
-            "@type": "Question",
-            name: f.question,
-            acceptedAnswer: { "@type": "Answer", text: f.answer },
-          })),
-        }
-      : null;
-
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -170,7 +158,6 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       <JsonLd data={articleLd} />
-      {faqLd && <JsonLd data={faqLd} />}
       <JsonLd data={breadcrumbLd} />
 
       <article>
@@ -243,21 +230,11 @@ export default async function BlogPostPage({ params }: Props) {
                   </section>
                 )}
 
-                {post.faqs.length > 0 && (
-                  <section aria-labelledby="faq-heading">
-                    <h2 id="faq-heading" style={{ fontSize: 26, marginTop: 48 }}>
-                      Frequently asked questions
-                    </h2>
-                    <div className="faq-list">
-                      {post.faqs.map((faq, i) => (
-                        <details key={faq.question} className="faq-item" open={i === 0}>
-                          <summary>{faq.question}</summary>
-                          <div>{faq.answer}</div>
-                        </details>
-                      ))}
-                    </div>
-                  </section>
-                )}
+                <FaqSection
+                  layout="inline"
+                  faqs={post.faqs}
+                  pageUrl={absoluteUrl(`/blog/${post.slug}`)}
+                />
 
                 <div className="cta-band" style={{ marginTop: 56, padding: "48px 28px" }}>
                   <h2 style={{ fontSize: 28 }}>Want results like this for your business?</h2>
