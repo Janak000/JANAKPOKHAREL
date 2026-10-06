@@ -42,7 +42,14 @@ export default async function ServiceDetailPage({ params }: Props) {
   ]);
   if (!service) notFound();
 
-  const otherServices = allServices.filter((s) => s.slug !== slug).slice(0, 3);
+  // Take the next three services after this one (wrapping round), instead of the
+  // first three every time. The old version gave the first few services nearly
+  // all the sidebar links and left the later ones with almost none.
+  const idx = allServices.findIndex((s) => s.slug === slug);
+  const otherServices = Array.from(
+    { length: Math.min(3, Math.max(allServices.length - 1, 0)) },
+    (_, i) => allServices[(idx + 1 + i) % allServices.length]
+  );
 
   const serviceLd = {
     "@context": "https://schema.org",
