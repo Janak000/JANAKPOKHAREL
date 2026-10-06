@@ -77,12 +77,19 @@ export default async function PortfolioPage() {
 
       <section className="section" style={{ paddingTop: 24 }}>
         <div className="container">
+          <h2 className="sr-only">Featured projects</h2>
           <div className="card-grid">
             {projects.map((project) => (
               <article key={project.title} className="project-card">
                 <div className="project-media">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={project.imageSrc} alt={project.imageAlt} loading="lazy" />
+                  <img
+                    src={project.imageSrc}
+                    alt={project.imageAlt}
+                    width={88}
+                    height={88}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="project-body">
                   <span className="project-category">{project.category}</span>
@@ -146,6 +153,19 @@ export default async function PortfolioPage() {
                 leads and revenue, from local service brands to worldwide clients.
               </p>
             </div>
+          </div>
+          <div className="prose" style={{ maxWidth: 760, marginTop: 40 }}>
+            <p>
+              The services behind this work are{" "}
+              <Link href="/services/seo-services-nepal">SEO services in Nepal</Link>,{" "}
+              <Link href="/services/technical-seo">technical SEO</Link>,{" "}
+              <Link href="/services/google-ads-ppc">Google Ads and PPC</Link> and{" "}
+              <Link href="/services/meta-ads">Meta Ads</Link>. If you are still
+              deciding on a budget, read{" "}
+              <Link href="/blog/seo-price-nepal">what SEO costs in Nepal</Link> and{" "}
+              <Link href="/blog/google-ads-cost-nepal">what Google Ads costs per click</Link>{" "}
+              first.
+            </p>
           </div>
         </div>
       </section>
