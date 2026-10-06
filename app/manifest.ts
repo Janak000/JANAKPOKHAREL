@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "SEO, Meta Ads, Google Ads, and growth systems for businesses worldwide.",
     start_url: "/",
     display: "standalone",
-    background_color: "#06080f",
+    background_color: "#f7f8fc",
     theme_color: "#d54835",
     icons: [
       { src: "/image/apple-icon.png", sizes: "180x180", type: "image/png" },
