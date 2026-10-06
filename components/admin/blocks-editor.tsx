@@ -81,6 +81,7 @@ const blocks: BlockDef[] = [
       { key: "kicker", label: "Kicker", type: "text" },
       { key: "title", label: "Title", type: "text" },
       { key: "intro", label: "Intro", type: "textarea", rows: 3 },
+      { key: "metaDescription", label: "Search snippet (max 155 characters, falls back to Intro)", type: "textarea", rows: 2 },
       { key: "body", label: "Body (Markdown, supports links)", type: "markdown", rows: 10 },
       {
         key: "stats",
@@ -133,7 +134,9 @@ const blocks: BlockDef[] = [
     fallback: fallbackBlogSettings as unknown as Record<string, unknown>,
     fields: [
       { key: "title", label: "Blog title", type: "text" },
-      { key: "description", label: "Blog description", type: "textarea", rows: 2 },
+      { key: "description", label: "Blog description (shown on the page)", type: "textarea", rows: 6 },
+      { key: "metaTitle", label: "Search title (max 60 characters, falls back to Blog title)", type: "text" },
+      { key: "metaDescription", label: "Search snippet (max 155 characters, falls back to description)", type: "textarea", rows: 2 },
     ],
   },
 ];
