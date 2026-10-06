@@ -39,6 +39,10 @@ ${posts.map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}) (${formatD
 - [Portfolio](${absoluteUrl("/portfolio")}): Brands and campaigns supported
 - [Blog](${absoluteUrl("/blog")}): Digital marketing insights on SEO, Meta Ads, and growth
 - [Contact](${absoluteUrl("/contact")}): Start a project
+
+## Optional
+
+- [Full site content](${absoluteUrl("/llms-full.txt")}): Complete text of every service page and article in one Markdown file
 `;
 
   return new Response(body, {
