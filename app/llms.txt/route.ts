@@ -21,7 +21,7 @@ export async function GET() {
 
 > ${settings.description}
 
-${settings.name} is a ${settings.role} based in ${settings.location}, working with clients worldwide. Core expertise: technical SEO, content strategy, Meta Ads, Google Ads, CRO, and analytics.
+${settings.name} is a ${settings.role} based in ${settings.location}, working with clients worldwide. Core expertise: technical SEO, AI search optimization (GEO), local SEO, content strategy, Google Ads, Meta Ads, CRO, and analytics. Available as an SEO expert, SEO company and Google Ads consultant for businesses in Nepal.
 
 Contact: ${settings.email} · ${absoluteUrl("/contact")}
 
