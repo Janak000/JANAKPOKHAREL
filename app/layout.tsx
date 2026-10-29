@@ -22,8 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl()),
     title: {
-      // Homepage title lengthened to the 50-60 char sweet spot with a local keyword.
-      default: `${settings.name} | ${settings.role} in Nepal`,
+      // Homepage title: target keywords first, 60 chars so Google does not truncate it.
+      default: `SEO Expert & Google Ads Consultant in Nepal | ${settings.name}`,
       template: `%s`,
     },
     description: settings.description,
@@ -111,6 +111,9 @@ export default async function RootLayout({
       "Technical SEO",
       "Conversion Rate Optimization",
       "Digital Marketing",
+      "AI Search Optimization",
+      "Generative Engine Optimization",
+      "Local SEO",
     ],
   };
 
