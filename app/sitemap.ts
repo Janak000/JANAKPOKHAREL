@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/portfolio",
     "/blog",
     "/contact",
-  ].map((path) => ({ url: absoluteUrl(path) }));
+    ].map((path) => ({ url: absoluteUrl(path), lastModified: new Date('2026-10-28') }));
 
   const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
     url: absoluteUrl(`/services/${s.slug}`),
