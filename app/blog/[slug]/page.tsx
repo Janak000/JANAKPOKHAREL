@@ -35,10 +35,18 @@ const SERVICES_FOR_POST: Record<string, string[]> = {
   "google-ads-cost-nepal": ["google-ads-ppc", "digital-marketing-agency-nepal"],
   "hire-seo-ads-freelancer": ["digital-marketing-agency-nepal", "seo-services-nepal", "google-ads-ppc"],
   "are-meta-ads-worth-it-2026": ["meta-ads", "google-ads-ppc"],
+  "choose-digital-marketing-agency-nepal": ["digital-marketing-agency-nepal", "digital-marketing-nepal", "seo-services-nepal"],
+  "facebook-ads-cost-nepal": ["meta-ads", "digital-marketing-nepal", "google-ads-ppc"],
+  "hire-seo-consultant-uk": ["advanced-seo", "technical-seo", "seo-services-nepal"],
+  "seo-audit-service-small-business": ["technical-seo", "advanced-seo", "seo-services-nepal"],
+  "seo-for-colleges-nepal": ["seo-services-nepal", "google-ads-ppc", "digital-marketing-nepal"],
+  "shopify-seo-nepal": ["technical-seo", "seo-services-nepal", "advanced-seo"],
+  "technical-seo-audit-cost": ["technical-seo", "advanced-seo", "seo-services-nepal"],
 };
 
 const SERVICES_FOR_CATEGORY: Record<string, string[]> = {
   "SEO Strategy": ["seo-services-nepal", "technical-seo", "advanced-seo"],
+  SEO: ["seo-services-nepal", "technical-seo", "advanced-seo"],
   "Paid Media": ["meta-ads", "google-ads-ppc", "digital-marketing-nepal"],
   "Google Ads": ["google-ads-ppc", "meta-ads", "digital-marketing-nepal"],
 };
