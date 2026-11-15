@@ -122,6 +122,23 @@ export default async function ServiceDetailPage({ params }: Props) {
                 pageUrl={absoluteUrl(`/services/${service.slug}`)}
               />
               {after && <Markdown content={after} />}
+              <section aria-labelledby="all-services-heading" style={{ marginTop: 48 }}>
+                <h2 id="all-services-heading" style={{ fontSize: 26 }}>
+                  More services
+                </h2>
+                <p>
+                  Every service builds on the others.{" "}
+                  {allServices
+                    .filter((s) => s.slug !== slug)
+                    .map((s, i, arr) => (
+                      <span key={s.slug}>
+                        <Link href={`/services/${s.slug}`}>{s.title}</Link>
+                        {i < arr.length - 1 ? ", " : "."}
+                      </span>
+                    ))}{" "}
+                  Or see the full <Link href="/services">services overview</Link>.
+                </p>
+              </section>
             </div>
             <aside className="article-sidebar">
               <div className="sidebar-card">
