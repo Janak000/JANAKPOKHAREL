@@ -11,6 +11,15 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [posts, services] = await Promise.all([getPosts(), getServices()]);
 
+  // Static pages take the newest real content date instead of a hardcoded one.
+  const latest = new Date(
+    Math.max(
+      0,
+      ...posts.map((p) => +new Date(p.updatedAt)),
+      ...services.map((s) => (s.updatedAt ? +new Date(s.updatedAt) : 0))
+    )
+  );
+
   const staticPages: MetadataRoute.Sitemap = [
     "/",
     "/about",
@@ -18,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/portfolio",
     "/blog",
     "/contact",
-    ].map((path) => ({ url: absoluteUrl(path), lastModified: new Date('2026-10-28') }));
+  ].map((path) => ({ url: absoluteUrl(path), lastModified: latest }));
 
   const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
     url: absoluteUrl(`/services/${s.slug}`),
