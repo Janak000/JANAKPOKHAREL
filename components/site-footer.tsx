@@ -27,9 +27,11 @@ const NEPAL_SLUGS = [
 export function SiteFooter({
   settings,
   services = [],
+  posts = [],
 }: {
   settings: SiteSettings;
   services?: Service[];
+  posts?: { slug: string; title: string }[];
 }) {
   const nepal = services.filter((s) => NEPAL_SLUGS.includes(s.slug));
   const core = services.filter((s) => !NEPAL_SLUGS.includes(s.slug));
@@ -96,6 +98,17 @@ export function SiteFooter({
             {core.map((s) => (
               <Link key={s.slug} href={`/services/${s.slug}`}>
                 {s.title}
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {posts.length > 0 && (
+          <nav className="footer-col" aria-label="Guides">
+            <h3>Guides</h3>
+            {posts.map((p) => (
+              <Link key={p.slug} href={"/blog/" + p.slug}>
+                {p.title}
               </Link>
             ))}
           </nav>
