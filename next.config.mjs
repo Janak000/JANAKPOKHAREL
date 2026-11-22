@@ -12,6 +12,7 @@ const nextConfig = {
       { source: "/admin", destination: "/sanchalan", permanent: true },
       { source: "/blog.html", destination: "/blog", permanent: true },
       { source: "/index.html", destination: "/", permanent: true },
+      { source: "/services/google-ads-nepal", destination: "/services/google-ads-ppc", permanent: true },
 
       // Legacy static site: best CTR on the whole property (18.2%), 44 impressions.
       {
