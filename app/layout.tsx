@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ChromeGate } from "@/components/chrome-gate";
 import { JsonLd } from "@/components/json-ld";
-import { getSettings, getServices, siteUrl, absoluteUrl } from "@/lib/cms";
+import { getSettings, getServices, getPosts, siteUrl, absoluteUrl } from "@/lib/cms";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -84,7 +84,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [settings, services] = await Promise.all([getSettings(), getServices()]);
+  const [settings, services, posts] = await Promise.all([getSettings(), getServices(), getPosts()]);
 
   const personLd = {
     "@context": "https://schema.org",
@@ -189,7 +189,7 @@ export default async function RootLayout({
         <SiteHeader name={settings.name} />
         <main>{children}</main>
         <ChromeGate>
-          <SiteFooter settings={settings} services={services} />
+          <SiteFooter settings={settings} services={services} posts={posts.map((p) => ({ slug: p.slug, title: p.title }))} />
         </ChromeGate>
       </body>
     </html>
