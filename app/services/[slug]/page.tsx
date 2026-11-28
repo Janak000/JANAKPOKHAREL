@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getService, getServices, getSettings, absoluteUrl } from "@/lib/cms";
+import { getService, getServices, getSettings, getPageLinks, sourcesFor, absoluteUrl } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
 import { FaqSection } from "@/components/faq-section";
 import { splitFaqs } from "@/lib/faq";
 import { splitAtMiddleHeading } from "@/lib/split-body";
-import { SOURCES_FOR_SERVICE } from "@/lib/sources";
 import { InlineCta, LinkCards, SourcesList } from "@/components/page-blocks";
 
 export const revalidate = 120;
@@ -39,10 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServiceDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [settings, service, allServices] = await Promise.all([
+  const [settings, service, allServices, links] = await Promise.all([
     getSettings(),
     getService(slug),
     getServices(),
+    getPageLinks(),
   ]);
   if (!service) notFound();
 
@@ -123,10 +123,13 @@ export default async function ServiceDetailPage({ params }: Props) {
                     {first && <Markdown content={first} />}
                     {second && (
                       <>
-                        <InlineCta
-                          title={`Want ${service.title} handled for you?`}
-                          text="Get a free, honest assessment of whether it is the right investment right now."
-                        />
+                        {links.showInlineCta && (
+                          <InlineCta
+                            title={links.serviceCtaTitle.replace("{title}", service.title)}
+                            text={links.serviceCtaText}
+                            label={links.serviceCtaLabel}
+                          />
+                        )}
                         <Markdown content={second} />
                       </>
                     )}
@@ -143,8 +146,8 @@ export default async function ServiceDetailPage({ params }: Props) {
               {after && <Markdown content={after} />}
               <LinkCards
                 id="all-services-heading"
-                heading="More services"
-                intro="Every service builds on the others."
+                heading={links.moreServicesHeading}
+                intro={links.moreServicesIntro}
                 cards={allServices
                   .filter((s) => s.slug !== slug)
                   .map((s) => ({ href: `/services/${s.slug}`, title: s.title, text: s.shortDescription }))}
@@ -153,7 +156,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 Or see the full <Link href="/services">services overview</Link>, or{" "}
                 <Link href="/blog">read the guides</Link>.
               </p>
-              <SourcesList sources={SOURCES_FOR_SERVICE[slug]} />
+              <SourcesList heading={links.sourcesHeading} sources={sourcesFor(links, slug)} />
             </div>
             <aside className="article-sidebar">
               <div className="sidebar-card">

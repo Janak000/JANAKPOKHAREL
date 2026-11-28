@@ -8,6 +8,7 @@ import {
   fallbackContact,
   fallbackHero,
   fallbackHome,
+  fallbackPageLinks,
   fallbackPortfolioPage,
   fallbackServicesPage,
   fallbackSettings,

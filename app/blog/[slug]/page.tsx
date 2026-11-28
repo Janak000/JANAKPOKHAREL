@@ -5,7 +5,10 @@ import { notFound } from "next/navigation";
 import {
   getPost,
   getPosts,
+  getPageLinks,
   getServices,
+  sourcesFor,
+  relatedServiceSlugs,
   getSettings,
   absoluteUrl,
   categorySlug,
@@ -16,7 +19,6 @@ import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
 import { FaqSection } from "@/components/faq-section";
 import { splitAtMiddleHeading } from "@/lib/split-body";
-import { SOURCES_FOR_POST } from "@/lib/sources";
 import { InlineCta, LinkCards, SourcesList } from "@/components/page-blocks";
 
 export const revalidate = 120;
@@ -29,24 +31,6 @@ type Props = { params: Promise<{ slug: string }> };
  * never passed anything to the pages that actually sell. Unknown slugs fall
  * back to the category list, and anything missing from the CMS is dropped.
  */
-const SERVICES_FOR_POST: Record<string, string[]> = {
-  "google-business-profile-nepal": ["seo-services-nepal", "digital-marketing-nepal"],
-  "seo-price-nepal": ["seo-services-nepal", "technical-seo", "digital-marketing-agency-nepal"],
-  "best-seo-company-nepal": ["seo-services-nepal", "digital-marketing-agency-nepal"],
-  "facebook-boosting-nepal": ["meta-ads", "digital-marketing-nepal"],
-  "seo-vs-meta-ads": ["seo-services-nepal", "meta-ads", "advanced-seo"],
-  "google-ads-cost-nepal": ["google-ads-ppc", "digital-marketing-agency-nepal"],
-  "hire-seo-ads-freelancer": ["digital-marketing-agency-nepal", "seo-services-nepal", "google-ads-ppc"],
-  "are-meta-ads-worth-it-2026": ["meta-ads", "google-ads-ppc"],
-  "choose-digital-marketing-agency-nepal": ["digital-marketing-agency-nepal", "digital-marketing-nepal", "seo-services-nepal"],
-  "facebook-ads-cost-nepal": ["meta-ads", "digital-marketing-nepal", "google-ads-ppc"],
-  "hire-seo-consultant-uk": ["advanced-seo", "technical-seo", "seo-services-nepal"],
-  "seo-audit-service-small-business": ["technical-seo", "advanced-seo", "seo-services-nepal"],
-  "seo-for-colleges-nepal": ["seo-services-nepal", "google-ads-ppc", "digital-marketing-nepal"],
-  "shopify-seo-nepal": ["technical-seo", "seo-services-nepal", "advanced-seo"],
-  "technical-seo-audit-cost": ["technical-seo", "advanced-seo", "seo-services-nepal"],
-};
-
 const SERVICES_FOR_CATEGORY: Record<string, string[]> = {
   "SEO Strategy": ["seo-services-nepal", "technical-seo", "advanced-seo"],
   SEO: ["seo-services-nepal", "technical-seo", "advanced-seo"],
@@ -94,11 +78,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const [settings, post, allPosts, services] = await Promise.all([
+  const [settings, post, allPosts, services, links] = await Promise.all([
     getSettings(),
     getPost(slug),
     getPosts(),
     getServices(),
+    getPageLinks(),
   ]);
   if (!post) notFound();
 
@@ -113,7 +98,7 @@ export default async function BlogPostPage({ params }: Props) {
   ].slice(0, 4);
 
   const relatedServices = (
-    SERVICES_FOR_POST[slug] ?? SERVICES_FOR_CATEGORY[post.category] ?? []
+    relatedServiceSlugs(links, slug) ?? SERVICES_FOR_CATEGORY[post.category] ?? []
   )
     .map((s) => services.find((svc) => svc.slug === s))
     .filter((s): s is NonNullable<typeof s> => Boolean(s));
@@ -216,11 +201,11 @@ export default async function BlogPostPage({ params }: Props) {
                       <Markdown content={first} />
                       {second && (
                         <>
-                          {cta && (
+                          {cta && links.showInlineCta && (
                             <InlineCta
-                              title={`Need help with ${cta.title}?`}
-                              text="Talk to me about your goals and get a free, honest assessment."
-                              label="Work with me"
+                              title={links.postCtaTitle.replace("{title}", cta.title)}
+                              text={links.postCtaText}
+                              label={links.postCtaLabel}
                             />
                           )}
                           <Markdown content={second} />
@@ -242,8 +227,8 @@ export default async function BlogPostPage({ params }: Props) {
 
                 <LinkCards
                   id="related-services-heading"
-                  heading="Related services"
-                  intro="If you would rather have this handled than read about it, these are the services closest to this article."
+                  heading={links.relatedServicesHeading}
+                  intro={links.relatedServicesIntro}
                   cards={relatedServices.map((s) => ({ href: `/services/${s.slug}`, title: s.title, text: s.shortDescription }))}
                 />
 
@@ -253,11 +238,11 @@ export default async function BlogPostPage({ params }: Props) {
                   pageUrl={absoluteUrl(`/blog/${post.slug}`)}
                 />
 
-                <SourcesList sources={SOURCES_FOR_POST[slug]} />
+                <SourcesList heading={links.sourcesHeading} sources={sourcesFor(links, slug)} />
 
                 <LinkCards
                   id="keep-reading-heading"
-                  heading="Keep reading"
+                  heading={links.keepReadingHeading}
                   cards={related.slice(0, 3).map((p) => ({ href: `/blog/${p.slug}`, title: p.title, text: p.excerpt }))}
                 />
 

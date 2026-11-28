@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@/components/icon";
-import type { Source } from "@/lib/sources";
+import type { Source } from "@/lib/page-links-defaults";
 
 /** Compact call to action placed inside a long article. */
 export function InlineCta({ title, text, label = "Request a proposal" }: { title: string; text: string; label?: string }) {
@@ -42,11 +42,11 @@ export function LinkCards({ heading, id, intro, cards }: { heading: string; id: 
 }
 
 /** External references. Opens in a new tab; passes no `nofollow` because these are editorial citations. */
-export function SourcesList({ sources }: { sources: Source[] | undefined }) {
+export function SourcesList({ sources, heading = "Sources and further reading" }: { sources: Source[] | undefined; heading?: string }) {
   if (!sources || sources.length === 0) return null;
   return (
     <section aria-labelledby="sources-heading" className="sources-section">
-      <h2 id="sources-heading">Sources and further reading</h2>
+      <h2 id="sources-heading">{heading}</h2>
       <ul>
         {sources.map((s) => (
           <li key={s.url}>

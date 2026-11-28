@@ -1,4 +1,5 @@
 import type {
+  PageLinks,
   AboutContent,
   BlogSettings,
   ContactContent,
@@ -13,6 +14,7 @@ import type {
   SiteSettings,
 } from "./types";
 import {
+  fallbackPageLinks,
   fallbackAbout,
   fallbackBlogSettings,
   fallbackContact,
@@ -118,6 +120,29 @@ export async function getSettings(): Promise<SiteSettings> {
     description: clean(settings.description),
     location: clean(settings.location),
   };
+}
+
+/** Text, sources and related-service rules for service and blog pages. */
+export async function getPageLinks(): Promise<PageLinks> {
+  const d = await getBlock("pageLinks", fallbackPageLinks);
+  return {
+    ...d,
+    sources: (d.sources ?? []).filter(
+      (r) => r?.page?.trim() && r?.label?.trim() && /^https?:\/\//i.test(r?.url?.trim() ?? "")
+    ),
+    relatedServices: (d.relatedServices ?? []).filter((r) => r?.post?.trim() && r?.services?.trim()),
+  };
+}
+
+export function sourcesFor(d: PageLinks, page: string) {
+  return d.sources
+    .filter((r) => r.page.trim() === page)
+    .map((r) => ({ label: r.label.trim(), url: r.url.trim() }));
+}
+
+export function relatedServiceSlugs(d: PageLinks, post: string): string[] | undefined {
+  const row = d.relatedServices.find((r) => r.post.trim() === post);
+  return row ? row.services.split(",").map((x) => x.trim()).filter(Boolean) : undefined;
 }
 
 export function getHero(): Promise<Hero> {
