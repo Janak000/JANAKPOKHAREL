@@ -1,4 +1,6 @@
 import type {
+  FooterContent,
+  SocialFeed,
   AboutContent,
   BlogSettings,
   ContactContent,
@@ -852,3 +854,33 @@ Many businesses should start with the channel that solves the immediate bottlene
     updatedAt: "2025-12-20T00:00:00.000Z",
   },
 ];
+
+
+export const fallbackFooter: FooterContent = {
+  tagline: "",
+  socials: [],
+  columns: [
+    {
+      title: "Explore",
+      links: "About | /about\nServices | /services\nPortfolio | /portfolio\nBlog | /blog",
+    },
+    {
+      title: "Latest",
+      links: "Digital marketing insights → | /blog\nStart a project → | /contact",
+    },
+  ],
+  showServices: true,
+  showGuides: true,
+  copyright: "",
+  bottomLine: "",
+};
+
+export const fallbackSocialFeed: SocialFeed = {
+  metaTitle: "Videos and Social Posts | Janak Pokharel",
+  metaDescription:
+    "Instagram posts, reels, YouTube videos and Facebook posts by Janak Pokharel on SEO, Google Ads and digital marketing in Nepal.",
+  kicker: "Social",
+  title: "Videos and social posts",
+  intro: "Short videos and posts on SEO, ads and digital marketing, from Instagram, YouTube and Facebook.",
+  items: [],
+};

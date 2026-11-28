@@ -6,11 +6,13 @@ import {
   fallbackAbout,
   fallbackBlogSettings,
   fallbackContact,
+  fallbackFooter,
   fallbackHero,
   fallbackHome,
   fallbackPortfolioPage,
   fallbackServicesPage,
   fallbackSettings,
+  fallbackSocialFeed,
 } from "@/lib/fallback-content";
 import { Field, NoticeBar, requestRevalidate, type Notice } from "./shared";
 import { MarkdownEditor } from "./markdown-editor";
@@ -20,6 +22,7 @@ type Column = { key: string; label: string; multiline?: boolean };
 type FieldDef =
   | { key: string; label: string; type: "heading" }
   | { key: string; label: string; type: "text" }
+  | { key: string; label: string; type: "toggle" }
   | { key: string; label: string; type: "textarea"; rows?: number }
   | { key: string; label: string; type: "markdown"; rows?: number }
   | { key: string; label: string; type: "csv" }
@@ -71,6 +74,7 @@ const blocks: BlockDef[] = [
       { key: "linkedin", label: "LinkedIn URL", type: "text" },
       { key: "gtmId", label: "Google Tag Manager ID", type: "text" },
       { key: "gaId", label: "GA4 ID", type: "text" },
+      { key: "gscVerification", label: "Google Search Console verification code (only the content=\"…\" value of the HTML tag; leave empty if verified by DNS)", type: "text" },
       { key: "ogImage", label: "Default social share image", type: "text" },
       { key: "keywords", label: "SEO keywords (comma-separated)", type: "csv" },
     ],
@@ -305,6 +309,67 @@ const blocks: BlockDef[] = [
       { key: "metaDescription", label: "Search snippet (max 155 characters, falls back to description)", type: "textarea", rows: 2 },
     ],
   },
+  {
+    key: "footer",
+    title: "Footer",
+    description:
+      "Shown at the bottom of every page. Links, extra social icons, and the text under the logo. Contact details come from Site settings.",
+    fallback: fallbackFooter as unknown as Record<string, unknown>,
+    fields: [
+      { key: "h-brand", label: "Brand area", type: "heading" },
+      { key: "tagline", label: "Text under the logo (empty = use the site tagline)", type: "textarea", rows: 2 },
+      {
+        key: "socials",
+        label: "Extra social icons (Instagram, YouTube, TikTok…). Facebook, LinkedIn and email always show.",
+        type: "objects",
+        columns: [
+          { key: "label", label: "Name (e.g. Instagram)" },
+          { key: "url", label: "Full link (https://…)" },
+        ],
+      },
+      { key: "h-cols", label: "Link columns", type: "heading" },
+      {
+        key: "columns",
+        label: "Columns. Under each title, write one link per line as: Link text | /page or https://link",
+        type: "objects",
+        columns: [
+          { key: "title", label: "Column title" },
+          { key: "links", label: "Links (one per line: Text | /url)", multiline: true },
+        ],
+      },
+      { key: "h-auto", label: "Automatic columns", type: "heading" },
+      { key: "showServices", label: "Show the services columns", type: "toggle" },
+      { key: "showGuides", label: "Show the latest guides column", type: "toggle" },
+      { key: "h-bottom", label: "Bottom bar", type: "heading" },
+      { key: "copyright", label: "Copyright text after the year (empty = name + All rights reserved)", type: "text" },
+      { key: "bottomLine", label: "Right-hand line (empty = role · location)", type: "text" },
+    ],
+  },
+  {
+    key: "social",
+    title: "Videos & social",
+    description:
+      "Paste links to your Instagram posts and reels, YouTube videos and shorts, and Facebook posts and videos. They appear on /social. Posts must be public. Other links show as a simple link card.",
+    fallback: fallbackSocialFeed as unknown as Record<string, unknown>,
+    fields: [
+      { key: "h-seo", label: "Page and search", type: "heading" },
+      { key: "metaTitle", label: "Search title", type: "text" },
+      { key: "metaDescription", label: "Search snippet", type: "textarea", rows: 2 },
+      { key: "kicker", label: "Kicker", type: "text" },
+      { key: "title", label: "Heading", type: "text" },
+      { key: "intro", label: "Intro", type: "textarea", rows: 3 },
+      { key: "h-items", label: "Posts (newest first)", type: "heading" },
+      {
+        key: "items",
+        label: "Paste a link, add a title if you like",
+        type: "objects",
+        columns: [
+          { key: "url", label: "Link (Instagram / YouTube / Facebook)" },
+          { key: "title", label: "Title (optional)" },
+        ],
+      },
+    ],
+  },
 ];
 
 export function BlocksEditor() {
@@ -370,6 +435,19 @@ export function BlocksEditor() {
             onChange={(e) => setData({ ...data, [field.key]: e.target.value })}
           />
         </Field>
+      );
+    }
+
+    if (field.type === "toggle") {
+      return (
+        <label key={field.key} className="field" style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <input
+            type="checkbox"
+            checked={value !== false}
+            onChange={(e) => setData({ ...data, [field.key]: e.target.checked })}
+          />
+          <span>{field.label}</span>
+        </label>
       );
     }
 
