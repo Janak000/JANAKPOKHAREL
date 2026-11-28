@@ -1,4 +1,5 @@
 import type {
+  PageLinks,
   FooterContent,
   SocialFeed,
   AboutContent,
@@ -14,6 +15,7 @@ import type {
   ServicesPageContent,
   SiteSettings,
 } from "./types";
+import { defaultRelatedServices, defaultSourceRows } from "./page-links-defaults";
 
 export const fallbackSettings: SiteSettings = {
   name: "Janak Pokharel",
@@ -855,6 +857,24 @@ Many businesses should start with the channel that solves the immediate bottlene
   },
 ];
 
+export const fallbackPageLinks: PageLinks = {
+  showInlineCta: true,
+  serviceCtaTitle: "Want {title} handled for you?",
+  serviceCtaText: "Get a free, honest assessment of whether it is the right investment right now.",
+  serviceCtaLabel: "Request a proposal",
+  postCtaTitle: "Need help with {title}?",
+  postCtaText: "Talk to me about your goals and get a free, honest assessment.",
+  postCtaLabel: "Work with me",
+  moreServicesHeading: "More services",
+  moreServicesIntro: "Every service builds on the others.",
+  relatedServicesHeading: "Related services",
+  relatedServicesIntro:
+    "If you would rather have this handled than read about it, these are the services closest to this article.",
+  keepReadingHeading: "Keep reading",
+  sourcesHeading: "Sources and further reading",
+  sources: defaultSourceRows,
+  relatedServices: defaultRelatedServices,
+};
 
 export const fallbackFooter: FooterContent = {
   tagline: "",

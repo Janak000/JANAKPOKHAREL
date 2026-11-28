@@ -209,6 +209,26 @@ export type Post = {
   updatedAt: string;
 };
 
+/** Editable text, sources and related-service rules for service and blog pages. */
+export type PageLinks = {
+  showInlineCta: boolean;
+  serviceCtaTitle: string; // {title} = the service name
+  serviceCtaText: string;
+  serviceCtaLabel: string;
+  postCtaTitle: string; // {title} = the first related service
+  postCtaText: string;
+  postCtaLabel: string;
+  moreServicesHeading: string;
+  moreServicesIntro: string;
+  relatedServicesHeading: string;
+  relatedServicesIntro: string;
+  keepReadingHeading: string;
+  sourcesHeading: string;
+  /** page = a service or post slug, e.g. seo-services-nepal */
+  sources: { page: string; label: string; url: string }[];
+  /** post = a post slug; services = comma-separated service slugs, most relevant first */
+  relatedServices: { post: string; services: string }[];
+};
 
 /** Editable footer. Empty/missing values fall back to the built-in footer. */
 export type FooterContent = {

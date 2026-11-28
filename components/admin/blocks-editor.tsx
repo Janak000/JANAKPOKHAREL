@@ -9,6 +9,7 @@ import {
   fallbackFooter,
   fallbackHero,
   fallbackHome,
+  fallbackPageLinks,
   fallbackPortfolioPage,
   fallbackServicesPage,
   fallbackSettings,
