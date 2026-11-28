@@ -903,4 +903,8 @@ export const fallbackSocialFeed: SocialFeed = {
   title: "Videos and social posts",
   intro: "Short videos and posts on SEO, ads and digital marketing, from Instagram, YouTube and Facebook.",
   items: [],
+  showOnHome: true,
+  homeKicker: "Watch",
+  homeTitle: "Latest videos and posts",
+  homeButtonLabel: "More videos and posts",
 };

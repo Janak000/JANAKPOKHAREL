@@ -359,6 +359,11 @@ const blocks: BlockDef[] = [
       { key: "kicker", label: "Kicker", type: "text" },
       { key: "title", label: "Heading", type: "text" },
       { key: "intro", label: "Intro", type: "textarea", rows: 3 },
+      { key: "h-home", label: "Homepage strip (shown right after the top section, two rows, with a More button to /social)", type: "heading" },
+      { key: "showOnHome", label: "Show the videos strip on the homepage", type: "toggle" },
+      { key: "homeKicker", label: "Strip kicker", type: "text" },
+      { key: "homeTitle", label: "Strip heading", type: "text" },
+      { key: "homeButtonLabel", label: "More button label", type: "text" },
       { key: "h-items", label: "Posts (newest first)", type: "heading" },
       {
         key: "items",

@@ -252,6 +252,11 @@ export type SocialFeed = {
   title: string;
   intro: string;
   items: { url: string; title: string }[];
+  /** Homepage strip right after the hero. */
+  showOnHome: boolean;
+  homeKicker: string;
+  homeTitle: string;
+  homeButtonLabel: string;
 };
 
 /** A footer column after the CMS text ("Label | /url" per line) has been parsed. */

@@ -9,16 +9,18 @@ import {
   getProjects,
   getServices,
   getSettings,
+  getSocialFeed,
 } from "@/lib/cms";
 import { Icon } from "@/components/icon";
 import { PostCard } from "@/components/post-card";
 import { FaqSection } from "@/components/faq-section";
 import { CtaBand } from "@/components/sections";
+import { SocialCard } from "@/components/social-card";
 
 export const revalidate = 120;
 
 export default async function HomePage() {
-  const [settings, hero, home, about, services, projects, posts] = await Promise.all([
+  const [settings, hero, home, about, services, projects, posts, social] = await Promise.all([
     getSettings(),
     getHero(),
     getHome(),
@@ -26,6 +28,7 @@ export default async function HomePage() {
     getServices(),
     getProjects(),
     getPosts(),
+    getSocialFeed(),
   ]);
 
   const latestPosts = posts.slice(0, 6);
@@ -73,6 +76,30 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Latest videos and social posts: two rows (CSS shows 6 / 4 / 2 by screen width) */}
+      {social.showOnHome && social.items.length > 0 && (
+        <section className="section home-social">
+          <div className="container">
+            <div className="section-head section-head-row">
+              <div>
+                <p className="kicker">{social.homeKicker}</p>
+                <h2>{social.homeTitle}</h2>
+              </div>
+            </div>
+            <div className="social-grid home-social-grid">
+              {social.items.slice(0, 6).map((item, i) => (
+                <SocialCard key={item.url + i} url={item.url} title={item.title} />
+              ))}
+            </div>
+            <div className="home-social-more">
+              <Link href="/social" className="btn btn-ghost">
+                {social.homeButtonLabel} <Icon name="arrow-right" size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Stats */}
       <section className="section" style={{ paddingTop: 20 }}>
