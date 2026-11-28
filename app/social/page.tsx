@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getSocialFeed, getSettings, absoluteUrl } from "@/lib/cms";
-import { parseSocialUrl } from "@/lib/social-embed";
+import { SocialCard } from "@/components/social-card";
 import { JsonLd } from "@/components/json-ld";
 
 export const revalidate = 120;
@@ -57,38 +57,9 @@ export default async function SocialPage() {
             <p>New posts and videos are coming soon.</p>
           ) : (
             <div className="social-grid">
-              {page.items.map((item, i) => {
-                const e = parseSocialUrl(item.url);
-                return (
-                  <article key={item.url + i} className="social-card">
-                    {e?.kind === "embed" ? (
-                      <div
-                        className="social-frame"
-                        style={e.aspect ? { aspectRatio: e.aspect } : { height: e.height }}
-                      >
-                        <iframe
-                          src={e.src}
-                          title={item.title || e.label}
-                          loading="lazy"
-                          allow="encrypted-media; picture-in-picture; fullscreen"
-                          allowFullScreen
-                          referrerPolicy="strict-origin-when-cross-origin"
-                        />
-                      </div>
-                    ) : null}
-                    <div className="social-meta">
-                      {item.title && <h2>{item.title}</h2>}
-                      <a
-                        href={e?.href ?? item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {e ? (e.kind === "embed" ? `Open ${e.label} ↗` : `Open on ${e.label} ↗`) : "Open link ↗"}
-                      </a>
-                    </div>
-                  </article>
-                );
-              })}
+              {page.items.map((item, i) => (
+                <SocialCard key={item.url + i} url={item.url} title={item.title} />
+              ))}
             </div>
           )}
         </div>
