@@ -1,4 +1,5 @@
 import { parseSocialUrl } from "@/lib/social-embed";
+import { SocialEmbedFrame } from "@/components/social-embed-frame";
 
 /** One embedded Instagram / YouTube / Facebook post (or a plain link card). Shared by /social and the homepage. */
 export function SocialCard({ url, title }: { url: string; title?: string }) {
@@ -7,13 +8,12 @@ export function SocialCard({ url, title }: { url: string; title?: string }) {
     <article className="social-card">
       {e?.kind === "embed" ? (
         <div className="social-frame" style={e.aspect ? { aspectRatio: e.aspect } : { height: e.height }}>
-          <iframe
+          <SocialEmbedFrame
             src={e.src}
+            platform={e.platform}
+            label={e.label}
             title={title || e.label}
-            loading="lazy"
-            allow="encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-            referrerPolicy="strict-origin-when-cross-origin"
+            thumb={e.thumb}
           />
         </div>
       ) : null}

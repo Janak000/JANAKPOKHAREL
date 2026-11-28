@@ -12,6 +12,8 @@ export type SocialEmbed =
       /** CSS aspect-ratio for the frame, or a fixed height for tall embeds. */
       aspect?: string;
       height?: number;
+      /** Small preview image shown before the player loads (YouTube only). */
+      thumb?: string;
       href: string;
     }
   | { kind: "link"; label: string; href: string };
@@ -104,6 +106,7 @@ function yt(id: string, short: boolean, href: string): SocialEmbed {
     platform: "youtube",
     label: short ? "YouTube short" : "YouTube video",
     src: `https://www.youtube-nocookie.com/embed/${id}`,
+    thumb: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
     aspect: short ? "9 / 16" : "16 / 9",
     href,
   };
