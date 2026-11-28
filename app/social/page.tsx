@@ -58,7 +58,7 @@ export default async function SocialPage() {
           ) : (
             <div className="social-grid">
               {page.items.map((item, i) => (
-                <SocialCard key={item.url + i} url={item.url} title={item.title} />
+                <SocialCard key={item.url + i} url={item.url} title={item.title} level={2} />
               ))}
             </div>
           )}
