@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPosts, getServices, absoluteUrl } from "@/lib/cms";
+import { getPosts, getServices, getSocialFeed, absoluteUrl } from "@/lib/cms";
 
 export const revalidate = 3600;
 
@@ -9,7 +9,7 @@ export const revalidate = 3600;
  * Category pages are noindex (thin listings) and are left out entirely.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [posts, services] = await Promise.all([getPosts(), getServices()]);
+  const [posts, services, social] = await Promise.all([getPosts(), getServices(), getSocialFeed()]);
 
   // Static pages take the newest real content date instead of a hardcoded one.
   const latest = new Date(
@@ -27,7 +27,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/portfolio",
     "/blog",
     "/contact",
-  ].map((path) => ({ url: absoluteUrl(path), lastModified: latest }));
+  ]
+    // /social is noindex while empty, so only list it once it has posts.
+    .concat(social.items.length > 0 ? ["/social"] : [])
+    .map((path) => ({ url: absoluteUrl(path), lastModified: latest }));
 
   const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
     url: absoluteUrl(`/services/${s.slug}`),

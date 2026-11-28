@@ -1,5 +1,8 @@
 import type {
   PageLinks,
+  FooterColumn,
+  FooterContent,
+  SocialFeed,
   AboutContent,
   BlogSettings,
   ContactContent,
@@ -15,6 +18,8 @@ import type {
 } from "./types";
 import {
   fallbackPageLinks,
+  fallbackFooter,
+  fallbackSocialFeed,
   fallbackAbout,
   fallbackBlogSettings,
   fallbackContact,
@@ -143,6 +148,39 @@ export function sourcesFor(d: PageLinks, page: string) {
 export function relatedServiceSlugs(d: PageLinks, post: string): string[] | undefined {
   const row = d.relatedServices.find((r) => r.post.trim() === post);
   return row ? row.services.split(",").map((x) => x.trim()).filter(Boolean) : undefined;
+}
+
+/** "Label | /url" per line. Lines without both parts are ignored, never rendered broken. */
+function parseLinks(text: string): { label: string; href: string }[] {
+  return String(text ?? "")
+    .split("\n")
+    .map((line) => {
+      const i = line.lastIndexOf("|");
+      if (i < 0) return null;
+      const label = line.slice(0, i).trim();
+      const href = line.slice(i + 1).trim();
+      // Only site paths and http(s) links; blocks javascript: and similar.
+      return label && /^(\/|https?:\/\/|mailto:|tel:)/i.test(href) ? { label, href } : null;
+    })
+    .filter((x): x is { label: string; href: string } => x !== null);
+}
+
+export type ResolvedFooter = Omit<FooterContent, "columns"> & { columns: FooterColumn[] };
+
+export async function getFooter(): Promise<ResolvedFooter> {
+  const f = await getBlock("footer", fallbackFooter);
+  return {
+    ...f,
+    socials: (f.socials ?? []).filter((x) => /^https?:\/\//i.test(x?.url?.trim() ?? "")),
+    columns: (f.columns ?? [])
+      .map((c) => ({ title: (c.title ?? "").trim(), links: parseLinks(c.links) }))
+      .filter((c) => c.title && c.links.length > 0),
+  };
+}
+
+export async function getSocialFeed(): Promise<SocialFeed> {
+  const f = await getBlock("social", fallbackSocialFeed);
+  return { ...f, items: (f.items ?? []).filter((i) => i?.url?.trim()) };
 }
 
 export function getHero(): Promise<Hero> {

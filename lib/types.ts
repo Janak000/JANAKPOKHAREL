@@ -13,6 +13,8 @@ export type SiteSettings = {
   linkedin: string;
   gtmId?: string;
   gaId?: string;
+  /** Google Search Console HTML-tag verification code (the content="" value). */
+  gscVerification?: string;
   ogImage: string;
   keywords: string[];
 };
@@ -227,3 +229,30 @@ export type PageLinks = {
   /** post = a post slug; services = comma-separated service slugs, most relevant first */
   relatedServices: { post: string; services: string }[];
 };
+
+/** Editable footer. Empty/missing values fall back to the built-in footer. */
+export type FooterContent = {
+  /** Replaces the tagline under the logo. Empty = use the site tagline. */
+  tagline: string;
+  /** Extra social icons next to the built-in Facebook / LinkedIn / email ones. */
+  socials: { label: string; url: string }[];
+  /** Link columns, e.g. Explore. Each row is "Link text" + "Link URL". */
+  columns: { title: string; links: string }[];
+  showServices: boolean;
+  showGuides: boolean;
+  copyright: string;
+  bottomLine: string;
+};
+
+/** Social posts shown on /social. Each item is just a pasted link. */
+export type SocialFeed = {
+  metaTitle: string;
+  metaDescription: string;
+  kicker: string;
+  title: string;
+  intro: string;
+  items: { url: string; title: string }[];
+};
+
+/** A footer column after the CMS text ("Label | /url" per line) has been parsed. */
+export type FooterColumn = { title: string; links: { label: string; href: string }[] };
