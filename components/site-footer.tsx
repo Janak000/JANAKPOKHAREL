@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Service, SiteSettings } from "@/lib/types";
 import type { ResolvedFooter } from "@/lib/cms";
-import { socialIconFor } from "@/lib/social-embed";
+import { socialIconFor, VIDEOS_PATH } from "@/lib/social-embed";
 import { Icon } from "./icon";
 
 /**
@@ -88,7 +88,7 @@ export function SiteFooter({
                 </Link>
               )
             )}
-            {i === 0 && hasSocial && <Link href="/social">Videos &amp; social</Link>}
+            {i === 0 && hasSocial && <Link href={VIDEOS_PATH}>SEO videos</Link>}
           </nav>
         ))}
 

@@ -244,14 +244,18 @@ export type FooterContent = {
   bottomLine: string;
 };
 
-/** Social posts shown on /social. Each item is just a pasted link. */
+/** Videos and social posts shown on /seo-videos. Each item is just a pasted link. */
 export type SocialFeed = {
   metaTitle: string;
   metaDescription: string;
   kicker: string;
   title: string;
   intro: string;
-  items: { url: string; title: string }[];
+  items: { url: string; title: string; description?: string; date?: string }[];
+  /** Markdown text shown under the videos: the page copy search engines read. */
+  body: string;
+  faqTitle: string;
+  faqs: { question: string; answer: string }[];
   /** Homepage strip right after the hero. */
   showOnHome: boolean;
   homeKicker: string;

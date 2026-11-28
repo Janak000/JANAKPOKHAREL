@@ -178,9 +178,28 @@ export async function getFooter(): Promise<ResolvedFooter> {
   };
 }
 
+/**
+ * The first version of the editor saved its old placeholder text into the
+ * database. Treat those exact old values as "not customised" so the improved
+ * defaults apply; anything the owner has really written is kept.
+ */
+const OLD_SOCIAL_DEFAULTS: Partial<Record<keyof SocialFeed, string>> = {
+  metaTitle: "Videos and Social Posts | Janak Pokharel",
+  metaDescription:
+    "Instagram posts, reels, YouTube videos and Facebook posts by Janak Pokharel on SEO, Google Ads and digital marketing in Nepal.",
+  kicker: "Social",
+  title: "Videos and social posts",
+  intro: "Short videos and posts on SEO, ads and digital marketing, from Instagram, YouTube and Facebook.",
+};
+
 export async function getSocialFeed(): Promise<SocialFeed> {
   const f = await getBlock("social", fallbackSocialFeed);
-  return { ...f, items: (f.items ?? []).filter((i) => i?.url?.trim()) };
+  const fixed = { ...f } as Record<string, unknown>;
+  for (const [k, old] of Object.entries(OLD_SOCIAL_DEFAULTS)) {
+    if (fixed[k] === old) fixed[k] = (fallbackSocialFeed as Record<string, unknown>)[k];
+  }
+  const out = fixed as unknown as SocialFeed;
+  return { ...out, items: (out.items ?? []).filter((i) => i?.url?.trim()), faqs: out.faqs ?? [] };
 }
 
 export function getHero(): Promise<Hero> {

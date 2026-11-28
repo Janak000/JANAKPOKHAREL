@@ -350,7 +350,7 @@ const blocks: BlockDef[] = [
     key: "social",
     title: "Videos & social",
     description:
-      "Paste links to your Instagram posts and reels, YouTube videos and shorts, and Facebook posts and videos. They appear on /social. Posts must be public. Other links show as a simple link card.",
+      "Paste links to your Instagram posts and reels, YouTube videos and shorts, and Facebook posts and videos. They appear on /seo-videos. Posts must be public. Other links show as a simple link card.",
     fallback: fallbackSocialFeed as unknown as Record<string, unknown>,
     fields: [
       { key: "h-seo", label: "Page and search", type: "heading" },
@@ -359,11 +359,23 @@ const blocks: BlockDef[] = [
       { key: "kicker", label: "Kicker", type: "text" },
       { key: "title", label: "Heading", type: "text" },
       { key: "intro", label: "Intro", type: "textarea", rows: 3 },
-      { key: "h-home", label: "Homepage strip (shown right after the top section, two rows, with a More button to /social)", type: "heading" },
+      { key: "h-home", label: "Homepage strip (shown right after the top section, two rows, with a More button to /seo-videos)", type: "heading" },
       { key: "showOnHome", label: "Show the videos strip on the homepage", type: "toggle" },
       { key: "homeKicker", label: "Strip kicker", type: "text" },
       { key: "homeTitle", label: "Strip heading", type: "text" },
       { key: "homeButtonLabel", label: "More button label", type: "text" },
+      { key: "h-body", label: "Page text under the videos (Markdown; this is the copy Google reads, so keep the links)", type: "heading" },
+      { key: "body", label: "Text", type: "markdown", rows: 18 },
+      { key: "faqTitle", label: "FAQ heading", type: "text" },
+      {
+        key: "faqs",
+        label: "Questions and answers (also published as FAQ schema)",
+        type: "objects",
+        columns: [
+          { key: "question", label: "Question" },
+          { key: "answer", label: "Answer", multiline: true },
+        ],
+      },
       { key: "h-items", label: "Posts (newest first)", type: "heading" },
       {
         key: "items",
@@ -371,7 +383,9 @@ const blocks: BlockDef[] = [
         type: "objects",
         columns: [
           { key: "url", label: "Link (Instagram / YouTube / Facebook)" },
-          { key: "title", label: "Title (optional)" },
+          { key: "title", label: "Title (use a descriptive one, it is the video's SEO title)" },
+          { key: "description", label: "One-sentence description (optional)" },
+          { key: "date", label: "Upload date, YYYY-MM-DD (optional, helps Google video results)" },
         ],
       },
     ],

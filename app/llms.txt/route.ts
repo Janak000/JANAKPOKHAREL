@@ -38,6 +38,7 @@ ${posts.map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}) (${formatD
 - [About](${absoluteUrl("/about")}): Background, experience, education, and certifications
 - [Portfolio](${absoluteUrl("/portfolio")}): Brands and campaigns supported
 - [Blog](${absoluteUrl("/blog")}): Digital marketing insights on SEO, Meta Ads, and growth
+- [SEO videos](${absoluteUrl("/seo-videos")}): Short videos and reels on SEO, Google Ads and Meta Ads from Nepal
 - [Contact](${absoluteUrl("/contact")}): Start a project
 
 ## Optional
