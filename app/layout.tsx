@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ChromeGate } from "@/components/chrome-gate";
 import { JsonLd } from "@/components/json-ld";
-import { getSettings, getServices, getPosts, siteUrl, absoluteUrl } from "@/lib/cms";
+import { getSettings, getServices, getPosts, getFooter, getSocialFeed, siteUrl, absoluteUrl } from "@/lib/cms";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -50,6 +50,9 @@ export async function generateMetadata(): Promise<Metadata> {
     // not-found, colliding with the noindex Next emits there - two conflicting
     // robots tags on the most-crawled error surface. Indexing is the default
     // when no robots tag is present, so the tag bought nothing.
+    verification: settings.gscVerification?.trim()
+      ? { google: settings.gscVerification.trim() }
+      : undefined,
     robots: {
       googleBot: {
         index: true,
@@ -84,7 +87,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [settings, services, posts] = await Promise.all([getSettings(), getServices(), getPosts()]);
+  const [settings, services, posts, footer, social] = await Promise.all([
+    getSettings(),
+    getServices(),
+    getPosts(),
+    getFooter(),
+    getSocialFeed(),
+  ]);
 
   const personLd = {
     "@context": "https://schema.org",
@@ -189,7 +198,13 @@ export default async function RootLayout({
         <SiteHeader name={settings.name} />
         <main>{children}</main>
         <ChromeGate>
-          <SiteFooter settings={settings} services={services} posts={posts.map((p) => ({ slug: p.slug, title: p.title }))} />
+          <SiteFooter
+            settings={settings}
+            footer={footer}
+            services={services}
+            posts={posts.map((p) => ({ slug: p.slug, title: p.title }))}
+            hasSocial={social.items.length > 0}
+          />
         </ChromeGate>
       </body>
     </html>

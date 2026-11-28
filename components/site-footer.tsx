@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Service, SiteSettings } from "@/lib/types";
+import type { ResolvedFooter } from "@/lib/cms";
+import { socialIconFor } from "@/lib/social-embed";
 import { Icon } from "./icon";
 
 /**
@@ -24,14 +26,22 @@ const NEPAL_SLUGS = [
   "ecommerce-seo-nepal",
 ];
 
+function isExternal(href: string) {
+  return /^https?:\/\//i.test(href);
+}
+
 export function SiteFooter({
   settings,
+  footer,
   services = [],
   posts = [],
+  hasSocial = false,
 }: {
   settings: SiteSettings;
+  footer: ResolvedFooter;
   services?: Service[];
   posts?: { slug: string; title: string }[];
+  hasSocial?: boolean;
 }) {
   const nepal = services.filter((s) => NEPAL_SLUGS.includes(s.slug));
   const core = services.filter((s) => !NEPAL_SLUGS.includes(s.slug));
@@ -45,7 +55,7 @@ export function SiteFooter({
             <img src="/image/logo.webp" alt="Janak Pokharel logo" className="brand-logo" width={40} height={40} />
             <span className="brand-name">{settings.name}</span>
           </Link>
-          <p className="footer-tagline">{settings.tagline}</p>
+          <p className="footer-tagline">{footer.tagline.trim() || settings.tagline}</p>
           <div className="footer-socials">
             <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <Icon name="facebook" size={18} />
@@ -56,16 +66,31 @@ export function SiteFooter({
             <a href={`mailto:${settings.email}`} aria-label="Email">
               <Icon name="mail" size={18} />
             </a>
+            {footer.socials.map((s) => (
+              <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label || s.url}>
+                <Icon name={socialIconFor(s.url)} size={18} />
+              </a>
+            ))}
           </div>
         </div>
 
-        <nav className="footer-col" aria-label="Explore">
-          <h3>Explore</h3>
-          <Link href="/about">About</Link>
-          <Link href="/services">Services</Link>
-          <Link href="/portfolio">Portfolio</Link>
-          <Link href="/blog">Blog</Link>
-        </nav>
+        {footer.columns.map((col, i) => (
+          <nav key={col.title + i} className="footer-col" aria-label={col.title}>
+            <h3>{col.title}</h3>
+            {col.links.map((l) =>
+              isExternal(l.href) ? (
+                <a key={l.href + l.label} href={l.href} target="_blank" rel="noopener noreferrer">
+                  {l.label}
+                </a>
+              ) : (
+                <Link key={l.href + l.label} href={l.href}>
+                  {l.label}
+                </Link>
+              )
+            )}
+            {i === 0 && hasSocial && <Link href="/social">Videos &amp; social</Link>}
+          </nav>
+        ))}
 
         <div className="footer-col">
           <h3>Contact</h3>
@@ -81,7 +106,7 @@ export function SiteFooter({
           </a>
         </div>
 
-        {nepal.length > 0 && (
+        {footer.showServices && nepal.length > 0 && (
           <nav className="footer-col" aria-label="Services in Nepal">
             <h3>Services in Nepal</h3>
             {nepal.map((s) => (
@@ -92,7 +117,7 @@ export function SiteFooter({
           </nav>
         )}
 
-        {core.length > 0 && (
+        {footer.showServices && core.length > 0 && (
           <nav className="footer-col" aria-label="Specialist services">
             <h3>Specialist Services</h3>
             {core.map((s) => (
@@ -103,7 +128,7 @@ export function SiteFooter({
           </nav>
         )}
 
-        {posts.length > 0 && (
+        {footer.showGuides && posts.length > 0 && (
           <nav className="footer-col" aria-label="Guides">
             <h3>Guides</h3>
             {posts.map((p) => (
@@ -114,17 +139,12 @@ export function SiteFooter({
           </nav>
         )}
 
-        <div className="footer-col">
-          <h3>Latest</h3>
-          <Link href="/blog">Digital marketing insights →</Link>
-          <Link href="/contact">Start a project →</Link>
-        </div>
       </div>
       <div className="container footer-bottom">
         <p>
-          © {year} {settings.name}. All rights reserved.
+          © {year} {footer.copyright.trim() || `${settings.name}. All rights reserved.`}
         </p>
-        <p className="footer-role">{settings.role} · {settings.location}</p>
+        <p className="footer-role">{footer.bottomLine.trim() || `${settings.role} · ${settings.location}`}</p>
       </div>
     </footer>
   );
