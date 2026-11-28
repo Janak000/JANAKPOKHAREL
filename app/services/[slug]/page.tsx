@@ -7,6 +7,9 @@ import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
 import { FaqSection } from "@/components/faq-section";
 import { splitFaqs } from "@/lib/faq";
+import { splitAtMiddleHeading } from "@/lib/split-body";
+import { SOURCES_FOR_SERVICE } from "@/lib/sources";
+import { InlineCta, LinkCards, SourcesList } from "@/components/page-blocks";
 
 export const revalidate = 120;
 
@@ -113,7 +116,23 @@ export default async function ServiceDetailPage({ params }: Props) {
         <div className="container">
           <div className="article-layout">
             <div className="article-main">
-              {before && <Markdown content={before} />}
+              {(() => {
+                const [first, second] = splitAtMiddleHeading(before);
+                return (
+                  <>
+                    {first && <Markdown content={first} />}
+                    {second && (
+                      <>
+                        <InlineCta
+                          title={`Want ${service.title} handled for you?`}
+                          text="Get a free, honest assessment of whether it is the right investment right now."
+                        />
+                        <Markdown content={second} />
+                      </>
+                    )}
+                  </>
+                );
+              })()}
               <FaqSection
                 layout="inline"
                 title={heading || "Frequently asked questions"}
@@ -122,23 +141,19 @@ export default async function ServiceDetailPage({ params }: Props) {
                 pageUrl={absoluteUrl(`/services/${service.slug}`)}
               />
               {after && <Markdown content={after} />}
-              <section aria-labelledby="all-services-heading" style={{ marginTop: 48 }}>
-                <h2 id="all-services-heading" style={{ fontSize: 26 }}>
-                  More services
-                </h2>
-                <p>
-                  Every service builds on the others.{" "}
-                  {allServices
-                    .filter((s) => s.slug !== slug)
-                    .map((s, i, arr) => (
-                      <span key={s.slug}>
-                        <Link href={`/services/${s.slug}`}>{s.title}</Link>
-                        {i < arr.length - 1 ? ", " : "."}
-                      </span>
-                    ))}{" "}
-                  Or see the full <Link href="/services">services overview</Link>.
-                </p>
-              </section>
+              <LinkCards
+                id="all-services-heading"
+                heading="More services"
+                intro="Every service builds on the others."
+                cards={allServices
+                  .filter((s) => s.slug !== slug)
+                  .map((s) => ({ href: `/services/${s.slug}`, title: s.title, text: s.shortDescription }))}
+              />
+              <p>
+                Or see the full <Link href="/services">services overview</Link>, or{" "}
+                <Link href="/blog">read the guides</Link>.
+              </p>
+              <SourcesList sources={SOURCES_FOR_SERVICE[slug]} />
             </div>
             <aside className="article-sidebar">
               <div className="sidebar-card">

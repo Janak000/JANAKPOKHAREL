@@ -15,6 +15,9 @@ import { Icon } from "@/components/icon";
 import { JsonLd } from "@/components/json-ld";
 import { Markdown } from "@/components/markdown";
 import { FaqSection } from "@/components/faq-section";
+import { splitAtMiddleHeading } from "@/lib/split-body";
+import { SOURCES_FOR_POST } from "@/lib/sources";
+import { InlineCta, LinkCards, SourcesList } from "@/components/page-blocks";
 
 export const revalidate = 120;
 
@@ -205,7 +208,27 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="article-layout">
               <div>
                 <p className="article-intro">{post.heroIntro}</p>
-                <Markdown content={post.body} />
+                {(() => {
+                  const [first, second] = splitAtMiddleHeading(post.body);
+                  const cta = relatedServices[0];
+                  return (
+                    <>
+                      <Markdown content={first} />
+                      {second && (
+                        <>
+                          {cta && (
+                            <InlineCta
+                              title={`Need help with ${cta.title}?`}
+                              text="Talk to me about your goals and get a free, honest assessment."
+                              label="Work with me"
+                            />
+                          )}
+                          <Markdown content={second} />
+                        </>
+                      )}
+                    </>
+                  );
+                })()}
 
                 {post.tags.length > 0 && (
                   <div className="article-tags">
@@ -217,31 +240,25 @@ export default async function BlogPostPage({ params }: Props) {
                   </div>
                 )}
 
-                {relatedServices.length > 0 && (
-                  <section aria-labelledby="related-services-heading">
-                    <h2 id="related-services-heading" style={{ fontSize: 26, marginTop: 48 }}>
-                      Related services
-                    </h2>
-                    <div className="prose">
-                      <p>
-                        If you would rather have this handled than read about it, these are
-                        the services closest to this article:{" "}
-                        {relatedServices.map((s, i) => (
-                          <span key={s.slug}>
-                            {i > 0 && (i === relatedServices.length - 1 ? " and " : ", ")}
-                            <Link href={`/services/${s.slug}`}>{s.title}</Link>
-                          </span>
-                        ))}
-                        .
-                      </p>
-                    </div>
-                  </section>
-                )}
+                <LinkCards
+                  id="related-services-heading"
+                  heading="Related services"
+                  intro="If you would rather have this handled than read about it, these are the services closest to this article."
+                  cards={relatedServices.map((s) => ({ href: `/services/${s.slug}`, title: s.title, text: s.shortDescription }))}
+                />
 
                 <FaqSection
                   layout="inline"
                   faqs={post.faqs}
                   pageUrl={absoluteUrl(`/blog/${post.slug}`)}
+                />
+
+                <SourcesList sources={SOURCES_FOR_POST[slug]} />
+
+                <LinkCards
+                  id="keep-reading-heading"
+                  heading="Keep reading"
+                  cards={related.slice(0, 3).map((p) => ({ href: `/blog/${p.slug}`, title: p.title, text: p.excerpt }))}
                 />
 
                 <div className="cta-band" style={{ marginTop: 56, padding: "48px 28px" }}>
