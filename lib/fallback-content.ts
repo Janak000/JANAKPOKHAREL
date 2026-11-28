@@ -896,13 +896,57 @@ export const fallbackFooter: FooterContent = {
 };
 
 export const fallbackSocialFeed: SocialFeed = {
-  metaTitle: "Videos and Social Posts | Janak Pokharel",
+  metaTitle: "SEO & Google Ads Videos from Nepal | Janak Pokharel",
   metaDescription:
-    "Instagram posts, reels, YouTube videos and Facebook posts by Janak Pokharel on SEO, Google Ads and digital marketing in Nepal.",
-  kicker: "Social",
-  title: "Videos and social posts",
-  intro: "Short videos and posts on SEO, ads and digital marketing, from Instagram, YouTube and Facebook.",
+    "Watch short SEO, Google Ads and Meta Ads videos from Nepal by Janak Pokharel, with Instagram reels, YouTube shorts and the guides that go with them.",
+  kicker: "Videos",
+  title: "SEO and Google Ads videos from Nepal",
+  intro:
+    "Short videos and reels on SEO, Google Ads, Meta Ads and local search for Nepali businesses. Watch here, then read the matching guide or service page for the full detail.",
   items: [],
+  body: `## What these videos cover
+
+I post short videos on the parts of digital marketing that decide whether a business in Nepal gets found and gets enquiries. Each video is one idea, so you can watch it in under a minute and then go deeper on the page that matches it.
+
+- **Search engine optimization.** How Google crawls, indexes and ranks a small business website, and what to fix first. The full process is on the [SEO services in Nepal](/services/seo-services-nepal) page, and the technical side is on [Technical SEO](/services/technical-seo).
+- **AI search and answer engines.** How pages get cited in AI answers and Google's AI features. See [Advanced SEO](/services/advanced-seo) for how I approach it.
+- **Google Ads.** Campaign structure, keywords and wasted spend. Start with [Google Ads and PPC](/services/google-ads-ppc) and the guide on [what Google Ads costs in Nepal](/blog/google-ads-cost-nepal).
+- **Meta Ads.** Targeting, creative and budgets on Facebook and Instagram, covered in [Meta Ads](/services/meta-ads) and [Facebook ads cost in Nepal](/blog/facebook-ads-cost-nepal).
+- **Local search.** Google Maps and your Business Profile, explained in the [Google Business Profile guide for Nepal](/blog/google-business-profile-nepal).
+
+## Guides that go with the videos
+
+If you prefer reading, these articles cover the same topics in full: [how to choose an SEO expert in Nepal](/blog/seo-expert-in-nepal), [what SEO costs in Nepal](/blog/seo-price-nepal), [SEO or Meta Ads: which to start with](/blog/seo-vs-meta-ads) and [what a technical SEO audit costs](/blog/technical-seo-audit-cost). The full list is on the [blog](/blog).
+
+## Sources I rely on
+
+I keep the advice in these videos in line with what Google publishes. Good starting points are Google's [SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide), its guidance on [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features), the [Business Profile ranking tips](https://support.google.com/business/answer/7091) and the Google Ads help page on [Quality Score](https://support.google.com/google-ads/answer/6167118).
+
+## Want this done for your business?
+
+Watching a video shows you what to do. Doing it on your own site takes time, so if you would rather have it handled, [get in touch](/contact) or see all [services](/services).`,
+  faqTitle: "Questions about the videos",
+  faqs: [
+    {
+      question: "Where can I watch Janak Pokharel's videos?",
+      answer:
+        "They are on this page, and the same videos and reels are posted on YouTube, Instagram and Facebook. You can play any of them here without leaving the site.",
+    },
+    {
+      question: "What topics do the videos cover?",
+      answer:
+        "SEO, AI search visibility, Google Ads, Meta Ads and local search for businesses in Nepal. Each video explains one idea, and the text below links to the matching guide or service page.",
+    },
+    {
+      question: "Are the videos free?",
+      answer: "Yes. Watching the videos and reading the linked guides costs nothing.",
+    },
+    {
+      question: "Can I suggest a topic for a video?",
+      answer:
+        "Yes. Send the question through the contact page and, where it helps other business owners, it may become a video or a guide.",
+    },
+  ],
   showOnHome: true,
   homeKicker: "Watch",
   homeTitle: "Latest videos and posts",

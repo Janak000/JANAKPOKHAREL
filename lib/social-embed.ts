@@ -122,3 +122,12 @@ export function socialIconFor(url: string): string {
   if (host.startsWith("wa.me") || host.includes("whatsapp")) return "message-circle";
   return "arrow-up-right";
 }
+
+/** Public URL of the videos page. Keep in sync with the redirect in next.config.mjs. */
+export const VIDEOS_PATH = "/seo-videos";
+
+/** A title like "Youtube" tells Google and visitors nothing, so treat it as empty. */
+export function usefulTitle(title: string | undefined): string | undefined {
+  const t = (title ?? "").trim();
+  return t && !/^(you\s?tube|video|reel|post|instagram|facebook|untitled)$/i.test(t) ? t : undefined;
+}

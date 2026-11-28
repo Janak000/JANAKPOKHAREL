@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getPosts, getServices, getSocialFeed, absoluteUrl } from "@/lib/cms";
+import { VIDEOS_PATH } from "@/lib/social-embed";
 
 export const revalidate = 3600;
 
@@ -28,8 +29,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/blog",
     "/contact",
   ]
-    // /social is noindex while empty, so only list it once it has posts.
-    .concat(social.items.length > 0 ? ["/social"] : [])
+    // The videos page is noindex while empty, so only list it once it has posts.
+    .concat(social.items.length > 0 ? [VIDEOS_PATH] : [])
     .map((path) => ({ url: absoluteUrl(path), lastModified: latest }));
 
   const servicePages: MetadataRoute.Sitemap = services.map((s) => ({

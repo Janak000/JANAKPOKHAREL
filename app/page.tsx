@@ -16,6 +16,7 @@ import { PostCard } from "@/components/post-card";
 import { FaqSection } from "@/components/faq-section";
 import { CtaBand } from "@/components/sections";
 import { SocialCard } from "@/components/social-card";
+import { VIDEOS_PATH } from "@/lib/social-embed";
 
 export const revalidate = 120;
 
@@ -93,7 +94,7 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="home-social-more">
-              <Link href="/social" className="btn btn-ghost">
+              <Link href={VIDEOS_PATH} className="btn btn-ghost">
                 {social.homeButtonLabel} <Icon name="arrow-right" size={16} />
               </Link>
             </div>
